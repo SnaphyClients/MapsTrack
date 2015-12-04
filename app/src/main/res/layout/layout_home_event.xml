@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:background="@color/colorPrimary">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_home_event_textview1"
+        android:text="@string/layout_home_event_textview1"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="15dp"
+        android:textSize="17sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_home_event_textview2"
+        android:text="@string/layout_home_event_textview2"
+        android:textColor="@color/white"
+        android:layout_below="@+id/layout_home_event_textview1"
+        android:layout_marginLeft="15dp"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="12dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_home_event_imageButton1"
+        android:src="@mipmap/share_home"
+        android:background="@android:color/transparent"
+        android:layout_toLeftOf="@+id/layout_home_event_imageButton2"
+        android:layout_centerVertical="true"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_home_event_imageButton2"
+        android:src="@mipmap/delete_home"
+        android:background="@android:color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

@@ -2,25 +2,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.snaphy.mapstrack.Fragment.HomeFragment"
     android:clickable="true"
     android:background="@color/background"
     android:orientation="vertical">
 
-   <LinearLayout
+   <RelativeLayout
        android:layout_width="match_parent"
        android:layout_height="0dp"
        android:layout_weight="1"
-       android:background="@color/colorPrimary">
+       android:background="@color/colorPrimary"
+       android:orientation="vertical">
 
-   </LinearLayout>
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="@string/fragment_home_textview1"
+           android:layout_margin="10dp"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:textColor="@color/white"
+           android:textSize="18sp"
+           android:id="@+id/fragment_home_textview1"
+           android:textStyle="bold"/>
 
-    <LinearLayout
+
+       <android.support.v7.widget.RecyclerView
+           android:id="@+id/fragment_home_recycler_view1"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_below="@+id/fragment_home_textview1"
+           android:layout_marginTop="10dp"
+           android:scrollbars="vertical"/>
+
+       <android.support.design.widget.FloatingActionButton
+           android:layout_height="wrap_content"
+           android:layout_width="wrap_content"
+           android:layout_alignParentRight="true"
+           android:layout_alignParentBottom="true"
+           android:layout_marginRight="30dp"
+           android:layout_marginBottom="25dp"
+           android:src="@mipmap/add"
+           android:id="@+id/fragment_cart_floating_button1"
+           app:backgroundTint="@color/BlueGrey"/>
+
+
+   </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:orientation="vertical">
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_home_textview2"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/darkGrey"
+            android:textSize="18sp"
+            android:id="@+id/fragment_home_textview2"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_home_recycler_view2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/fragment_home_textview2"
+            android:layout_marginTop="10dp"
+            android:scrollbars="vertical"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="25dp"
+            android:src="@mipmap/add"
+            android:id="@+id/fragment_cart_floating_button2"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -31,4 +31,10 @@
 
     <!--Terms and Condition Fragment-->
     <string name="fragment_terms_textview0">Terms &amp; Conditions</string>
+
+    <!--Home Fragment-->
+    <string name="fragment_home_textview1">Events</string>
+    <string name="fragment_home_textview2">Locations</string>
+    <string name="layout_home_event_textview1">Ravi123</string>
+    <string name="layout_home_event_textview2">DLF Phase 3, Gurgaon</string>
 </resources>
