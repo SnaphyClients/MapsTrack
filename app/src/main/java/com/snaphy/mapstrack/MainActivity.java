@@ -1,21 +1,27 @@
 package com.snaphy.mapstrack;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
+import com.snaphy.mapstrack.Fragment.AboutusFragment;
+import com.snaphy.mapstrack.Fragment.ContactFragment;
+import com.snaphy.mapstrack.Fragment.FaqsFragment;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
 import com.snaphy.mapstrack.Fragment.MainFragment;
 import com.snaphy.mapstrack.Fragment.ProfileFragment;
 import com.snaphy.mapstrack.Fragment.SettingFragment;
 import com.snaphy.mapstrack.Fragment.ShareFragment;
+import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         MainFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener,
-        ShareFragment.OnFragmentInteractionListener{
+        ShareFragment.OnFragmentInteractionListener, AboutusFragment.OnFragmentInteractionListener,
+        FaqsFragment.OnFragmentInteractionListener, ContactFragment.OnFragmentInteractionListener,
+        TermsFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,22 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             case R.layout.fragment_main:
                 loadMainFragment(fragmentTransaction);
                 break;
+
+            case R.layout.fragment_aboutus :
+                openAboutUsPage(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_faq:
+                openFaqPage(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_contact:
+                openContactPage(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_terms:
+                openTermsPage(fragmentTransaction);
+                break;
         }
     }
 
@@ -43,6 +65,47 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.replace(R.id.container, mainFragment, MainFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
     }
+
+    private void openAboutUsPage(FragmentTransaction fragmentTransaction) {
+        AboutusFragment aboutusFragment = (AboutusFragment) getSupportFragmentManager().
+                findFragmentByTag(AboutusFragment.TAG);
+        if (aboutusFragment == null) {
+            aboutusFragment = AboutusFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, aboutusFragment, AboutusFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void openFaqPage(FragmentTransaction fragmentTransaction) {
+        FaqsFragment faqsFragment = (FaqsFragment) getSupportFragmentManager().
+                findFragmentByTag(FaqsFragment.TAG);
+        if (faqsFragment == null) {
+            faqsFragment = FaqsFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, faqsFragment, FaqsFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void openContactPage(FragmentTransaction fragmentTransaction) {
+        ContactFragment contactFragment = (ContactFragment) getSupportFragmentManager().
+                findFragmentByTag(ContactFragment.TAG);
+        if (contactFragment == null) {
+            contactFragment = ContactFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, contactFragment, ContactFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void openTermsPage(FragmentTransaction fragmentTransaction) {
+        TermsFragment termsFragment = (TermsFragment) getSupportFragmentManager().
+                findFragmentByTag(TermsFragment.TAG);
+        if (termsFragment == null) {
+            termsFragment = TermsFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, termsFragment, TermsFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
 
 
     @Override

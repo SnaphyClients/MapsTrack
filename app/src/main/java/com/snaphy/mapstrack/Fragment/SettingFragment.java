@@ -3,12 +3,18 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +27,13 @@ import com.snaphy.mapstrack.R;
 public class SettingFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
+    @Bind(R.id.fragment_setting_button1) Button aboutUs;
+    @Bind(R.id.fragment_setting_button2) Button faq;
+    @Bind(R.id.fragment_setting_button4) Button rate;
+    @Bind(R.id.fragment_setting_button5) Button contact;
+    @Bind(R.id.fragment_setting_button6) Button terms;
+    @Bind(R.id.fragment_setting_button3) Button share;
+    MainActivity mainActivity;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -40,7 +53,89 @@ public class SettingFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        ButterKnife.bind(this, view);
+        aboutusClick();
+        faqClick();
+        shareClick();
+        rateClick();
+        contactClick();
+        termsClick();
+        return view;
+    }
+
+    /**
+     * Method to Open About us Fragment
+     */
+    public void aboutusClick() {
+        aboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(R.layout.fragment_aboutus,null);
+            }
+        });
+    }
+
+    /**
+     * Method to Open FAQs Fragment
+     */
+    public void faqClick() {
+        faq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(R.layout.fragment_faq,null);
+            }
+        });
+    }
+
+    /**
+     * Method to Open Share Fragment
+     */
+    public void shareClick() {
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(getView(), "Share Button is clicked", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        });
+    }
+
+    /**
+     * Method to Open rate us Fragment
+     */
+    public void rateClick() {
+        rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(getView(), "Rate Button is clicked", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        });
+    }
+
+    /**
+     * Method to Open Contact Fragment
+     */
+    public void contactClick(){
+        contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(R.layout.fragment_contact, null);
+            }
+        });
+    }
+
+    /**
+     * Method to Open Terms and Conditions Fragment
+     */
+    public void termsClick() {
+        terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(R.layout.fragment_terms, null);
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -53,6 +148,7 @@ public class SettingFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

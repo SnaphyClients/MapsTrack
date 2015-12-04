@@ -5,16 +5,18 @@
     tools:context="com.snaphy.mapstrack.Fragment.MainFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:id="@+id/main_container">
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/toolbar"
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:background="?attr/colorPrimary"
         android:elevation="0dp"
+        android:paddingBottom="5dp"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
     </android.support.v7.widget.Toolbar>
@@ -26,6 +28,13 @@
         app:tabMode="fixed"
         app:tabGravity="center"
         app:tabIndicatorColor="@color/colorPrimary"/>
+
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/search_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MaterialSearchViewStyle" />
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_main_view_pager"

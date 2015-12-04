@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,10 +6,121 @@
     android:clickable="true"
     android:background="@color/background">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_setting_textview1"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragment_setting_textview1"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@color/white"
+        android:layout_below="@+id/fragment_setting_textview1"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
-</FrameLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:text="@string/fragment_setting_button1"
+            android:gravity="left|center"
+            android:paddingLeft="15dp"
+            android:textAllCaps="false"
+            android:id="@+id/fragment_setting_button1"
+            android:drawableRight="@mipmap/about_us"
+            android:paddingRight="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:text="@string/fragment_setting_button2"
+            android:gravity="left|center"
+            android:paddingLeft="15dp"
+            android:textAllCaps="false"
+            android:id="@+id/fragment_setting_button2"
+            android:drawableRight="@mipmap/faq"
+            android:paddingRight="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:text="@string/fragment_setting_button3"
+            android:gravity="left|center"
+            android:paddingLeft="15dp"
+            android:textAllCaps="false"
+            android:id="@+id/fragment_setting_button3"
+            android:drawableRight="@mipmap/setting_share"
+            android:paddingRight="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:text="@string/fragment_setting_button4"
+            android:gravity="left|center"
+            android:paddingLeft="15dp"
+            android:textAllCaps="false"
+            android:id="@+id/fragment_setting_button4"
+            android:drawableRight="@mipmap/feedback"
+            android:paddingRight="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:text="@string/fragment_setting_button5"
+            android:gravity="left|center"
+            android:paddingLeft="15dp"
+            android:textAllCaps="false"
+            android:id="@+id/fragment_setting_button5"
+            android:drawableRight="@mipmap/contact"
+            android:paddingRight="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:text="@string/fragment_setting_button6"
+            android:gravity="left|center"
+            android:paddingLeft="15dp"
+            android:textAllCaps="false"
+            android:id="@+id/fragment_setting_button6"
+            android:drawableRight="@mipmap/terms"
+            android:paddingRight="15dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -3,4 +3,32 @@
 
     <string name="hello_blank_fragment">Hello MapsTrack</string>
     <string name="search_hint">Search</string>
+
+    <!--Profile Fragment-->
+    <string name="fragment_profile_button1">Logout</string>
+    <string name="fragment_profile_button2">Edit Profile</string>
+    <string name="fragment_profile_textview1">Ravi Gupta</string>
+    <string name="fragment_profile_textview2">ravigupta9363@gmail.com</string>
+    <string name="fragment_profile_textview3">9873046993</string>
+
+    <!--Setting Fragment-->
+    <string name="fragment_setting_textview1">Settings</string>
+    <string name="fragment_setting_button1">About</string>
+    <string name="fragment_setting_button2">FAQs</string>
+    <string name="fragment_setting_button3">Share</string>
+    <string name="fragment_setting_button4">Rate</string>
+    <string name="fragment_setting_button5">Contact</string>
+    <string name="fragment_setting_button6">Terms and Conditions</string>
+
+    <!--About us Fragment-->
+    <string name="fragment_about_us_textview0">About us</string>
+
+    <!--FAQ Fragment-->
+    <string name="fragment_faq_textview0">FAQs</string>
+
+    <!--Contact Fragment-->
+    <string name="fragment_contact_textview0">Contact us</string>
+
+    <!--Terms and Condition Fragment-->
+    <string name="fragment_terms_textview0">Terms &amp; Conditions</string>
 </resources>
