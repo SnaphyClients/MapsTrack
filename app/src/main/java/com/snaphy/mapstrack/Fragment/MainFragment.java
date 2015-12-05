@@ -126,9 +126,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
      * @param position {Integer} It is the position of the tab layout elements
      */
     public void changeSelectedIconInTabLayout(int position) {
+        setHasOptionsMenu(false);
         switch(position) {
             case 0 :
                 tabLayout.getTabAt(0).setIcon(R.mipmap.selected_home);
+                setHasOptionsMenu(true);
                 break;
 
             case 1 :
