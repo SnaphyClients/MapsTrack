@@ -63,6 +63,12 @@ public class ShareFragment extends Fragment {
         locationModels.add(new ShareLocationModel("to","Chahat Bhandari"));
         locationModels.add(new ShareLocationModel("to","Siddharth Jain"));
         locationModels.add(new ShareLocationModel("to","Reena Mukherji"));
+        locationModels.add(new ShareLocationModel("to","Robins Gupta"));
+        locationModels.add(new ShareLocationModel("to","Anurag Gupta"));
+        locationModels.add(new ShareLocationModel("to","Pulkit Dubey"));
+        locationModels.add(new ShareLocationModel("to","Ankur Suwalka"));
+        locationModels.add(new ShareLocationModel("to","Meenakshi Jain"));
+        locationModels.add(new ShareLocationModel("from","Sapna Grover"));
         locationModels.add(new ShareLocationModel("from","Robins Gupta"));
         locationModels.add(new ShareLocationModel("from","Anurag Gupta"));
         locationModels.add(new ShareLocationModel("from","Pulkit Dubey"));

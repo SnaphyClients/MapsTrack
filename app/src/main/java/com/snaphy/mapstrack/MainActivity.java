@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
+import com.snaphy.mapstrack.Fragment.CreateEventFragment;
+import com.snaphy.mapstrack.Fragment.CreateLocationFragment;
 import com.snaphy.mapstrack.Fragment.FaqsFragment;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
 import com.snaphy.mapstrack.Fragment.MainFragment;
@@ -21,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         ProfileFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener,
         ShareFragment.OnFragmentInteractionListener, AboutusFragment.OnFragmentInteractionListener,
         FaqsFragment.OnFragmentInteractionListener, ContactFragment.OnFragmentInteractionListener,
-        TermsFragment.OnFragmentInteractionListener{
+        TermsFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener,
+        CreateLocationFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             case R.layout.fragment_terms:
                 openTermsPage(fragmentTransaction);
+                break;
+
+            case R.id.fragment_cart_floating_button1 :
+                createEvent(fragmentTransaction);
+                break;
+
+            case R.id.fragment_cart_floating_button2:
+                createLocation(fragmentTransaction);
                 break;
         }
     }
@@ -103,6 +114,26 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             termsFragment = TermsFragment.newInstance();
         }
         fragmentTransaction.replace(R.id.main_container, termsFragment, TermsFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void createEvent(FragmentTransaction fragmentTransaction) {
+        CreateEventFragment createEventFragment = (CreateEventFragment) getSupportFragmentManager().
+                findFragmentByTag(CreateEventFragment.TAG);
+        if (createEventFragment == null) {
+            createEventFragment = CreateEventFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, createEventFragment, CreateEventFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void createLocation(FragmentTransaction fragmentTransaction) {
+        CreateLocationFragment createLocationFragment = (CreateLocationFragment) getSupportFragmentManager().
+                findFragmentByTag(CreateLocationFragment.TAG);
+        if (createLocationFragment == null) {
+            createLocationFragment = CreateLocationFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, createLocationFragment, CreateLocationFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
