@@ -55,7 +55,6 @@ public class SettingFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         ButterKnife.bind(this, view);
-        setHasOptionsMenu(false);
         aboutusClick();
         faqClick();
         shareClick();

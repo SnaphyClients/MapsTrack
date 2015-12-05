@@ -8,7 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.snaphy.mapstrack.Adapter.ShareLocationAdapter;
+import com.snaphy.mapstrack.Model.ShareLocationModel;
 import com.snaphy.mapstrack.R;
+
+import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +28,9 @@ import com.snaphy.mapstrack.R;
 public class ShareFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    ShareLocationAdapter shareLocationAdapter;
+    ArrayList<ShareLocationModel> locationModels = new ArrayList<ShareLocationModel>();
+    @Bind(R.id.fragment_share_listview1) se.emilsjolander.stickylistheaders.StickyListHeadersListView stickyListHeadersListView;
 
     public ShareFragment() {
         // Required empty public constructor
@@ -34,14 +44,31 @@ public class ShareFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        setLocationInfo();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_share, container, false);
+        View view  =  inflater.inflate(R.layout.fragment_share, container, false);
+        ButterKnife.bind(this, view);
+        shareLocationAdapter = new ShareLocationAdapter(locationModels);
+        stickyListHeadersListView.setAdapter(shareLocationAdapter);
+        return view;
+    }
+
+    public void setLocationInfo() {
+        locationModels.add(new ShareLocationModel("to","Ravi Gupta"));
+        locationModels.add(new ShareLocationModel("to","Chahat Bhandari"));
+        locationModels.add(new ShareLocationModel("to","Siddharth Jain"));
+        locationModels.add(new ShareLocationModel("to","Reena Mukherji"));
+        locationModels.add(new ShareLocationModel("from","Robins Gupta"));
+        locationModels.add(new ShareLocationModel("from","Anurag Gupta"));
+        locationModels.add(new ShareLocationModel("from","Pulkit Dubey"));
+        locationModels.add(new ShareLocationModel("from","Ankur Suwalka"));
+        locationModels.add(new ShareLocationModel("from","Meenakshi Jain"));
+        locationModels.add(new ShareLocationModel("from","Sapna Grover"));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

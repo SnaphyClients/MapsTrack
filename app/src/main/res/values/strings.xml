@@ -37,4 +37,8 @@
     <string name="fragment_home_textview2">Locations</string>
     <string name="layout_home_event_textview1">Ravi123</string>
     <string name="layout_home_event_textview2">DLF Phase 3, Gurgaon</string>
+
+    <!--Share Fragment-->
+    <string name="layout_fragment_share_item_textview1">Ravi Gupta</string>
+    <string name="fragment_share_header_name">Location shared by you</string>
 </resources>
