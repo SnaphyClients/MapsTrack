@@ -39,8 +39,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_main_view_pager) ViewPager viewPager;
     @Bind(R.id.search_view) MaterialSearchView searchView;
     @Bind(R.id.main_toolbar) android.support.v7.widget.Toolbar toolbar;
-    @Bind(R.id.fragment_cart_floating_button1) android.support.design.widget.FloatingActionButton floatingActionButton1;
-    @Bind(R.id.fragment_cart_floating_button2) android.support.design.widget.FloatingActionButton floatingActionButton2;
     MainActivity mainActivity;
 
     public MainFragment() {
@@ -71,8 +69,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
         searchSetting();
         setIconInTabLayout();
         tabLayoutListener();
-        eventFloatingButtonClickListener();
-        locationFloatingButtonClickListener();
         return view;
     }
 

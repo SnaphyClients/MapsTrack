@@ -41,4 +41,26 @@
     <!--Share Fragment-->
     <string name="layout_fragment_share_item_textview1">Ravi Gupta</string>
     <string name="fragment_share_header_name">Location shared by you</string>
+
+    <!--Create Event Fragment-->
+    <string name="fragment_create_event_edittext1">Event Name</string>
+    <string name="fragment_create_event_edittext2">Location</string>
+    <string name="fragment_create_event_edittext3">Event Date</string>
+    <string name="fragment_create_event_button1">Select Date</string>
+    <string name="fragment_create_event_button3">Use my location</string>
+    <string name="fragment_create_event_button4">Select Friends</string>
+    <string name="fragment_create_event_button2">Publish Event</string>
+    <string name="fragment_create_event_radio_button1">Public</string>
+    <string name="fragment_create_event_radio_button2">Private</string>
+    <string name="layout_display_contact_textview1">Ravi Gupta</string>
+    <string name="fragment_create_event_textview0">Create Event</string>
+
+    <!--Create Location Fragment-->
+    <string name="fragment_create_location_edittext1">Enter Location Name</string>
+    <string name="fragment_create_location_edittext2">Enter Location Id</string>
+    <string name="fragment_create_location_edittext3">Enter Location</string>
+    <string name="fragment_create_location_button1">Select Friends</string>
+    <string name="fragment_create_location_button2">Publish Location</string>
+    <string name="fragment_create_location_textview0">Create Location</string>
+
 </resources>

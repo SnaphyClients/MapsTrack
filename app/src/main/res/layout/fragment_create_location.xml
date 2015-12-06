@@ -1,13 +1,171 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.snaphy.mapstrack.Fragment.CreateLocationFragment">
+    tools:context="com.snaphy.mapstrack.Fragment.CreateLocationFragment"
+    android:background="@color/background"
+    android:clickable="true">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="0dp"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-</FrameLayout>
+
+        <ImageButton
+            android:paddingRight="4dp"
+            android:id="@+id/fragment_create_location_imagebutton1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@mipmap/back_arrow"
+            android:background="@drawable/ripple_button" />
+        <!-- </RelativeLayout>-->
+
+        <TextView
+            android:padding="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_create_location_textview0"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:text="@string/fragment_create_location_textview0" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:id="@+id/fragment_create_location_relative_layout1"
+        android:layout_below="@+id/toolbar">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_create_location_textInputLayout1">
+
+            <EditText
+                android:id="@+id/fragment_create_location_edittext1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/fragment_create_location_edittext1"
+                android:textSize="14sp"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/fragment_create_location_linear_layout1"
+            android:layout_below="@+id/fragment_create_location_textInputLayout1"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_create_location_textInputLayout2">
+
+                <EditText
+                    android:id="@+id/fragment_create_location_edittext2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:hint="@string/fragment_create_location_edittext2"
+                    android:textSize="14sp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/fragment_create_location_linear_layout2"
+            android:layout_below="@+id/fragment_create_location_linear_layout1"
+            android:layout_marginTop="10dp">
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_create_location_textInputLayout3"
+                android:layout_weight="3">
+
+                <EditText
+                    android:id="@+id/fragment_create_location_edittext3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:hint="@string/fragment_create_location_edittext3"
+                    android:textSize="14sp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:id="@+id/fragment_create_location_imagebutton2"
+                android:src="@mipmap/my_location"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_create_location_recycler_view1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_create_location_relative_layout1"
+        android:layout_above="@+id/fragment_create_location_linear_layout3"
+        android:layout_marginTop="15dp"
+        android:scrollbars="vertical"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/fragment_create_location_linear_layout3">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_create_location_button1"
+            android:textColor="@color/white"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@color/googleRed"
+            android:textAllCaps="false"
+            android:id="@+id/fragment_create_location_button1"
+            android:layout_weight="1"
+            android:layout_marginRight="1dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_create_location_button2"
+            android:textColor="@color/white"
+            android:background="@color/googleRed"
+            android:textAllCaps="false"
+            android:id="@+id/fragment_create_location_button2"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

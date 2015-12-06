@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
@@ -38,10 +39,14 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_home_recycler_view2) RecyclerView recyclerView2;
     @Bind(R.id.fragment_home_textview1) TextView eventText;
     @Bind(R.id.fragment_home_textview2) TextView locationText;
+    @Bind(R.id.fragment_cart_floating_button1) android.support.design.widget.FloatingActionButton floatingActionButton1;
+    @Bind(R.id.fragment_cart_floating_button2) android.support.design.widget.FloatingActionButton floatingActionButton2;
     HomeEventAdapter homeEventAdapter;
     HomeLocationAdapter homeLocationAdapter;
     ArrayList<EventHomeModel> eventHomeModelArrayList = new ArrayList<EventHomeModel>();
     ArrayList<LocationHomeModel> locationHomeModelArrayList = new ArrayList<LocationHomeModel>();
+    MainActivity mainActivity;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -84,7 +89,32 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
         recyclerView1.setAdapter(homeEventAdapter);
         recyclerView2.setAdapter(homeLocationAdapter);
+
+        eventFloatingButtonClickListener();
+        locationFloatingButtonClickListener();
+
         return view;
+    }
+
+
+    private void locationFloatingButtonClickListener() {
+        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.replaceFragment(R.id.fragment_cart_floating_button1, null);
+            }
+        });
+
+    }
+
+    private void eventFloatingButtonClickListener() {
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.replaceFragment(R.id.fragment_cart_floating_button2, null);
+            }
+        });
+
     }
 
     /**
@@ -119,6 +149,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

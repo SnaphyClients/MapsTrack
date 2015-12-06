@@ -4,11 +4,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
+import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.R;
+
+import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +33,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateEventFragment";
+    @Bind(R.id.fragment_create_event_recycler_view1) RecyclerView recyclerView;
+    @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
+    DisplayContactAdapter displayContactAdapter;
+    ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
+    MainActivity mainActivity;
 
     public CreateEventFragment() {
         // Required empty public constructor
@@ -35,6 +51,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setEventDataInAdapter();
     }
 
     @Override
@@ -42,7 +59,37 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
+        ButterKnife.bind(this, view);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        displayContactAdapter = new DisplayContactAdapter(displayContactModelArrayList);
+        recyclerView.setAdapter(displayContactAdapter);
+        backButtonClickListener();
+
         return view;
+    }
+
+    private void backButtonClickListener() {
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.onBackPressed();
+            }
+        });
+    }
+
+
+    /**
+     * Data in events has been initialize from here
+     */
+    public void setEventDataInAdapter() {
+        displayContactModelArrayList.add(new DisplayContactModel("Ravi Gupta"));
+        displayContactModelArrayList.add(new DisplayContactModel("Siddharth Jain"));
+        displayContactModelArrayList.add(new DisplayContactModel("Anurag Gupta"));
+        displayContactModelArrayList.add(new DisplayContactModel("Robins Gupta"));
+        displayContactModelArrayList.add(new DisplayContactModel("Jay Dixit"));
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -55,6 +102,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
