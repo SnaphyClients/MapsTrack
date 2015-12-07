@@ -5,8 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.GridHolder;
+import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.OnCancelListener;
+import com.orhanobut.dialogplus.OnDismissListener;
+import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.R;
 
@@ -21,8 +29,10 @@ import butterknife.ButterKnife;
 public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.ViewHolder> {
 
     ArrayList<EventHomeModel> eventHomeModels  = new ArrayList<EventHomeModel>();
-    public HomeEventAdapter( ArrayList<EventHomeModel> eventHomeModels) {
+    Context context;
+    public HomeEventAdapter(Context context, ArrayList<EventHomeModel> eventHomeModels) {
         this.eventHomeModels = eventHomeModels;
+        this.context = context;
     }
 
     @Override
@@ -37,15 +47,25 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         EventHomeModel eventHomeModel = eventHomeModels.get(position);
 
         // Set item views based on the data model
         TextView eventId = holder.eventId;
         TextView eventAddress = holder.eventAddress;
+        ImageButton menuOption = holder.menuOption;
 
         eventId.setText(eventHomeModel.getEventId());
         eventAddress.setText(eventHomeModel.getEventAddress());
+
+        menuOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeMenuAdapter adapter = new HomeMenuAdapter(context);
+                Holder holder = new GridHolder(3);
+                showOnlyContentDialog(holder, adapter);
+            }
+        });
 
     }
 
@@ -62,6 +82,7 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
         // for any view that will be set as you render a row
         @Bind(R.id.layout_home_event_textview1) TextView eventId;
         @Bind(R.id.layout_home_event_textview2) TextView eventAddress;
+        @Bind(R.id.layout_home_event_imageButton1) ImageButton menuOption;
 
 
         // We also create a constructor that accepts the entire item row
@@ -72,5 +93,32 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
+        final DialogPlus dialog = DialogPlus.newDialog(context)
+                .setContentHolder(holder)
+                .setAdapter(adapter)
+                . setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+
+                    }
+                })
+                .setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogPlus dialog) {
+
+                    }
+                })
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogPlus dialog) {
+
+                    }
+                })
+                .setCancelable(true)
+                .create();
+        dialog.show();
     }
 }

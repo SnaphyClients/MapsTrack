@@ -5,8 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.GridHolder;
+import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.OnCancelListener;
+import com.orhanobut.dialogplus.OnDismissListener;
+import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
 
@@ -21,8 +29,10 @@ import butterknife.ButterKnife;
 public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapter.ViewHolder> {
 
     ArrayList<LocationHomeModel> locationHomeModels  = new ArrayList<LocationHomeModel>();
-    public HomeLocationAdapter( ArrayList<LocationHomeModel> locationHomeModels) {
+    Context context;
+    public HomeLocationAdapter(Context context, ArrayList<LocationHomeModel> locationHomeModels) {
         this.locationHomeModels = locationHomeModels;
+        this.context = context;
     }
 
     @Override
@@ -43,9 +53,19 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         // Set item views based on the data model
         TextView locationName = holder.locationName;
         TextView locationAddress = holder.locationAddress;
+        ImageButton menuOption = holder.moreOptions;
 
         locationName.setText(locationHomeModel.getLocationName());
         locationAddress.setText(locationHomeModel.getLocationAddress());
+        menuOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeMenuAdapter adapter = new HomeMenuAdapter(context);
+                Holder holder = new GridHolder(3);
+                showOnlyContentDialog(holder, adapter);
+            }
+        });
+
 
     }
 
@@ -62,6 +82,7 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         // for any view that will be set as you render a row
         @Bind(R.id.layout_home_location_textview1) TextView locationName;
         @Bind(R.id.layout_home_location_textview2) TextView locationAddress;
+        @Bind(R.id.layout_home_location_imageButton1) ImageButton moreOptions;
 
 
         // We also create a constructor that accepts the entire item row
@@ -72,6 +93,33 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
+        final DialogPlus dialog = DialogPlus.newDialog(context)
+                .setContentHolder(holder)
+                .setAdapter(adapter)
+                . setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+
+                    }
+                })
+                .setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogPlus dialog) {
+
+                    }
+                })
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogPlus dialog) {
+
+                    }
+                })
+                .setCancelable(true)
+                .create();
+        dialog.show();
     }
 
 }

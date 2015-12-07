@@ -27,20 +27,12 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="12dp"/>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_home_location_imageButton1"
-        android:src="@mipmap/share_purple"
-        android:background="@android:color/transparent"
-        android:layout_toLeftOf="@+id/layout_home_location_imageButton2"
-        android:layout_centerVertical="true"/>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/layout_home_location_imageButton2"
-        android:src="@mipmap/delete_purple"
+        android:id="@+id/layout_home_location_imageButton1"
+        android:src="@mipmap/menu_home_purple"
         android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>

@@ -84,8 +84,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         recyclerView1.setLayoutManager(layoutManager1);
         recyclerView2.setLayoutManager(layoutManager2);
 
-        homeEventAdapter = new HomeEventAdapter(eventHomeModelArrayList);
-        homeLocationAdapter = new HomeLocationAdapter(locationHomeModelArrayList);
+        homeEventAdapter = new HomeEventAdapter(mainActivity,eventHomeModelArrayList);
+        homeLocationAdapter = new HomeLocationAdapter(mainActivity,locationHomeModelArrayList);
 
         recyclerView1.setAdapter(homeEventAdapter);
         recyclerView2.setAdapter(homeLocationAdapter);
