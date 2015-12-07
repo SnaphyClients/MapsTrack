@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
@@ -35,6 +37,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     public static String TAG = "CreateEventFragment";
     @Bind(R.id.fragment_create_event_recycler_view1) RecyclerView recyclerView;
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
+    @Bind(R.id.fragment_create_event_button1) ImageButton datePicker;
+    @Bind(R.id.fragment_create_event_button3) ImageButton currentLocation;
+    @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
     DisplayContactAdapter displayContactAdapter;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     MainActivity mainActivity;
@@ -66,16 +71,41 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         displayContactAdapter = new DisplayContactAdapter(displayContactModelArrayList);
         recyclerView.setAdapter(displayContactAdapter);
         backButtonClickListener();
-
+        datePickerClickListener(view);
+        currentLocationListener();
         return view;
     }
 
     private void backButtonClickListener() {
-
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainActivity.onBackPressed();
+            }
+        });
+    }
+
+    private void datePickerClickListener(View view) {
+        datePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerPopWin pickerPopWin = new DatePickerPopWin(mainActivity,2000,2100, new DatePickerPopWin.OnDatePickedListener() {
+                    @Override
+                    public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
+                        //handler the result here
+                        dateEdittext.setText(dateDesc);
+                    }
+                });
+                pickerPopWin.showPopWin(mainActivity);
+            }
+        });
+    }
+
+    private void currentLocationListener() {
+        currentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
