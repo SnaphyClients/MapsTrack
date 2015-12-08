@@ -26,6 +26,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         TermsFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener,
         CreateLocationFragment.OnFragmentInteractionListener  {
 
+    //TODO 1. Make all list work in home fragment
+    //TODO 2. Make menu items work in home fragment
+    //TODO 3. Make Login Page with google login
+    //TODO 4. Make Share fragment dynamic (to delete contact list)
+    //TODO 5. Open Map and navigation
+    //TODO 6. Open Contacts and display in app
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
