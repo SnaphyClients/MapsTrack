@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         ShareFragment.OnFragmentInteractionListener, AboutusFragment.OnFragmentInteractionListener,
         FaqsFragment.OnFragmentInteractionListener, ContactFragment.OnFragmentInteractionListener,
         TermsFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener,
-        CreateLocationFragment.OnFragmentInteractionListener{
+        CreateLocationFragment.OnFragmentInteractionListener  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,11 +137,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-
-
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
-
 }

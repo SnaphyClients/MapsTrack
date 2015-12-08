@@ -63,4 +63,10 @@
     <string name="fragment_create_location_button2">Publish Location</string>
     <string name="fragment_create_location_textview0">Create Location</string>
 
+    <!--Service Fetch Intent Address-->
+    <string name="service_not_available">Service Not Available</string>
+    <string name="invalid_lat_long_used">Invalid Latitude and Longitude</string>
+    <string name="no_address_found">No Address Found</string>
+    <string name="address_found">Address Found</string>
+
 </resources>
