@@ -33,6 +33,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         replaceFragment(R.layout.fragment_main,null);
     }
 
+    /**
+     * This method is used to replace on fragment with teh other by calling appropiate method
+     * @param id {int} Id of the fragment to be replaced (It should be unique)
+     * @param object {Object} Data to be send to the fragment in anyform
+     */
     @Override
     public void replaceFragment(int id, Object object) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -67,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
     }
 
+    /**
+     *  Main Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
     private void loadMainFragment(FragmentTransaction fragmentTransaction) {
         MainFragment mainFragment = (MainFragment) getSupportFragmentManager().
                 findFragmentByTag(MainFragment.TAG);
@@ -77,16 +86,25 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**
+     *  About us Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
     private void openAboutUsPage(FragmentTransaction fragmentTransaction) {
         AboutusFragment aboutusFragment = (AboutusFragment) getSupportFragmentManager().
                 findFragmentByTag(AboutusFragment.TAG);
         if (aboutusFragment == null) {
             aboutusFragment = AboutusFragment.newInstance();
         }
-        fragmentTransaction.replace(R.id.main_container, aboutusFragment, AboutusFragment.TAG).addToBackStack(null);
+        fragmentTransaction.replace(R.id.main_container, aboutusFragment, AboutusFragment.TAG
+        ).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**
+     *  FAQs Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
     private void openFaqPage(FragmentTransaction fragmentTransaction) {
         FaqsFragment faqsFragment = (FaqsFragment) getSupportFragmentManager().
                 findFragmentByTag(FaqsFragment.TAG);
@@ -97,6 +115,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**
+     *  Contact Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
     private void openContactPage(FragmentTransaction fragmentTransaction) {
         ContactFragment contactFragment = (ContactFragment) getSupportFragmentManager().
                 findFragmentByTag(ContactFragment.TAG);
@@ -107,6 +129,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**
+     *  Terms Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
     private void openTermsPage(FragmentTransaction fragmentTransaction) {
         TermsFragment termsFragment = (TermsFragment) getSupportFragmentManager().
                 findFragmentByTag(TermsFragment.TAG);
@@ -117,6 +143,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**
+     *  Create Event Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
     private void createEvent(FragmentTransaction fragmentTransaction) {
         CreateEventFragment createEventFragment = (CreateEventFragment) getSupportFragmentManager().
                 findFragmentByTag(CreateEventFragment.TAG);
@@ -127,6 +157,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**
+     *  Create Location Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
     private void createLocation(FragmentTransaction fragmentTransaction) {
         CreateLocationFragment createLocationFragment = (CreateLocationFragment) getSupportFragmentManager().
                 findFragmentByTag(CreateLocationFragment.TAG);

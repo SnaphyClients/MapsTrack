@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -24,12 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MainFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MainFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * It is the parent fragment of all the fragments, it include tab layout, search, view pager for sliding tabs
  */
 public class MainFragment extends android.support.v4.app.Fragment {
 
@@ -70,14 +64,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
         setIconInTabLayout();
         tabLayoutListener();
         return view;
-    }
-
-    private void locationFloatingButtonClickListener() {
-        mainActivity.replaceFragment(R.id.fragment_cart_floating_button2,null);
-    }
-
-    private void eventFloatingButtonClickListener() {
-        mainActivity.replaceFragment(R.id.fragment_cart_floating_button1,null);
     }
 
     /**

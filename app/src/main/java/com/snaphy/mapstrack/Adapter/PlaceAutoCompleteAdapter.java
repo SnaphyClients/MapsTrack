@@ -15,6 +15,8 @@ import com.snaphy.mapstrack.R;
 
 /**
  * Created by Ravi-Gupta on 12/8/2015.
+ * This adapter used only and only if we want to change the layout of the option which are displayed
+ * in place auto complete editext
  */
 public class PlaceAutoCompleteAdapter extends AbstractPlacesAutocompleteAdapter {
 

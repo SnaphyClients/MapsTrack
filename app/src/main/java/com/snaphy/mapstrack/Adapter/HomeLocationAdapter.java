@@ -25,6 +25,8 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Ravi-Gupta on 12/5/2015.
+ * This adapter is used to show the location list in the home page of tha application.
+ * Second list in the app
  */
 public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapter.ViewHolder> {
 
@@ -35,6 +37,12 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         this.context = context;
     }
 
+    /**
+     * Inflate the layout file layout.home.location here
+     * @param parent {ViewGroup}
+     * @param viewType {int}
+     * @return
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -46,6 +54,11 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         return viewHolder;
     }
 
+    /**
+     * Set text in text fields from the data from the server
+     * @param holder {ViewHolder}
+     * @param position {int}
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         LocationHomeModel locationHomeModel = locationHomeModels.get(position);
@@ -68,7 +81,10 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
 
 
     }
-
+    /**
+     *
+     * @return number of fields in the list
+     */
     @Override
     public int getItemCount() {
         return locationHomeModels.size();

@@ -3,7 +3,6 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TermsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TermsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * All terms and conditions are controlled in this fragment
  */
 public class TermsFragment extends android.support.v4.app.Fragment {
 

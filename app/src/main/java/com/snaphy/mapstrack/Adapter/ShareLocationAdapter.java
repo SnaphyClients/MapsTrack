@@ -16,6 +16,9 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Created by Ravi-Gupta on 11/28/2015.
+ * This adapter is used for controlling shared location fragment which is using
+ * header list view
+ * TODO Write a suitable algorithm for categorization of child elements to header option
  */
 public class ShareLocationAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 

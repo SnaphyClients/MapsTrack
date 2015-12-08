@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Ravi-Gupta on 12/4/2015.
+ * This adapter is used to show the list of events in the home page of the app
  */
 public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.ViewHolder> {
 
@@ -35,6 +36,12 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
         this.context = context;
     }
 
+    /**
+     * Inflate the layout file layout.home.event here
+     * @param parent {ViewGroup}
+     * @param viewType {int}
+     * @return
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -46,6 +53,11 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
         return viewHolder;
     }
 
+    /**
+     * Set text in text fields from the data from the server
+     * @param holder {ViewHolder}
+     * @param position {int}
+     */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         EventHomeModel eventHomeModel = eventHomeModels.get(position);
@@ -69,6 +81,10 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
 
     }
 
+    /**
+     *
+     * @return number of fields in the list
+     */
     @Override
     public int getItemCount() {
         return eventHomeModels.size();

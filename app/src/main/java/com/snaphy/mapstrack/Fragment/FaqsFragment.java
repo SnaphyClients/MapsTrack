@@ -16,12 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FaqsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FaqsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * This fragment contains the methods to display frequently asked questions in the app
  */
 public class FaqsFragment extends android.support.v4.app.Fragment {
 

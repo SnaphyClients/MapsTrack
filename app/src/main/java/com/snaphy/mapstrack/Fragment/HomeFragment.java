@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,12 +24,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link HomeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * It is a home fragment and it contains all the elements in the home page
+ * ie... two recycler views, two floating buttons
  */
 public class HomeFragment extends android.support.v4.app.Fragment {
 
@@ -97,6 +92,9 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     }
 
 
+    /**
+     * Fire when create event button is clicked
+     */
     private void locationFloatingButtonClickListener() {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +105,9 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
     }
 
+    /**
+     * Fire when create location button is clicked
+     */
     private void eventFloatingButtonClickListener() {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override

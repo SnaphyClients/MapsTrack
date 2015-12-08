@@ -22,12 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CreateLocationFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CreateLocationFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * This fragment is used to create location from the "Add(Plus)" button in the home fragment
  */
 public class CreateLocationFragment extends android.support.v4.app.Fragment {
 

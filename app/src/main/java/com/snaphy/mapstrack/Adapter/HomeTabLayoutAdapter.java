@@ -11,6 +11,8 @@ import com.snaphy.mapstrack.Fragment.ShareFragment;
 
 /**
  * Created by Ravi-Gupta on 11/24/2015.
+ * It is a adapter that used to display and control all the fragments and tabs that are being display on
+ * the home screen for example like ... home tab, settings tab etc...
  */
 public class HomeTabLayoutAdapter extends FragmentPagerAdapter {
 

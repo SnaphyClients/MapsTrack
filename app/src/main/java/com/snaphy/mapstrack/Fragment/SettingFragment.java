@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SettingFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SettingFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * All settings options are called from this fragment
  */
 public class SettingFragment extends android.support.v4.app.Fragment {
 

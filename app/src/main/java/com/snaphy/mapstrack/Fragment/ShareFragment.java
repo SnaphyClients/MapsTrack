@@ -3,7 +3,6 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +17,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ShareFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ShareFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Location shared by others or by user to others is maintained here in this fragment
  */
-public class ShareFragment extends Fragment {
+public class ShareFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     ShareLocationAdapter shareLocationAdapter;
@@ -58,6 +52,9 @@ public class ShareFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Data is set from here
+     */
     public void setLocationInfo() {
         locationModels.add(new ShareLocationModel("to","Ravi Gupta"));
         locationModels.add(new ShareLocationModel("to","Chahat Bhandari"));

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,12 +39,8 @@ import butterknife.ButterKnife;
 import static com.google.android.gms.internal.zzip.runOnUiThread;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CreateEventFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CreateEventFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * This Fragment is used to create new event by clicking on "Add(Plus)" button in the home fragment
+ *
  */
 public class CreateEventFragment extends android.support.v4.app.Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -101,8 +96,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         return view;
     }
 
+    /**
+     * Initialize google place api and last location of the app
+     */
     private void initializeGooglePlacesApi() {
-
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -113,6 +110,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
 
+    /**
+     * When certain position is selected from the drop down in auto complete
+     * this method is fired
+     */
     private void selectPosition() {
         placesAutocompleteTextView.setOnPlaceSelectedListener(new OnPlaceSelectedListener() {
             @Override
@@ -122,6 +123,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         });
     }
 
+    /**
+     * When back button is the toolbar is pressed this method is fired
+     */
     private void backButtonClickListener() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,9 +135,14 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         });
     }
 
+    /**
+     * This method is fired when any date from the date picker is selected
+     * @param view
+     */
     private void datePickerClickListener(View view) {
         datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
                 DatePickerPopWin pickerPopWin = new DatePickerPopWin(mainActivity,2000,2100, new DatePickerPopWin.OnDatePickedListener() {
                     @Override
@@ -147,11 +156,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         });
     }
 
+    /**
+     * This method is fired when get mylocation button is clicked in the create event fragment
+     */
     private void currentLocationListener() {
         currentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIntentService();
                 if (mGoogleApiClient.isConnected() && mLastLocation != null) {
                     startIntentService();
                 }
@@ -196,6 +207,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         mListener = null;
     }
 
+    /**
+     * When google api is connected it start intent service from this method
+     * @param bundle
+     */
     @Override
     public void onConnected(Bundle bundle) {
         // Gets the best and most recent location currently available,
@@ -223,6 +238,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
 
     }
 
+    /**
+     * This method is responsible to start the service ie..FetchAddressIntentService to fetch
+     * the address and display it in edittext
+     */
     protected void startIntentService() {
         Intent intent = new Intent(getActivity(),FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
@@ -230,12 +249,23 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         mainActivity.startService(intent);
     }
 
+    /**
+     * It is a class which is used to get result received from the service
+     * The result is in many forms including
+     * Error for no address found,time out etc...
+     * Or Address, if correct address is found
+     */
     public static class AddressResultReceiver extends ResultReceiver {
 
         public AddressResultReceiver(Handler handler) {
             super(handler);
         }
 
+        /**
+         * This method is fired when result is received from the service
+         * @param resultCode
+         * @param resultData
+         */
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 

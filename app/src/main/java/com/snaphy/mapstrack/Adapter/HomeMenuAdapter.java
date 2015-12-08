@@ -11,6 +11,8 @@ import com.snaphy.mapstrack.R;
 
 /**
  * Created by Ravi-Gupta on 12/7/2015.
+ * It is an adapter that is responsible for displaying of menu item in the home screen when the users
+ * clicks on the menu icon of a particular list view item
  */
 public class HomeMenuAdapter extends BaseAdapter {
 

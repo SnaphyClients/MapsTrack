@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Ravi-Gupta on 12/6/2015.
+ * This adapter is used to diplay list of contact in the create location and create event fragments
  */
 public class DisplayContactAdapter extends RecyclerView.Adapter<DisplayContactAdapter.ViewHolder> {
 
@@ -25,6 +26,12 @@ public class DisplayContactAdapter extends RecyclerView.Adapter<DisplayContactAd
         this.displayContactModels = displayContactModels;
     }
 
+    /**
+     * Inflate the layout file layout.display.contact here
+     * @param parent {ViewGroup}
+     * @param viewType {int}
+     * @return
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -36,17 +43,25 @@ public class DisplayContactAdapter extends RecyclerView.Adapter<DisplayContactAd
         return viewHolder;
     }
 
+    /**
+     * Set text in text fields from the data from the server
+     * @param holder {ViewHolder}
+     * @param position {int}
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         DisplayContactModel displayContactModel = displayContactModels.get(position);
 
         // Set item views based on the data model
         TextView contactName = holder.contactName;
-
         contactName.setText(displayContactModel.getContactName());
 
     }
 
+    /**
+     *
+     * @return number of fields in the list
+     */
     @Override
     public int getItemCount() {
         return displayContactModels.size();

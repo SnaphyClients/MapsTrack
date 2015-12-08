@@ -11,12 +11,7 @@ import android.view.ViewGroup;
 import com.snaphy.mapstrack.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ProfileFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * All Profile related work is done here
  */
 public class ProfileFragment extends Fragment {
 

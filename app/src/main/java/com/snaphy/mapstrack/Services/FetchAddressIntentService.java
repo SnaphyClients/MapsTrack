@@ -21,6 +21,8 @@ import java.util.Locale;
 
 /**
  * Created by Ravi-Gupta on 12/8/2015.
+ * In this service current location of user is fetched from the geocoder and send to the fragment
+ * by which this service is called
  */
 public class FetchAddressIntentService extends IntentService {
 
@@ -35,6 +37,11 @@ public class FetchAddressIntentService extends IntentService {
         super(name);
     }
 
+    /**
+     * Overridden method onHandleIntent() is used to fetch the location by using geocoding
+     * technique
+     * @param intent
+     */
     @Override
     protected void onHandleIntent(Intent intent) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -87,6 +94,11 @@ public class FetchAddressIntentService extends IntentService {
         }
     }
 
+    /**
+     * This method is used to deliver result to the fragment which called it
+     * @param resultCode
+     * @param message
+     */
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RESULT_DATA_KEY, message);
