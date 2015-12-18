@@ -22,8 +22,6 @@ import android.widget.Toast;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
-import static java.lang.Long.getLong;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -201,12 +199,12 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         // Move to the selected contact
         cursor.moveToPosition(position);
         // Get the _ID value
-        mContactId = getLong(String.valueOf(CONTACT_ID_INDEX));
+       // mContactId = getLong(String.valueOf(CONTACT_ID_INDEX));
         // Get the selected LOOKUP KEY
-        mContactKey = String.valueOf(getLong(String.valueOf(LOOKUP_KEY_INDEX)));
+        //mContactKey = String.valueOf(getLong(String.valueOf(LOOKUP_KEY_INDEX)));
         // Create the contact's content Uri
-        mContactUri = ContactsContract.Contacts.getLookupUri(mContactId, mContactKey);
-        Toast.makeText(mainActivity, mContactId + "Hello", Toast.LENGTH_SHORT).show();
+      //  mContactUri = ContactsContract.Contacts.getLookupUri(mContactId, mContactKey);
+        Toast.makeText(mainActivity,  "I am at "+position, Toast.LENGTH_SHORT).show();
         /*
          * You can use mContactUri as the content URI for retrieving
          * the details for a contact.

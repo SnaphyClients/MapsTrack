@@ -32,7 +32,9 @@
         android:layout_gravity="right"
         android:gravity="right"
         android:id="@+id/layout_fragment_show_contact_checkbox1"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="20dp"
+        android:clickable="false"
+        android:focusable="false"/>
 
     </RelativeLayout>
 
