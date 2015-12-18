@@ -15,6 +15,7 @@ import com.snaphy.mapstrack.Fragment.MainFragment;
 import com.snaphy.mapstrack.Fragment.ProfileFragment;
 import com.snaphy.mapstrack.Fragment.SettingFragment;
 import com.snaphy.mapstrack.Fragment.ShareFragment;
+import com.snaphy.mapstrack.Fragment.ShowContactFragment;
 import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
 
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         ShareFragment.OnFragmentInteractionListener, AboutusFragment.OnFragmentInteractionListener,
         FaqsFragment.OnFragmentInteractionListener, ContactFragment.OnFragmentInteractionListener,
         TermsFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener,
-        CreateLocationFragment.OnFragmentInteractionListener  {
+        CreateLocationFragment.OnFragmentInteractionListener, ShowContactFragment.OnFragmentInteractionListener {
 
     //TODO 1. Make all list work in home fragment
     //TODO 2. Make menu items work in home fragment
@@ -76,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             case R.id.fragment_cart_floating_button2:
                 createLocation(fragmentTransaction);
+                break;
+
+            case R.layout.layout_select_contact:
+                selectContact(fragmentTransaction);
                 break;
         }
     }
@@ -178,6 +183,22 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.replace(R.id.main_container, createLocationFragment, CreateLocationFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
+
+    /**
+     *  Select Contact Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void selectContact(FragmentTransaction fragmentTransaction) {
+        ShowContactFragment showContactFragment = (ShowContactFragment) getSupportFragmentManager().
+                findFragmentByTag(ShowContactFragment.TAG);
+        if (showContactFragment == null) {
+            showContactFragment = ShowContactFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {

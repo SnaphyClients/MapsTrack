@@ -73,4 +73,8 @@
     <string name="no_address_found">No Address Found</string>
     <string name="address_found">Address Found</string>
 
+    <!--Show Contact Fragment-->
+    <string name="fragment_show_contact_textview0">Select Friends</string>
+    <string name="layout_select_contact">919873046993</string>
+
 </resources>

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.google.android.gms.internal.zzip.runOnUiThread;
 
@@ -50,7 +51,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateEventFragment";
-    @Bind(R.id.fragment_create_event_recycler_view1) RecyclerView recyclerView;
+    @Bind(R.id.fragment_create_event_recycler_view1)
+    RecyclerView recyclerView;
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
     fr.ganfra.materialspinner.MaterialSpinner materialSpinner;
@@ -61,6 +63,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     private GoogleApiClient mGoogleApiClient;
+
+
 
     public CreateEventFragment() {
         // Required empty public constructor
@@ -74,7 +78,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setEventDataInAdapter();
+        //setEventDataInAdapter();
+
     }
 
     @Override
@@ -168,9 +173,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
             @Override
             public void onClick(View v) {
                 mainActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                InputMethodManager im = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager im = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.hideSoftInputFromWindow(dateEdittext.getWindowToken(), 0);
-                DatePickerPopWin pickerPopWin = new DatePickerPopWin(mainActivity,2000,2100, new DatePickerPopWin.OnDatePickedListener() {
+                DatePickerPopWin pickerPopWin = new DatePickerPopWin(mainActivity, 2000, 2100, new DatePickerPopWin.OnDatePickedListener() {
                     @Override
                     public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
                         //handler the result here
@@ -180,19 +185,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
                 pickerPopWin.showPopWin(mainActivity);
             }
         });
-    }
-
-
-
-    /**
-     * Data in events has been initialize from here
-     */
-    public void setEventDataInAdapter() {
-        displayContactModelArrayList.add(new DisplayContactModel("Ravi Gupta"));
-        displayContactModelArrayList.add(new DisplayContactModel("Siddharth Jain"));
-        displayContactModelArrayList.add(new DisplayContactModel("Anurag Gupta"));
-        displayContactModelArrayList.add(new DisplayContactModel("Robins Gupta"));
-        displayContactModelArrayList.add(new DisplayContactModel("Jay Dixit"));
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -262,6 +254,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         mainActivity.startService(intent);
     }
 
+
+
     /**
      * It is a class which is used to get result received from the service
      * The result is in many forms including
@@ -301,6 +295,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
             }
 
         }
+    }
+
+    @OnClick(R.id.fragment_create_event_button4) void selectFriends() {
+        mainActivity.replaceFragment(R.layout.layout_select_contact,null);
     }
 
 
