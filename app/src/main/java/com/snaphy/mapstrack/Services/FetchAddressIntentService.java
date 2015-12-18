@@ -89,7 +89,7 @@ public class FetchAddressIntentService extends IntentService {
             }
             Log.i(Constants.TAG, getString(R.string.address_found));
             deliverResultToReceiver(Constants.SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"),
+                    TextUtils.join(" ",
                             addressFragments));
         }
     }

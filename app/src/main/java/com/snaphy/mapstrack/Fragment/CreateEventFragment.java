@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -49,9 +52,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
     public static String TAG = "CreateEventFragment";
     @Bind(R.id.fragment_create_event_recycler_view1) RecyclerView recyclerView;
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
-    @Bind(R.id.fragment_create_event_button1) ImageButton datePicker;
-    @Bind(R.id.fragment_create_event_button3) ImageButton currentLocation;
     @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
+    fr.ganfra.materialspinner.MaterialSpinner materialSpinner;
     static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
     DisplayContactAdapter displayContactAdapter;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
@@ -81,6 +83,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
+
+        materialSpinner = (fr.ganfra.materialspinner.MaterialSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
         placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -90,10 +94,30 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         initializeGooglePlacesApi();
         mGoogleApiClient.connect();
         backButtonClickListener();
+        setSpinner();
+        fetchContact(view);
         datePickerClickListener(view);
-        currentLocationListener();
+        dateEdittext.setKeyListener(null);
         selectPosition();
         return view;
+    }
+
+    /**
+     * Set the data in the spinner
+     */
+    public void setSpinner() {
+        String[] ITEMS = {"Marriage", "Birthday", "Meeting", "Party", "Get Togeather", "Baby Shower"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, ITEMS);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        materialSpinner.setAdapter(adapter);
+    }
+
+    /**
+     * Fetch all contact from contacts and  give suggestions
+     * @param view
+     */
+    public void fetchContact(View view) {
+
     }
 
     /**
@@ -140,10 +164,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
      * @param view
      */
     private void datePickerClickListener(View view) {
-        datePicker.setOnClickListener(new View.OnClickListener() {
+        dateEdittext.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View v) {
+                mainActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                InputMethodManager im = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(dateEdittext.getWindowToken(), 0);
                 DatePickerPopWin pickerPopWin = new DatePickerPopWin(mainActivity,2000,2100, new DatePickerPopWin.OnDatePickedListener() {
                     @Override
                     public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
@@ -156,19 +182,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         });
     }
 
-    /**
-     * This method is fired when get mylocation button is clicked in the create event fragment
-     */
-    private void currentLocationListener() {
-        currentLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-                    startIntentService();
-                }
-            }
-        });
-    }
 
 
     /**

@@ -46,6 +46,8 @@
     <string name="fragment_create_event_edittext1">Event Name</string>
     <string name="fragment_create_event_edittext2">Location</string>
     <string name="fragment_create_event_edittext3">Event Date</string>
+    <string name="fragment_create_event_edittext4">Event Description</string>
+    <string name="fragment_create_event_edittext5">Add Contact</string>
     <string name="fragment_create_event_button1">Select Date</string>
     <string name="fragment_create_event_button3">Use my location</string>
     <string name="fragment_create_event_button4">Select Friends</string>
@@ -54,6 +56,8 @@
     <string name="fragment_create_event_radio_button2">Private</string>
     <string name="layout_display_contact_textview1">Ravi Gupta</string>
     <string name="fragment_create_event_textview0">Create Event</string>
+    <string name="fragment_create_event_hint">event type</string>
+    <string name="fragment_create_event_placeHolder">Event Type</string>
 
     <!--Create Location Fragment-->
     <string name="fragment_create_location_edittext1">Enter Location Name</string>
