@@ -3,8 +3,6 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +44,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setEventDataInAdapter();
+        //setEventDataInAdapter();
     }
 
     @Override
@@ -55,11 +53,6 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_location, container, false);
         ButterKnife.bind(this, view);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        displayContactAdapter = new DisplayContactAdapter(displayContactModelArrayList);
-        recyclerView.setAdapter(displayContactAdapter);
         backButtonClickListener();
         return view;
     }

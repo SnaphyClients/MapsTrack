@@ -1,12 +1,18 @@
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.snaphy.mapstrack.Fragment.CreateEventFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context="com.snaphy.mapstrack.Fragment.CreateEventFragment"
-    android:clickable="true">
+    android:clickable="true"
+    android:fillViewport="true">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/container_recipe_page">
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,188 +22,224 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="0dp"
+        android:gravity="top"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
 
         <ImageButton
             android:paddingRight="4dp"
             android:id="@+id/fragment_create_event_imagebutton1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:src="@mipmap/back_arrow"
-            android:background="@drawable/ripple_button" />
-            <!-- </RelativeLayout>-->
+            android:background="@drawable/ripple_button"
+            android:layout_centerVertical="true"/>
+        <!-- </RelativeLayout>-->
 
         <TextView
             android:padding="2dp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/fragment_create_event_textview0"
             android:textSize="18sp"
             android:textColor="@color/white"
-            android:text="@string/fragment_create_event_textview0" />
+            android:text="@string/fragment_create_event_textview0"
+            android:layout_toRightOf="@id/fragment_create_event_imagebutton1"
+            android:gravity="center"
+            android:layout_centerVertical="true"/>
+
+        <ImageButton
+            android:id="@+id/fragment_create_event_imagebutton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/add"
+            android:background="@drawable/ripple_button"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"/>
+
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:id="@+id/fragment_create_event_relative_layout1"
-        android:layout_below="@+id/toolbar">
+        android:text="@string/fragment_create_event_textview0"
+        android:layout_below="@id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="15sp"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_create_event_textInputLayout1">
 
-            <EditText
-                android:id="@+id/fragment_create_event_edittext1"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="@string/fragment_create_event_edittext1"
-                android:textSize="14sp"/>
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/white"
+                android:id="@+id/fragment_create_event_relative_layout1"
+                android:layout_centerVertical="true">
 
-        </android.support.design.widget.TextInputLayout>
-
-        <fr.ganfra.materialspinner.MaterialSpinner
-            android:id="@+id/fragment_create_event_spinner1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fragment_create_event_textInputLayout1"
-            android:layout_marginTop="10dp"
-            app:ms_arrowColor="@color/colorPrimary"
-            app:ms_arrowSize="13dp"
-            app:ms_floatingLabelColor="@color/colorPrimary"
-            app:ms_floatingLabelText="@string/fragment_create_event_placeHolder"
-            app:ms_hint="@string/fragment_create_event_hint"
-            app:ms_multiline="false"/>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_create_event_textInputLayout4"
-            android:layout_below="@+id/fragment_create_event_spinner1"
-            android:layout_marginTop="10dp">
-
-            <EditText
-                android:id="@+id/fragment_create_event_edittext4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="@string/fragment_create_event_edittext4"
-                android:textSize="14sp"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/fragment_create_event_linear_layout1"
-            android:layout_below="@+id/fragment_create_event_textInputLayout4"
-            android:layout_marginTop="10dp">
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_create_event_textInputLayout2"
-                android:layout_weight="4">
-
-                <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
-                    android:id="@+id/fragment_create_event_edittext2"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/fragment_create_event_edittext2"
-                    app:pacv_googleMapsApiKey="AIzaSyDOkFISQfDfooJwIxYhbYEoOOvcMn8Hoqk"
-                    android:textSize="14sp" />
+                    android:id="@+id/fragment_create_event_textInputLayout1"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:paddingTop="15dp">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/fragment_create_event_edittext1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:hint="@string/fragment_create_event_edittext1"
+                        android:textSize="14sp"/>
 
-        </LinearLayout>
+                </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/fragment_create_event_linear_layout2"
-            android:layout_below="@+id/fragment_create_event_linear_layout1"
-            android:layout_marginTop="10dp">
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/fragment_create_event_spinner1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/fragment_create_event_textInputLayout1"
+                    app:ms_arrowColor="@color/colorPrimary"
+                    app:ms_arrowSize="13dp"
+                    app:ms_floatingLabelColor="@color/lightTextColor"
+                    app:ms_floatingLabelText="@string/fragment_create_event_placeHolder"
+                    app:ms_hint="@string/fragment_create_event_hint"
+                    app:ms_multiline="false"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"/>
 
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_create_event_textInputLayout3"
-                android:layout_weight="3">
-
-                <EditText
-                    android:id="@+id/fragment_create_event_edittext3"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:hint="@string/fragment_create_event_edittext3"
-                    android:textSize="14sp"
-                    android:focusableInTouchMode="false"/>
+                    android:id="@+id/fragment_create_event_textInputLayout4"
+                    android:layout_below="@+id/fragment_create_event_spinner1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/fragment_create_event_edittext4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:hint="@string/fragment_create_event_edittext4"
+                        android:textSize="14sp"/>
 
-        </LinearLayout>
+                </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/fragment_create_event_linear_layout2"
-            android:id="@+id/fragment_create_event_linear_layout3"
-            android:layout_marginTop="15dp">
-
-            <RadioGroup
-                android:id="@+id/fragment_create_event_radio_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/fragment_create_event_radio_button1"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/fragment_create_event_radio_button1"
-                    android:checked="true"
-                    android:layout_weight="1"/>
+                    android:orientation="horizontal"
+                    android:id="@+id/fragment_create_event_linear_layout1"
+                    android:layout_below="@+id/fragment_create_event_textInputLayout4"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp">
 
-                <RadioButton
-                    android:id="@+id/fragment_create_event_radio_button2"
-                    android:layout_width="wrap_content"
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_create_event_textInputLayout2"
+                        android:layout_weight="4">
+
+                        <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+                            android:id="@+id/fragment_create_event_edittext2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/fragment_create_event_edittext2"
+                            app:pacv_googleMapsApiKey="AIzaSyDOkFISQfDfooJwIxYhbYEoOOvcMn8Hoqk"
+                            android:textSize="14sp" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/fragment_create_event_radio_button2"
-                    android:layout_marginRight="10dp"/>
+                    android:orientation="horizontal"
+                    android:id="@+id/fragment_create_event_linear_layout2"
+                    android:layout_below="@+id/fragment_create_event_linear_layout1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp">
 
-            </RadioGroup>
-        </LinearLayout>
-    </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_create_event_recycler_view1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:scrollbars="vertical"
-        android:layout_below="@+id/fragment_create_event_relative_layout1"
-        android:layout_above="@+id/fragment_create_event_linear_layout4"/>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_create_event_textInputLayout3"
+                        android:layout_weight="3">
+
+                        <EditText
+                            android:id="@+id/fragment_create_event_edittext3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:hint="@string/fragment_create_event_edittext3"
+                            android:textSize="14sp"
+                            android:focusableInTouchMode="false"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/fragment_create_event_linear_layout2"
+                    android:id="@+id/fragment_create_event_linear_layout3"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:paddingBottom="15dp">
+
+                    <RadioGroup
+                        android:id="@+id/fragment_create_event_radio_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/fragment_create_event_radio_button1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fragment_create_event_radio_button1"
+                            android:checked="true"
+                            android:layout_weight="1"/>
+
+                        <RadioButton
+                            android:id="@+id/fragment_create_event_radio_button2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fragment_create_event_radio_button2"
+                            android:layout_marginRight="10dp"/>
+
+                    </RadioGroup>
+                </LinearLayout>
+            </RelativeLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
         android:id="@+id/fragment_create_event_linear_layout4"
-        android:gravity="bottom">
+        android:layout_alignParentBottom="true">
 
         <Button
             android:layout_width="wrap_content"
@@ -225,6 +267,9 @@
             android:layout_weight="1" />
 
     </LinearLayout>
+
 </RelativeLayout>
+
+</ScrollView>
 
 

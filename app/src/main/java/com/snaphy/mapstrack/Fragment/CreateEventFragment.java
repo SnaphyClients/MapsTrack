@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -25,6 +25,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
+import com.orhanobut.dialogplus.OnCancelListener;
+import com.orhanobut.dialogplus.OnDismissListener;
+import com.orhanobut.dialogplus.OnItemClickListener;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
@@ -51,7 +57,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateEventFragment";
-    @Bind(R.id.fragment_create_event_recycler_view1)
     RecyclerView recyclerView;
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
@@ -78,7 +83,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setEventDataInAdapter();
 
     }
 
@@ -91,20 +95,63 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
 
         materialSpinner = (fr.ganfra.materialspinner.MaterialSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
         placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        displayContactAdapter = new DisplayContactAdapter(displayContactModelArrayList);
-        recyclerView.setAdapter(displayContactAdapter);
         initializeGooglePlacesApi();
         mGoogleApiClient.connect();
         backButtonClickListener();
         setSpinner();
-        fetchContact(view);
         datePickerClickListener(view);
         dateEdittext.setKeyListener(null);
         selectPosition();
         return view;
+    }
+
+    /**
+     * Show contacts button event listener
+     */
+    @OnClick(R.id.fragment_create_event_imagebutton2) void openContactDialog() {
+        setEventDataInAdapter();
+        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
+        Holder holder = new ListHolder();
+        showOnlyContentDialog(holder, adapter);
+    }
+
+    /**
+     * Data in events has been initialize from here
+     */
+    public void setEventDataInAdapter() {
+        displayContactModelArrayList.add(new DisplayContactModel("Ravi Gupta"));
+        displayContactModelArrayList.add(new DisplayContactModel("Siddharth Jain"));
+        displayContactModelArrayList.add(new DisplayContactModel("Anurag Gupta"));
+        displayContactModelArrayList.add(new DisplayContactModel("Robins Gupta"));
+        displayContactModelArrayList.add(new DisplayContactModel("Jay Dixit"));
+    }
+
+    private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
+        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
+                .setContentHolder(holder)
+                .setAdapter(adapter)
+                . setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+
+                    }
+                })
+                .setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogPlus dialog) {
+
+                    }
+                })
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogPlus dialog) {
+
+                    }
+                })
+                .setCancelable(true)
+                .setExpanded(true)
+                .create();
+        dialog.show();
     }
 
     /**
@@ -115,14 +162,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment impleme
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, ITEMS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         materialSpinner.setAdapter(adapter);
-    }
-
-    /**
-     * Fetch all contact from contacts and  give suggestions
-     * @param view
-     */
-    public void fetchContact(View view) {
-
     }
 
     /**
