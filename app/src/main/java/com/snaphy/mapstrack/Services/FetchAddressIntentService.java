@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Fragment.CreateEventFragment;
+import com.snaphy.mapstrack.Fragment.HomeFragment;
 import com.snaphy.mapstrack.R;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ import java.util.Locale;
  */
 public class FetchAddressIntentService extends IntentService {
 
-    private CreateEventFragment.AddressResultReceiver mReceiver;
+    private HomeFragment.AddressResultReceiver mReceiver;
 
     public FetchAddressIntentService() {
         super("FetchAddressIntentServices");
@@ -45,7 +45,7 @@ public class FetchAddressIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        mReceiver = new CreateEventFragment.AddressResultReceiver(new Handler());
+        mReceiver = new HomeFragment.AddressResultReceiver(new Handler());
         String errorMessage = "";
         // Get the location passed to this service through an extra.
         Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);

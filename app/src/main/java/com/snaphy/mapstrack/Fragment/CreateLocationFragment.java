@@ -3,13 +3,11 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.R;
@@ -18,6 +16,8 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 /**
  * This fragment is used to create location from the "Add(Plus)" button in the home fragment
@@ -26,9 +26,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateLocationFragment";
-    @Bind(R.id.fragment_create_location_recycler_view1) RecyclerView recyclerView;
     @Bind(R.id.fragment_create_location_imagebutton1) ImageButton backButton;
-    DisplayContactAdapter displayContactAdapter;
+    static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     MainActivity mainActivity;
 
@@ -53,18 +52,30 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_location, container, false);
         ButterKnife.bind(this, view);
+        placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_location_edittext3);
+        boolean registered = EventBus.getDefault().isRegistered(this);
+        if(!registered) {
+            EventBus.getDefault().registerSticky(this);
+        }
         backButtonClickListener();
         return view;
     }
 
-    private void backButtonClickListener() {
+    public void onEventMainThread(String s){
+        placesAutocompleteTextView.setText(s);
+    }
 
+    private void backButtonClickListener() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainActivity.onBackPressed();
             }
         });
+    }
+
+    @OnClick(R.id.fragment_create_location_button1) void selectContact() {
+        mainActivity.replaceFragment(R.layout.layout_select_contact, null);
     }
 
 

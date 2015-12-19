@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.snaphy.mapstrack.Fragment.CreateLocationFragment"
@@ -17,12 +18,16 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
 
         <ImageButton
             android:paddingRight="4dp"
             android:id="@+id/fragment_create_location_imagebutton1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:src="@mipmap/back_arrow"
             android:background="@drawable/ripple_button" />
         <!-- </RelativeLayout>-->
@@ -30,13 +35,36 @@
         <TextView
             android:padding="2dp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/fragment_create_location_textview0"
             android:textSize="18sp"
             android:textColor="@color/white"
-            android:text="@string/fragment_create_location_textview0" />
+            android:text="@string/fragment_create_location_textview0"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/fragment_create_location_imagebutton1"/>
+
+        <ImageButton
+            android:id="@+id/fragment_create_location_imagebutton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/add"
+            android:background="@drawable/ripple_button"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"/>
+
+</RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_create_location_textview0"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="15sp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -44,13 +72,16 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
+        android:background="@color/white"
         android:id="@+id/fragment_create_location_relative_layout1"
-        android:layout_below="@+id/toolbar">
+        android:layout_centerVertical="true">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/fragment_create_location_textInputLayout1">
+            android:id="@+id/fragment_create_location_textInputLayout1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
 
             <EditText
                 android:id="@+id/fragment_create_location_edittext1"
@@ -58,7 +89,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:hint="@string/fragment_create_location_edittext1"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:paddingTop="15dp"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -68,7 +100,9 @@
             android:orientation="horizontal"
             android:id="@+id/fragment_create_location_linear_layout1"
             android:layout_below="@+id/fragment_create_location_textInputLayout1"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -93,47 +127,32 @@
             android:orientation="horizontal"
             android:id="@+id/fragment_create_location_linear_layout2"
             android:layout_below="@+id/fragment_create_location_linear_layout1"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
 
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/fragment_create_location_textInputLayout3"
-                android:layout_weight="3">
+                android:layout_weight="3"
+                android:paddingBottom="15dp">
 
-                <EditText
+                <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
                     android:id="@+id/fragment_create_location_edittext3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="@string/fragment_create_location_edittext3"
-                    android:textSize="14sp"/>
+                    app:pacv_googleMapsApiKey="AIzaSyDOkFISQfDfooJwIxYhbYEoOOvcMn8Hoqk"
+                    android:textSize="14sp" />
 
             </android.support.design.widget.TextInputLayout>
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:id="@+id/fragment_create_location_imagebutton2"
-                android:src="@mipmap/my_location"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"/>
 
         </LinearLayout>
 
     </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_create_location_recycler_view1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_create_location_relative_layout1"
-        android:layout_above="@+id/fragment_create_location_linear_layout3"
-        android:layout_marginTop="15dp"
-        android:scrollbars="vertical"/>
 
     <LinearLayout
         android:layout_width="match_parent"

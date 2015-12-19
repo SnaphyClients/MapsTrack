@@ -24,8 +24,7 @@
         android:elevation="0dp"
         android:gravity="top"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -73,7 +72,7 @@
         android:text="@string/fragment_create_event_textview0"
         android:layout_below="@id/toolbar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
         android:textSize="15sp"/>
 
@@ -152,8 +151,7 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/fragment_create_event_textInputLayout2"
-                        android:layout_weight="4">
+                        android:id="@+id/fragment_create_event_textInputLayout2">
 
                         <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
                             android:id="@+id/fragment_create_event_edittext2"
