@@ -30,6 +30,8 @@ import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -60,6 +62,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     private GoogleApiClient mGoogleApiClient;
+    ArrayList<String> contacts  = new ArrayList<String>();
 
 
     public HomeFragment() {
@@ -99,7 +102,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         recyclerView1.setLayoutManager(layoutManager1);
         recyclerView2.setLayoutManager(layoutManager2);
 
-        homeEventAdapter = new HomeEventAdapter(mainActivity,eventHomeModelArrayList);
+        homeEventAdapter = new HomeEventAdapter(mainActivity,eventHomeModelArrayList,mainActivity);
         homeLocationAdapter = new HomeLocationAdapter(mainActivity,locationHomeModelArrayList);
 
         recyclerView1.setAdapter(homeEventAdapter);
@@ -156,9 +159,9 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     }
 
     /**
-     * Data in events has been initialize from here
+     * Data in location has been initialize from here
      */
-    public void setEventDataInAdapter() {
+    public void setLocationDataInAdapter() {
         locationHomeModelArrayList.add(new LocationHomeModel("Shanti Niketan", "DLF Phase 3, Gurgaon"));
         locationHomeModelArrayList.add(new LocationHomeModel("Anu Office", "Palam Vihar, Sector 25"));
         locationHomeModelArrayList.add(new LocationHomeModel("My Party", "Pitampura, Haryana"));
@@ -167,14 +170,44 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     }
 
     /**
-     * Data in locatons has been initialize from here
+     * Data in event has been initialize from here
      */
-    public void setLocationDataInAdapter() {
-        eventHomeModelArrayList.add(new EventHomeModel("Ravi123","DLF Phase 3, Gurgaon"));
-        eventHomeModelArrayList.add(new EventHomeModel("SidHome","Palam Vihar, Sector 25"));
-        eventHomeModelArrayList.add(new EventHomeModel("RaghuMarriage","Pitampura, Haryana"));
-        eventHomeModelArrayList.add(new EventHomeModel("RobParty","Cyber Hub, Cyber City"));
-        eventHomeModelArrayList.add(new EventHomeModel("AnuOffice", "Sahara Mall, Sikandarpur"));
+    public void setEventDataInAdapter() {
+        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+        addDataToArrayList();
+
+        eventHomeModelArrayList.add(new EventHomeModel("Ravi123","DLF Phase 3, Gurgaon","Explore public service through this popular networking and recruiting program." +
+                " The Government Careers Forum will feature a keynote presentation by" +
+                " Massachusetts State Representative Tackey Chan ’95, followed by round table" +
+                " networking sessions for students, alumni, faculty and staff with agency" +
+                " representatives","Birthday", dateFormat, contacts));
+
+
+        eventHomeModelArrayList.add(new EventHomeModel("SidHome","Palam Vihar, Sector 25","Paul Romer, a prominent American economist and specialist on the theory of " +
+                "growth and innovation, will discuss charter cities and their potential impact on " +
+                "economic prosperity","Baby Shower", dateFormat, contacts));
+
+
+        eventHomeModelArrayList.add(new EventHomeModel("RaghuMarriage","Pitampura, Haryana","Experience Virginia Woolf’s darkly elegant voice in an original stage adaptation " +
+                "of four compelling short stories.","Party", dateFormat, contacts));
+
+
+        eventHomeModelArrayList.add(new EventHomeModel("RobParty","Cyber Hub, Cyber City","Debra Granik '85 will screen and discuss her best-known work to date – the " +
+                "Oscar-nominated film \"Winter's Bone.\"","Marriage", dateFormat, contacts));
+
+
+        eventHomeModelArrayList.add(new EventHomeModel("AnuOffice", "Sahara Mall, Sikandarpur","Granik will take questions from the audience after the screening. " +
+                "This event is sponsored by the Film, Television and Interactive Media Program " +
+                "and the Edie and Lew Wasserman Fund.","Meeting", dateFormat, contacts));
+    }
+
+    public void addDataToArrayList() {
+        contacts.add(0,"Ravi Gupta");
+        contacts.add(1,"Siddarth Jain");
+        contacts.add(2,"Robins Gupta");
+        contacts.add(3,"Neha Jain");
+        contacts.add(4,"Monika");
+        contacts.add(5,"Anurag Gupta");
     }
 
     // TODO: Rename method, update argument and hook method into UI event

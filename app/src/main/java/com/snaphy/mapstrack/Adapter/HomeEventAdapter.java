@@ -10,8 +10,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.GridHolder;
 import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
@@ -31,9 +31,11 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
 
     ArrayList<EventHomeModel> eventHomeModels  = new ArrayList<EventHomeModel>();
     Context context;
-    public HomeEventAdapter(Context context, ArrayList<EventHomeModel> eventHomeModels) {
+    Context mainActivity;
+    public HomeEventAdapter(Context context, ArrayList<EventHomeModel> eventHomeModels, Context mainActivity) {
         this.eventHomeModels = eventHomeModels;
         this.context = context;
+        this.mainActivity = mainActivity;
     }
 
     /**
@@ -59,8 +61,8 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
      * @param position {int}
      */
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        EventHomeModel eventHomeModel = eventHomeModels.get(position);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final EventHomeModel eventHomeModel = eventHomeModels.get(position);
 
         // Set item views based on the data model
         TextView eventId = holder.eventId;
@@ -73,12 +75,11 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
         menuOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HomeMenuAdapter adapter = new HomeMenuAdapter(context);
-                Holder holder = new GridHolder(3);
+                HomeMenuAdapter adapter = new HomeMenuAdapter(mainActivity,eventHomeModel);
+                Holder holder = new ListHolder();
                 showOnlyContentDialog(holder, adapter);
             }
         });
-
     }
 
     /**
@@ -112,7 +113,7 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
     }
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
-        final DialogPlus dialog = DialogPlus.newDialog(context)
+        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
                 .setContentHolder(holder)
                 .setAdapter(adapter)
                 . setOnItemClickListener(new OnItemClickListener() {

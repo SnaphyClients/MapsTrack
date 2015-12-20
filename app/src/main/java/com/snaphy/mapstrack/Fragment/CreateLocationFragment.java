@@ -6,8 +6,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
+import com.orhanobut.dialogplus.OnCancelListener;
+import com.orhanobut.dialogplus.OnDismissListener;
+import com.orhanobut.dialogplus.OnItemClickListener;
+import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
+import com.seatgeek.placesautocomplete.model.Place;
+import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.R;
@@ -58,7 +68,59 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
             EventBus.getDefault().registerSticky(this);
         }
         backButtonClickListener();
+        selectPosition();
         return view;
+    }
+
+    /**
+     * When certain position is selected from the drop down in auto complete
+     * this method is fired
+     */
+    private void selectPosition() {
+        placesAutocompleteTextView.setOnPlaceSelectedListener(new OnPlaceSelectedListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+
+            }
+        });
+    }
+
+    /**
+     * Show contacts button event listener
+     */
+    @OnClick(R.id.fragment_create_location_imagebutton2) void openContactDialog() {
+        setEventDataInAdapter();
+        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
+        Holder holder = new ListHolder();
+        showOnlyContentDialog(holder, adapter);
+    }
+
+    private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
+        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
+                .setContentHolder(holder)
+                .setAdapter(adapter)
+                . setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+
+                    }
+                })
+                .setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogPlus dialog) {
+
+                    }
+                })
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogPlus dialog) {
+
+                    }
+                })
+                .setCancelable(true)
+                .setExpanded(true)
+                .create();
+        dialog.show();
     }
 
     public void onEventMainThread(String s){

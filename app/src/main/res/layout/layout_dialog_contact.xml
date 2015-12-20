@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/layout_display_contact_textview1"
+        android:layout_margin="15dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:id="@+id/layout_fragment_dialog_contact_textview1"
+        android:layout_centerVertical="true"/>
+
+
+</RelativeLayout>

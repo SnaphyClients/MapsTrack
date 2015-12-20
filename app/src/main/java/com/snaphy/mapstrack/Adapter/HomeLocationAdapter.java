@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.GridHolder;
 import com.orhanobut.dialogplus.Holder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
@@ -60,7 +59,7 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
      * @param position {int}
      */
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         LocationHomeModel locationHomeModel = locationHomeModels.get(position);
 
         // Set item views based on the data model
@@ -73,9 +72,9 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         menuOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HomeMenuAdapter adapter = new HomeMenuAdapter(context);
-                Holder holder = new GridHolder(3);
-                showOnlyContentDialog(holder, adapter);
+                //HomeMenuAdapter adapter = new HomeMenuAdapter(context,position,locationHomeModels);
+                //Holder holder = new GridHolder(3);
+                //showOnlyContentDialog(holder, adapter);
             }
         });
 

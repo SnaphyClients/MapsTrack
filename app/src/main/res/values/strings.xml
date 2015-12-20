@@ -77,4 +77,11 @@
     <string name="fragment_show_contact_textview0">Select Friends</string>
     <string name="layout_select_contact">919873046993</string>
 
+    <!--Layout Home Menu Option-->
+    <string name="layout_home_menu_options_textview1">Ravi123</string>
+    <string name="layout_home_menu_options_textview2">DLF Phase 3</string>
+    <string name="layout_home_menu_options_textview3">Ravi123 is a event in which everybody get togeather</string>
+    <string name="layout_home_menu_options_textview4">Birthday</string>
+    <string name="layout_home_menu_options_textview5">26 June 2016</string>
+
 </resources>
