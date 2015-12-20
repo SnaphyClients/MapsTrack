@@ -84,4 +84,9 @@
     <string name="layout_home_menu_options_textview4">Birthday</string>
     <string name="layout_home_menu_options_textview5">26 June 2016</string>
 
+    <!--Layout Home Menu Option-->
+    <string name="layout_location_home_menu_options_textview1">Meeting with G Vamshi</string>
+    <string name="layout_location_home_menu_options_textview2">Ravi123</string>
+    <string name="layout_location_home_menu_options_textview3">V 20/9, DLF Phase 2, Sector 24,Gurgaon</string>
+
 </resources>

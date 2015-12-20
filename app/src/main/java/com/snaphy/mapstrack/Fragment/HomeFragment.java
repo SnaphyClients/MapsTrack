@@ -63,6 +63,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     private AddressResultReceiver mResultReceiver;
     private GoogleApiClient mGoogleApiClient;
     ArrayList<String> contacts  = new ArrayList<String>();
+    ArrayList<String> locationContacts  = new ArrayList<String>();
 
 
     public HomeFragment() {
@@ -162,11 +163,12 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
      * Data in location has been initialize from here
      */
     public void setLocationDataInAdapter() {
-        locationHomeModelArrayList.add(new LocationHomeModel("Shanti Niketan", "DLF Phase 3, Gurgaon"));
-        locationHomeModelArrayList.add(new LocationHomeModel("Anu Office", "Palam Vihar, Sector 25"));
-        locationHomeModelArrayList.add(new LocationHomeModel("My Party", "Pitampura, Haryana"));
-        locationHomeModelArrayList.add(new LocationHomeModel("Ravi House","Cyber Hub, Cyber City"));
-        locationHomeModelArrayList.add(new LocationHomeModel("Sid Home", "Sahara Mall, Sikandarpur"));
+        addDataToLocationArrayList();
+        locationHomeModelArrayList.add(new LocationHomeModel("Shanti Niketan", "DLF Phase 3, Gurgaon","sweetHome",contacts));
+        locationHomeModelArrayList.add(new LocationHomeModel("Anu Office", "Palam Vihar, Sector 25","officeOffice",contacts));
+        locationHomeModelArrayList.add(new LocationHomeModel("My Party", "Pitampura, Haryana","rock&Roll",contacts));
+        locationHomeModelArrayList.add(new LocationHomeModel("Ravi House","Cyber Hub, Cyber City","namoShiv",contacts));
+        locationHomeModelArrayList.add(new LocationHomeModel("Sid Home", "Sahara Mall, Sikandarpur", "dreamHome", contacts));
     }
 
     /**
@@ -202,12 +204,21 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     }
 
     public void addDataToArrayList() {
-        contacts.add(0,"Ravi Gupta");
+        contacts.add(0, "Ravi Gupta");
         contacts.add(1,"Siddarth Jain");
         contacts.add(2,"Robins Gupta");
         contacts.add(3,"Neha Jain");
         contacts.add(4,"Monika");
         contacts.add(5,"Anurag Gupta");
+    }
+
+    public void addDataToLocationArrayList() {
+        locationContacts.add(0,"Ravi Gupta");
+        locationContacts.add(1,"Siddarth Jain");
+        locationContacts.add(2,"Robins Gupta");
+        locationContacts.add(3,"Neha Jain");
+        locationContacts.add(4,"Monika");
+        locationContacts.add(5,"Anurag Gupta");
     }
 
     // TODO: Rename method, update argument and hook method into UI event

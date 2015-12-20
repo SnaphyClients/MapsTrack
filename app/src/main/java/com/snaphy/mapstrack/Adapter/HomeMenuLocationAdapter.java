@@ -11,36 +11,30 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.snaphy.mapstrack.Model.EventHomeModel;
+import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
 
-import java.util.Calendar;
-
 /**
- * Created by Ravi-Gupta on 12/7/2015.
- * It is an adapter that is responsible for displaying of menu item in the home screen when the users
- * clicks on the menu icon of a particular list view item
+ * Created by Ravi-Gupta on 12/21/2015.
  */
-public class HomeMenuAdapter extends BaseAdapter {
+public class HomeMenuLocationAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
-    EventHomeModel eventHomeModel;
+    LocationHomeModel locationHomeModel;
     Context context;
 
-    public HomeMenuAdapter(Context context, EventHomeModel eventHomeModel) {
+    public HomeMenuLocationAdapter(Context context,  LocationHomeModel locationHomeModel) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
-        this.eventHomeModel = eventHomeModel;
+        this.locationHomeModel = locationHomeModel;
     }
 
     static class ViewHolder {
         ImageButton shareButton;
         ImageButton editButton;
         ImageButton deleteButton;
-        TextView description;
-        TextView eventId;
-        TextView date;
-        TextView type;
+        TextView locationName;
+        TextView locationId;
         TextView address;
         ListView contactList;
     }
@@ -66,31 +60,27 @@ public class HomeMenuAdapter extends BaseAdapter {
         View view = convertView;
 
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.layout_home_menu_options, parent, false);
+            view = layoutInflater.inflate(R.layout.layout_location_home_menu_options, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.shareButton = (ImageButton) view.findViewById(R.id.layout_home_menu_options_imagebutton1);
-            viewHolder.editButton = (ImageButton) view.findViewById(R.id.layout_home_menu_options_imagebutton2);
-            viewHolder.deleteButton = (ImageButton) view.findViewById(R.id.layout_home_menu_options_imagebutton3);
-            viewHolder.description = (TextView) view.findViewById(R.id.layout_home_menu_options_textview3);
-            viewHolder.eventId = (TextView) view.findViewById(R.id.layout_home_menu_options_textview1);
-            viewHolder.date = (TextView) view.findViewById(R.id.layout_home_menu_options_textview5);
-            viewHolder.type = (TextView) view.findViewById(R.id.layout_home_menu_options_textview4);
-            viewHolder.address = (TextView) view.findViewById(R.id.layout_home_menu_options_textview2);
-            viewHolder.contactList = (ListView) view.findViewById(R.id.layout_home_menu_options_listview);
+            viewHolder.shareButton = (ImageButton) view.findViewById(R.id.layout_location_home_menu_options_imagebutton1);
+            viewHolder.editButton = (ImageButton) view.findViewById(R.id.layout_location_home_menu_options_imagebutton2);
+            viewHolder.deleteButton = (ImageButton) view.findViewById(R.id.layout_location_home_menu_options_imagebutton3);
+            viewHolder.locationName = (TextView) view.findViewById(R.id.layout_location_home_menu_options_textview1);
+            viewHolder.locationId = (TextView) view.findViewById(R.id.layout_location_home_menu_options_textview2);
+            viewHolder.address = (TextView) view.findViewById(R.id.layout_location_home_menu_options_textview3);
+            viewHolder.contactList = (ListView) view.findViewById(R.id.layout_location_home_menu_options_listview);
 
             view.setTag(viewHolder);
         }
         else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        viewHolder.eventId.setText(eventHomeModel.getEventId());
-        viewHolder.date.setText(String.valueOf(eventHomeModel.getDate().format(Calendar.getInstance().getTime())));
-        viewHolder.type.setText(eventHomeModel.getType());
-        viewHolder.description.setText(eventHomeModel.getDescription());
-        viewHolder.address.setText(eventHomeModel.getEventAddress());
+        viewHolder.locationName.setText(locationHomeModel.getLocationName());
+        viewHolder.locationId.setText(locationHomeModel.getLocationId());
+        viewHolder.address.setText(locationHomeModel.getLocationAddress());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                R.layout.layout_dialog_contact, R.id.layout_fragment_dialog_contact_textview1, eventHomeModel.getContacts());
+                R.layout.layout_dialog_contact, R.id.layout_fragment_dialog_contact_textview1, locationHomeModel.getContacts());
         // Sets the adapter for the ListView
         viewHolder.contactList.setAdapter(adapter);
         setListViewHeightBasedOnChildren(viewHolder.contactList);
