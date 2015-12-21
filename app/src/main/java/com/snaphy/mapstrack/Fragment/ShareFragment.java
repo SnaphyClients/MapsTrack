@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.snaphy.mapstrack.Adapter.ShareLocationAdapter;
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ShareLocationModel;
 import com.snaphy.mapstrack.R;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Location shared by others or by user to others is maintained here in this fragment
@@ -25,6 +27,7 @@ public class ShareFragment extends android.support.v4.app.Fragment {
     ShareLocationAdapter shareLocationAdapter;
     ArrayList<ShareLocationModel> locationModels = new ArrayList<ShareLocationModel>();
     @Bind(R.id.fragment_share_listview1) se.emilsjolander.stickylistheaders.StickyListHeadersListView stickyListHeadersListView;
+    MainActivity mainActivity;
 
     public ShareFragment() {
         // Required empty public constructor
@@ -69,9 +72,13 @@ public class ShareFragment extends android.support.v4.app.Fragment {
         locationModels.add(new ShareLocationModel("from","Robins Gupta"));
         locationModels.add(new ShareLocationModel("from","Anurag Gupta"));
         locationModels.add(new ShareLocationModel("from","Pulkit Dubey"));
-        locationModels.add(new ShareLocationModel("from","Ankur Suwalka"));
+        locationModels.add(new ShareLocationModel("from", "Ankur Suwalka"));
         locationModels.add(new ShareLocationModel("from","Meenakshi Jain"));
-        locationModels.add(new ShareLocationModel("from","Sapna Grover"));
+        locationModels.add(new ShareLocationModel("from", "Sapna Grover"));
+    }
+
+    @OnClick(R.id.fragment_share_floating_button1) void addContactsButton() {
+        mainActivity.replaceFragment(R.layout.layout_select_contact,null);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -84,6 +91,7 @@ public class ShareFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
