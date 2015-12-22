@@ -16,6 +16,7 @@ import com.snaphy.mapstrack.Fragment.ProfileFragment;
 import com.snaphy.mapstrack.Fragment.SettingFragment;
 import com.snaphy.mapstrack.Fragment.ShareFragment;
 import com.snaphy.mapstrack.Fragment.ShowContactFragment;
+import com.snaphy.mapstrack.Fragment.ShowMapFragment;
 import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
 
@@ -25,7 +26,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         ShareFragment.OnFragmentInteractionListener, AboutusFragment.OnFragmentInteractionListener,
         FaqsFragment.OnFragmentInteractionListener, ContactFragment.OnFragmentInteractionListener,
         TermsFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener,
-        CreateLocationFragment.OnFragmentInteractionListener, ShowContactFragment.OnFragmentInteractionListener {
+        CreateLocationFragment.OnFragmentInteractionListener, ShowContactFragment.OnFragmentInteractionListener,
+        ShowMapFragment.OnFragmentInteractionListener
+{
 
     //TODO 1. Make all list work in home fragment
     //TODO 2. Make menu items work in home fragment
@@ -81,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             case R.layout.layout_select_contact:
                 selectContact(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_map:
+                openMap(fragmentTransaction);
                 break;
         }
     }
@@ -195,6 +202,20 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             showContactFragment = ShowContactFragment.newInstance();
         }
         fragmentTransaction.replace(R.id.main_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**
+     *  Map Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void openMap(FragmentTransaction fragmentTransaction) {
+        ShowMapFragment showMapFragment = (ShowMapFragment) getSupportFragmentManager().
+                findFragmentByTag(ShowMapFragment.TAG);
+        if (showMapFragment == null) {
+            showMapFragment = ShowMapFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, showMapFragment, ShowMapFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 

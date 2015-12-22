@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
-import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.R;
 
@@ -27,12 +28,12 @@ import butterknife.ButterKnife;
  * Created by Ravi-Gupta on 12/4/2015.
  * This adapter is used to show the list of events in the home page of the app
  */
-public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.ViewHolder> {
+public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.ViewHolder>  {
 
     ArrayList<EventHomeModel> eventHomeModels  = new ArrayList<EventHomeModel>();
     Context context;
-    Context mainActivity;
-    public HomeEventAdapter(Context context, ArrayList<EventHomeModel> eventHomeModels, Context mainActivity) {
+    static MainActivity mainActivity;
+    public HomeEventAdapter(Context context, ArrayList<EventHomeModel> eventHomeModels, MainActivity mainActivity) {
         this.eventHomeModels = eventHomeModels;
         this.context = context;
         this.mainActivity = mainActivity;
@@ -75,9 +76,10 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
         menuOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HomeMenuAdapter adapter = new HomeMenuAdapter(mainActivity,eventHomeModel);
+                /*HomeMenuAdapter adapter = new HomeMenuAdapter(context,eventHomeModel);
                 Holder holder = new ListHolder();
-                showOnlyContentDialog(holder, adapter);
+                showOnlyContentDialog(holder, adapter);*/
+                mainActivity.replaceFragment(R.layout.fragment_map,null);
             }
         });
     }
@@ -94,7 +96,7 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
     /**
      * View Holder class used to display all the elements in recycler view
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         @Bind(R.id.layout_home_event_textview1) TextView eventId;
@@ -109,6 +111,12 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
             // to access the context from any ViewHolder instance.
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(mainActivity, "Clicked", Toast.LENGTH_SHORT).show();
+            mainActivity.replaceFragment(R.layout.fragment_map,null);
         }
     }
 

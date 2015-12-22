@@ -89,4 +89,9 @@
     <string name="layout_location_home_menu_options_textview2">Ravi123</string>
     <string name="layout_location_home_menu_options_textview3">V 20/9, DLF Phase 2, Sector 24,Gurgaon</string>
 
+    <!--Map Fragment-->
+    <string name="fragment_map_textview0">Maps Track</string>
+    <string name="fragment_map_textview1">52km</string>
+    <string name="fragment_map_textview2">25mins</string>
+
 </resources>

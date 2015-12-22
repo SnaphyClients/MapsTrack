@@ -64,6 +64,8 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     private GoogleApiClient mGoogleApiClient;
     ArrayList<String> contacts  = new ArrayList<String>();
     ArrayList<String> locationContacts  = new ArrayList<String>();
+    double latitude;
+    double longitude;
 
 
     public HomeFragment() {
@@ -259,6 +261,9 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
 
         if (mLastLocation != null) {
             // Determine whether a Geocoder is available.
+            //http://stackoverflow.com/questions/17519198/how-to-get-the-current-location-latitude-and-longitude-in-android
+            latitude = mLastLocation.getLatitude();
+            longitude = mLastLocation.getLongitude();
             if (!Geocoder.isPresent()) {
                 return;
             }
