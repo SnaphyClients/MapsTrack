@@ -11,16 +11,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.snaphy.mapstrack.Adapter.SelectContactAdapter;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +41,8 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "ShowContactFragment";
+    SelectContactAdapter selectContactAdapter;
+    ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
 
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
@@ -98,7 +105,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     // A content URI for the selected contact
     Uri mContactUri;
     // An adapter that binds the result Cursor to the ListView
-    private SimpleCursorAdapter mCursorAdapter;
+
     MainActivity mainActivity;
 
 
@@ -124,15 +131,11 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_show_contact, container, false);
         mContactsList = (ListView) view.findViewById(R.id.fragment_show_contact_listview1);
-
-        mCursorAdapter = new SimpleCursorAdapter(
-                getActivity(),
+        selectContactAdapter = new SelectContactAdapter(getActivity(),
                 R.layout.layout_select_contact,
                 null,
-                FROM_COLUMNS, TO_IDS,
-                0);
-        // Sets the adapter for the ListView
-        mContactsList.setAdapter(mCursorAdapter);
+                FROM_COLUMNS, TO_IDS);
+        mContactsList.setAdapter(selectContactAdapter);
         mContactsList.setOnItemClickListener(this);
 
         return view;
@@ -184,18 +187,19 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Put the result Cursor in the adapter for the ListView
-        mCursorAdapter.changeCursor(data);
+        Log.v(Constants.TAG, data + "Yess");
+        selectContactAdapter.changeCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCursorAdapter.changeCursor(null);
+        selectContactAdapter.changeCursor(null);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // Get the Cursor
-        Cursor cursor = mCursorAdapter.getCursor();
+        Cursor cursor = selectContactAdapter.getCursor();
         // Move to the selected contact
         cursor.moveToPosition(position);
         // Get the _ID value
@@ -205,6 +209,9 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         // Create the contact's content Uri
       //  mContactUri = ContactsContract.Contacts.getLookupUri(mContactId, mContactKey);
         Toast.makeText(mainActivity,  "I am at "+position, Toast.LENGTH_SHORT).show();
+        if(view.getId() == R.id.layout_fragment_show_contact_checkbox1) {
+            Toast.makeText(mainActivity,  "I am a checkbox "+position, Toast.LENGTH_SHORT).show();
+        }
         /*
          * You can use mContactUri as the content URI for retrieving
          * the details for a contact.

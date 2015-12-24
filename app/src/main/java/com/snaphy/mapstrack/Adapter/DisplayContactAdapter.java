@@ -67,6 +67,7 @@ public class DisplayContactAdapter extends BaseAdapter {
         }
         else {
             viewHolder = (ViewHolder) view.getTag();
+
         }
         Log.v(Constants.TAG,displayContactModelArrayList.get(position).getContactName());
         viewHolder.textview.setText(displayContactModelArrayList.get(position).getContactName());
