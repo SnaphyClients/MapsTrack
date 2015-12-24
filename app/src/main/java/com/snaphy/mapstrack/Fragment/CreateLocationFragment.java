@@ -18,6 +18,7 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Event.AddressEvent;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.R;
@@ -123,8 +124,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         dialog.show();
     }
 
-    public void onEventMainThread(String s){
-        placesAutocompleteTextView.setText(s);
+    public void onEvent(AddressEvent event){
+        placesAutocompleteTextView.setText(event.getAddress());
     }
 
     private void backButtonClickListener() {

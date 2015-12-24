@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
@@ -76,10 +76,9 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
         menuOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*HomeMenuAdapter adapter = new HomeMenuAdapter(context,eventHomeModel);
+                HomeMenuAdapter adapter = new HomeMenuAdapter(context,eventHomeModel);
                 Holder holder = new ListHolder();
-                showOnlyContentDialog(holder, adapter);*/
-                mainActivity.replaceFragment(R.layout.fragment_map,null);
+                showOnlyContentDialog(holder, adapter);
             }
         });
     }
@@ -96,7 +95,7 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
     /**
      * View Holder class used to display all the elements in recycler view
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         @Bind(R.id.layout_home_event_textview1) TextView eventId;
@@ -113,11 +112,6 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
             ButterKnife.bind(this, itemView);
         }
 
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(mainActivity, "Clicked", Toast.LENGTH_SHORT).show();
-            mainActivity.replaceFragment(R.layout.fragment_map,null);
-        }
     }
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {

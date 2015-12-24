@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.orhanobut.dialogplus.DialogPlus;
@@ -24,6 +25,7 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Event.AddressEvent;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.R;
@@ -90,8 +92,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         return view;
     }
 
-    public void onEventMainThread(String s){
-        placesAutocompleteTextView.setText(s);
+    public void onEvent(AddressEvent event){
+        Toast.makeText(mainActivity,event.getAddress(),Toast.LENGTH_SHORT).show();
+        placesAutocompleteTextView.setText(event.getAddress());
     }
 
     /**

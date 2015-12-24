@@ -64,7 +64,7 @@
         android:textAllCaps="false"
         android:background="@drawable/button_style_white"
         android:layout_below="@+id/fragment_profile_textview2"
-        android:id="@+id/fragment_profile_button2"
+        android:id="@+id/fragment_profile_button1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         android:textColor="@color/googleRed"/>
@@ -85,7 +85,7 @@
         android:textColor="@color/white"
         android:textAllCaps="false"
         android:textSize="16sp"
-        android:id="@+id/fragment_chef_button3"/>
+        android:id="@+id/fragment_profile_button2"/>
 
     </LinearLayout>
 

@@ -8,10 +8,13 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true"/>
     <application
+        android:name="com.snaphy.mapstrack.Database.MapsTrackDB"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,12 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBjBnh-pIMsr1rMyXQ2gzSQ8G7cxVZ3Pp4"/>
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBjBnh-pIMsr1rMyXQ2gzSQ8G7cxVZ3Pp4"/>
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <meta-data android:name="AA_DB_NAME" android:value="mapstrack.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="1" />
+        <meta-data android:name="AA_MODELS" android:value="com.snaphy.mapstrack.Database.ProfileDatabase" />
         <service
             android:name="com.snaphy.mapstrack.Services.FetchAddressIntentService"
             android:exported="false"/>

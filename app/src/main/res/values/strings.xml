@@ -7,8 +7,8 @@
     <!--Profile Fragment-->
     <string name="fragment_profile_button1">Logout</string>
     <string name="fragment_profile_button2">Edit Profile</string>
-    <string name="fragment_profile_textview1">Ravi Gupta</string>
-    <string name="fragment_profile_textview2">ravigupta9363@gmail.com</string>
+    <string name="fragment_profile_textview1">Sharman Joshi</string>
+    <string name="fragment_profile_textview2">sharmanjoshi@gmail.com</string>
     <string name="fragment_profile_textview3">9873046993</string>
 
     <!--Setting Fragment-->
@@ -93,5 +93,11 @@
     <string name="fragment_map_textview0">Maps Track</string>
     <string name="fragment_map_textview1">52km</string>
     <string name="fragment_map_textview2">25mins</string>
+
+    <!--Login Fragment-->
+    <string name="fragment_login_textview0">Maps</string>
+    <string name="fragment_login_textview1">Track</string>
+    <string name="fragment_login_textview2">log in with</string>
+    <string name="fragment_login_button1">Google +</string>
 
 </resources>

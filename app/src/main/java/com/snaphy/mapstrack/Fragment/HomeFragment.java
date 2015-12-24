@@ -24,10 +24,12 @@ import com.google.android.gms.location.LocationServices;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
 import com.snaphy.mapstrack.Constants;
+import com.snaphy.mapstrack.Event.AddressEvent;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.RecyclerItemClickListener;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 
 import java.text.DateFormat;
@@ -110,6 +112,23 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
 
         recyclerView1.setAdapter(homeEventAdapter);
         recyclerView2.setAdapter(homeLocationAdapter);
+
+        recyclerView1.addOnItemTouchListener(
+                new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        mainActivity.replaceFragment(R.layout.fragment_map,null);
+                    }
+                })
+        );
+
+        recyclerView2.addOnItemTouchListener(
+                new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        mainActivity.replaceFragment(R.layout.fragment_map, null);
+                    }
+                })
+        );
 
         eventFloatingButtonClickListener();
         locationFloatingButtonClickListener();
@@ -328,7 +347,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                     @Override
                     public void run() {
                         if(mAddressOutput != null)
-                        EventBus.getDefault().postSticky(mAddressOutput);
+                        EventBus.getDefault().postSticky(new AddressEvent(mAddressOutput));
                     }
                 });
 

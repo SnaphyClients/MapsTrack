@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import com.snaphy.mapstrack.Event.LoginEvent;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
 import com.snaphy.mapstrack.Fragment.CreateLocationFragment;
 import com.snaphy.mapstrack.Fragment.FaqsFragment;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
+import com.snaphy.mapstrack.Fragment.LoginFragment;
 import com.snaphy.mapstrack.Fragment.MainFragment;
 import com.snaphy.mapstrack.Fragment.ProfileFragment;
 import com.snaphy.mapstrack.Fragment.SettingFragment;
@@ -20,6 +22,8 @@ import com.snaphy.mapstrack.Fragment.ShowMapFragment;
 import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
 
+import de.greenrobot.event.EventBus;
+
 public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         MainFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener,
@@ -27,14 +31,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         FaqsFragment.OnFragmentInteractionListener, ContactFragment.OnFragmentInteractionListener,
         TermsFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener,
         CreateLocationFragment.OnFragmentInteractionListener, ShowContactFragment.OnFragmentInteractionListener,
-        ShowMapFragment.OnFragmentInteractionListener
+        ShowMapFragment.OnFragmentInteractionListener, LoginFragment.OnFragmentInteractionListener
 {
 
     //TODO 1. Make all list work in home fragment
     //TODO 2. Make menu items work in home fragment
     //TODO 3. Make Login Page with google login
     //TODO 4. Make Share fragment dynamic (to delete contact list)
-    //TODO 5. Open Map and navigation
     //TODO 6. Open Contacts and display in app
 
 
@@ -42,7 +45,29 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        replaceFragment(R.layout.fragment_main,null);
+        EventBus.getDefault().registerSticky(this);
+        replaceFragment(R.layout.fragment_login, null);
+        //http://www.andreas-schrade.de/2015/11/28/android-how-to-use-the-greenrobot-eventbus/
+    }
+
+    public void onEvent(LoginEvent event){
+        if(event.isLogin()) {
+            replaceFragment(R.layout.fragment_main, null);
+        } else {
+
+        }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
     /**
@@ -88,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             case R.layout.fragment_map:
                 openMap(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_login:
+                isLogin(fragmentTransaction);
                 break;
         }
     }
@@ -216,6 +245,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             showMapFragment = ShowMapFragment.newInstance();
         }
         fragmentTransaction.replace(R.id.main_container, showMapFragment, ShowMapFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**  Login Fragment is open from here
+    * @param fragmentTransaction {FragmentTransaction}
+    */
+    private void isLogin(FragmentTransaction fragmentTransaction) {
+        LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager().
+                findFragmentByTag(LoginFragment.TAG);
+        if (loginFragment == null) {
+            loginFragment = LoginFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.container, loginFragment, LoginFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
