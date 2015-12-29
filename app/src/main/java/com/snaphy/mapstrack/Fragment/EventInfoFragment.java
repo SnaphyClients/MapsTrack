@@ -50,6 +50,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_info_textview6) TextView contact;
     DateFormat dateFormat;
     MainActivity mainActivity;
+    EventHomeModel eventHomeModel;
 
     public EventInfoFragment() {
         // Required empty public constructor
@@ -80,6 +81,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Subscriber(tag = Constants.SHOW_EVENT_INFO)
     private void showEventInfo(EventHomeModel eventHomeModel) {
 
+        this.eventHomeModel = eventHomeModel;
         eventName.setText(eventHomeModel.getEventId());
 
         CharSequence eName = drawTextViewDesign("Event Name : ",eventHomeModel.getEventId());
@@ -122,6 +124,8 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button2) void deleteEvent() {
 
+        EventBus.getDefault().post(this.eventHomeModel, EventHomeModel.onDelete);
+        mainActivity.onBackPressed();
     }
 
     @OnClick(R.id.fragment_event_info_button3) void openMap() {

@@ -22,13 +22,14 @@ public class EventHomeModel {
     public static final String onChangeData = "EventHomeModel:onChange";
     public static final String onRemoveData = "EventHomeModel:onRemove";
 
-    public EventHomeModel(String eventId, String eventAddress, String description, String type, Date date, ArrayList<SelectContactModel> contacts ){
+    public EventHomeModel(String id, String eventId, String eventAddress, String description, String type, Date date, ArrayList<SelectContactModel> contacts ){
         this.eventId = eventId;
         this.eventAddress = eventAddress;
         this.description = description;
         this.type = type;
         this.date = date;
         this.contacts = contacts;
+        this.id = id;
     }
 
     public String getId() {

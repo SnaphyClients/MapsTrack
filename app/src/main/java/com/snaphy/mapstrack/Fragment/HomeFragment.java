@@ -155,7 +155,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         eventHomeModelArrayList.clear();
 
         for(int i = 0; i<eventHomeModel.size(); i++) {
-            eventHomeModelArrayList.add(new EventHomeModel(eventHomeModel.get(i).getEventId(),
+            eventHomeModelArrayList.add(new EventHomeModel(eventHomeModel.get(i).getId(),eventHomeModel.get(i).getEventId(),
                     eventHomeModel.get(i).getEventAddress(), eventHomeModel.get(i).getDescription(),
                     eventHomeModel.get(i).getType(), eventHomeModel.get(i).getDate(),eventHomeModel.get(i).getContacts()));
         }
@@ -176,6 +176,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
             if(element.getId() == eventHomeModel.getId()) {
                 int position = eventHomeModelArrayList.indexOf(element);
                 eventHomeModelArrayList.remove(position);
+                break;
             }
         }
         homeEventAdapter.notifyDataSetChanged();
@@ -189,7 +190,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     private void onChangeEvent(EventHomeModel eventHomeModel) {
 
         if(eventHomeModel.getId() == null) {
-            eventHomeModelArrayList.add(new EventHomeModel(eventHomeModel.getEventId(),
+            eventHomeModelArrayList.add(new EventHomeModel(null,eventHomeModel.getEventId(),
                     eventHomeModel.getEventAddress(), eventHomeModel.getDescription(), eventHomeModel.getType(),
                     eventHomeModel.getDate(), eventHomeModel.getContacts()));
             homeEventAdapter.notifyDataSetChanged();

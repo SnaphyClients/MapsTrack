@@ -39,27 +39,27 @@ public class EventHomeCollection {
         selectContactModels.add(new SelectContactModel("Anurag Gupta","9873045632"));
         selectContactModels.add(new SelectContactModel("Siddarth Jain","8745646993"));
         //Remove this static code
-        eventHomeModelArrayList.add(new EventHomeModel("Ravi123","DLF Phase 3, Gurgaon","Explore public service through this popular networking and recruiting program." +
+        eventHomeModelArrayList.add(new EventHomeModel("1","Ravi123","DLF Phase 3, Gurgaon","Explore public service through this popular networking and recruiting program." +
                 " The Government Careers Forum will feature a keynote presentation by" +
                 " Massachusetts State Representative Tackey Chan ’95, followed by round table" +
                 " networking sessions for students, alumni, faculty and staff with agency" +
                 " representatives","Birthday", date, selectContactModels));
 
 
-        eventHomeModelArrayList.add(new EventHomeModel("SidHome","Palam Vihar, Sector 25","Paul Romer, a prominent American economist and specialist on the theory of " +
+        eventHomeModelArrayList.add(new EventHomeModel("2","SidHome","Palam Vihar, Sector 25","Paul Romer, a prominent American economist and specialist on the theory of " +
                 "growth and innovation, will discuss charter cities and their potential impact on " +
                 "economic prosperity","Baby Shower", date, selectContactModels));
 
 
-        eventHomeModelArrayList.add(new EventHomeModel("RaghuMarriage","Pitampura, Haryana","Experience Virginia Woolf’s darkly elegant voice in an original stage adaptation " +
+        eventHomeModelArrayList.add(new EventHomeModel("3","RaghuMarriage","Pitampura, Haryana","Experience Virginia Woolf’s darkly elegant voice in an original stage adaptation " +
                 "of four compelling short stories.","Party", date, selectContactModels));
 
 
-        eventHomeModelArrayList.add(new EventHomeModel("RobParty","Cyber Hub, Cyber City","Debra Granik '85 will screen and discuss her best-known work to date – the " +
+        eventHomeModelArrayList.add(new EventHomeModel("4","RobParty","Cyber Hub, Cyber City","Debra Granik '85 will screen and discuss her best-known work to date – the " +
                 "Oscar-nominated film \"Winter's Bone.\"","Marriage", date, selectContactModels));
 
 
-        eventHomeModelArrayList.add(new EventHomeModel("AnuOffice", "Sahara Mall, Sikandarpur","Granik will take questions from the audience after the screening. " +
+        eventHomeModelArrayList.add(new EventHomeModel("5","AnuOffice", "Sahara Mall, Sikandarpur","Granik will take questions from the audience after the screening. " +
                 "This event is sponsored by the Film, Television and Interactive Media Program " +
                 "and the Edie and Lew Wasserman Fund.","Meeting", date, selectContactModels));
 
@@ -75,7 +75,7 @@ public class EventHomeCollection {
     private void onSave(EventHomeModel eventHomeModel) {
 
         if(eventHomeModel.getId() == null) { // New Data has been added in create location fragment
-            eventHomeModelArrayList.add(new EventHomeModel(eventHomeModel.getEventId(), eventHomeModel.getEventAddress(),
+            eventHomeModelArrayList.add(new EventHomeModel(null,eventHomeModel.getEventId(), eventHomeModel.getEventAddress(),
                     eventHomeModel.getDescription(), eventHomeModel.getType(), eventHomeModel.getDate(), eventHomeModel.getContacts()));
             /**
              *  TODO Send POST request to server
@@ -107,12 +107,13 @@ public class EventHomeCollection {
             if(element.getId() == eventHomeModel.getId()) {
                 int position = eventHomeModelArrayList.indexOf(element);
                 eventHomeModelArrayList.remove(position);
+                break;
             }
         }
         /**
          * TODO Send DELETE request to server
          */
-        EventBus.getDefault().postSticky(eventHomeModel, EventHomeModel.onRemoveData);
+        EventBus.getDefault().post(eventHomeModel, EventHomeModel.onRemoveData);
     }
 
 }

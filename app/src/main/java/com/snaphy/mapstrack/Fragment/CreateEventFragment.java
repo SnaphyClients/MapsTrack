@@ -241,7 +241,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             e.printStackTrace();
         }
 
-        EventHomeModel eventHomeModel =  new EventHomeModel(eventName.getText().toString(),
+        EventHomeModel eventHomeModel =  new EventHomeModel(null,eventName.getText().toString(),
                 placesAutocompleteTextView.getText().toString(), eventDescription.getText().toString(),
                 materialSpinner.getSelectedItem().toString(), date
                 , selectContactModelArrayList);
