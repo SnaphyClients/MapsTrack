@@ -10,8 +10,10 @@ import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
 import com.snaphy.mapstrack.Fragment.CreateLocationFragment;
+import com.snaphy.mapstrack.Fragment.EventInfoFragment;
 import com.snaphy.mapstrack.Fragment.FaqsFragment;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
+import com.snaphy.mapstrack.Fragment.LocationInfoFragment;
 import com.snaphy.mapstrack.Fragment.LoginFragment;
 import com.snaphy.mapstrack.Fragment.MainFragment;
 import com.snaphy.mapstrack.Fragment.ProfileFragment;
@@ -30,7 +32,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         FaqsFragment.OnFragmentInteractionListener, ContactFragment.OnFragmentInteractionListener,
         TermsFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener,
         CreateLocationFragment.OnFragmentInteractionListener, ShowContactFragment.OnFragmentInteractionListener,
-        ShowMapFragment.OnFragmentInteractionListener, LoginFragment.OnFragmentInteractionListener
+        ShowMapFragment.OnFragmentInteractionListener, LoginFragment.OnFragmentInteractionListener,
+        EventInfoFragment.OnFragmentInteractionListener, LocationInfoFragment.OnFragmentInteractionListener
 {
 
     //TODO 1. Make all list work in home fragment
@@ -115,6 +118,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             case R.layout.fragment_login:
                 isLogin(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_event_info:
+                openEventInfo(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_location_info:
+                openLocationInfo(fragmentTransaction);
                 break;
         }
     }
@@ -255,7 +266,33 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         if (loginFragment == null) {
             loginFragment = LoginFragment.newInstance();
         }
-        fragmentTransaction.replace(R.id.container, loginFragment, LoginFragment.TAG);
+        fragmentTransaction.replace(R.id.container, loginFragment, LoginFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**  Event Info Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void openEventInfo(FragmentTransaction fragmentTransaction) {
+        EventInfoFragment eventInfoFragment = (EventInfoFragment) getSupportFragmentManager().
+                findFragmentByTag(EventInfoFragment.TAG);
+        if (eventInfoFragment == null) {
+            eventInfoFragment = EventInfoFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.container, eventInfoFragment, EventInfoFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**  Location Info Fragment is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void openLocationInfo(FragmentTransaction fragmentTransaction) {
+        LocationInfoFragment locationInfoFragment = (LocationInfoFragment) getSupportFragmentManager().
+                findFragmentByTag(LocationInfoFragment.TAG);
+        if (locationInfoFragment == null) {
+            locationInfoFragment = LocationInfoFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.container, locationInfoFragment, LocationInfoFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
     }
 

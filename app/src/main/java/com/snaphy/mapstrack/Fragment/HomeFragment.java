@@ -34,8 +34,6 @@ import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -86,7 +84,6 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setEventDataInAdapter();
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
     }
@@ -123,7 +120,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mainActivity.replaceFragment(R.layout.fragment_map, null);
+                        mainActivity.replaceFragment(R.layout.fragment_event_info, null);
                     }
                 })
         );
@@ -132,7 +129,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mainActivity.replaceFragment(R.layout.fragment_map, null);
+                        mainActivity.replaceFragment(R.layout.fragment_location_info, null);
                     }
                 })
         );
@@ -316,48 +313,6 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
             }
         });
 
-    }
-
-
-    /**
-     * Data in event has been initialize from here
-     */
-    public void setEventDataInAdapter() {
-        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-        addDataToArrayList();
-
-       /* eventHomeModelArrayList.add(new EventHomeModel("Ravi123","DLF Phase 3, Gurgaon","Explore public service through this popular networking and recruiting program." +
-                " The Government Careers Forum will feature a keynote presentation by" +
-                " Massachusetts State Representative Tackey Chan ’95, followed by round table" +
-                " networking sessions for students, alumni, faculty and staff with agency" +
-                " representatives","Birthday", dateFormat, contacts));
-
-
-        eventHomeModelArrayList.add(new EventHomeModel("SidHome","Palam Vihar, Sector 25","Paul Romer, a prominent American economist and specialist on the theory of " +
-                "growth and innovation, will discuss charter cities and their potential impact on " +
-                "economic prosperity","Baby Shower", dateFormat, contacts));
-
-
-        eventHomeModelArrayList.add(new EventHomeModel("RaghuMarriage","Pitampura, Haryana","Experience Virginia Woolf’s darkly elegant voice in an original stage adaptation " +
-                "of four compelling short stories.","Party", dateFormat, contacts));
-
-
-        eventHomeModelArrayList.add(new EventHomeModel("RobParty","Cyber Hub, Cyber City","Debra Granik '85 will screen and discuss her best-known work to date – the " +
-                "Oscar-nominated film \"Winter's Bone.\"","Marriage", dateFormat, contacts));
-
-
-        eventHomeModelArrayList.add(new EventHomeModel("AnuOffice", "Sahara Mall, Sikandarpur","Granik will take questions from the audience after the screening. " +
-                "This event is sponsored by the Film, Television and Interactive Media Program " +
-                "and the Edie and Lew Wasserman Fund.","Meeting", dateFormat, contacts));*/
-    }
-
-    public void addDataToArrayList() {
-        contacts.add(0, "Ravi Gupta");
-        contacts.add(1,"Siddarth Jain");
-        contacts.add(2,"Robins Gupta");
-        contacts.add(3,"Neha Jain");
-        contacts.add(4,"Monika");
-        contacts.add(5,"Anurag Gupta");
     }
 
 
