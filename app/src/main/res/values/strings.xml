@@ -48,9 +48,9 @@
     <string name="fragment_create_event_edittext3">Event Date</string>
     <string name="fragment_create_event_edittext4">Event Description</string>
     <string name="fragment_create_event_edittext5">Add Contact</string>
-    <string name="fragment_create_event_button1">Select Date</string>
-    <string name="fragment_create_event_button3">Use my location</string>
-    <string name="fragment_create_event_button4">Select Friends</string>
+    <string name="fragment_create_event_button1">Edit Image</string>
+    <string name="fragment_create_event_button3">Show Selected Friends</string>
+    <string name="fragment_create_event_button4">Add Friends</string>
     <string name="fragment_create_event_button2">Publish Event</string>
     <string name="fragment_create_event_radio_button1">Public</string>
     <string name="fragment_create_event_radio_button2">Private</string>
