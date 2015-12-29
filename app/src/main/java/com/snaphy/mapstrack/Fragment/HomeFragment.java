@@ -120,7 +120,9 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        EventHomeModel eventHomeModel = eventHomeModelArrayList.get(position);
                         mainActivity.replaceFragment(R.layout.fragment_event_info, null);
+                        EventBus.getDefault().postSticky(eventHomeModel, Constants.SHOW_EVENT_INFO);
                     }
                 })
         );

@@ -101,8 +101,16 @@
     <string name="fragment_login_button1">Google +</string>
 
     <!--Event Info-->
-    <string name="fragment_event_info_textview0">My Event</string>
-    <string name="fragment_event_info_textview1">Event Name</string>
-    <string name="fragment_event_info_textview2">26 June 2016</string>
+    <string name="fragment_event_info_textview0">Party House</string>
+    <string name="fragment_event_info_textview1">Party House</string>
+    <string name="fragment_event_info_textview2">Party</string>
+    <string name="fragment_event_info_textview3">26 June 2016</string>
+    <string name="fragment_event_info_textview4">V 21/6, DLF Phase 3, Gurgaon</string>
+    <string name="fragment_event_info_textview5">Debra Granik 85 will screen and discuss her best-known work to date the
+                Oscar nominated film Winters Bone</string>
+    <string name="fragment_event_info_textview6">20 Friends</string>
+    <string name="layout_event_info_button1">Edit Event</string>
+    <string name="layout_event_info_button2">Delete Event</string>
+    <string name="layout_event_info_button3">Open Map</string>
 
 </resources>

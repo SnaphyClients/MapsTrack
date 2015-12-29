@@ -1,8 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.snaphy.mapstrack.Fragment.EventInfoFragment"
     android:background="@color/background"
     android:clickable="true">
@@ -11,11 +12,126 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/fragment_recipe_page_view_pager"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_margin="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="bottom|center"
+                android:text="@string/fragment_event_info_textview1"
+                android:textSize="13sp"
+                android:id="@+id/fragment_event_info_textview1"
+                android:layout_marginBottom="15dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightdarkColor"
+                android:layout_below="@+id/fragment_event_info_textview1"
+                android:id="@+id/view1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="bottom|center"
+                android:text="@string/fragment_event_info_textview2"
+                android:textSize="13sp"
+                android:layout_below="@+id/view1"
+                android:id="@+id/fragment_event_info_textview2"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightdarkColor"
+                android:layout_below="@+id/fragment_event_info_textview2"
+                android:id="@+id/view2"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="bottom|center"
+                android:layout_below="@+id/fragment_event_info_textview2"
+                android:text="@string/fragment_event_info_textview3"
+                android:textSize="13sp"
+                android:id="@+id/fragment_event_info_textview3"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightdarkColor"
+                android:layout_below="@+id/fragment_event_info_textview3"
+                android:id="@+id/view3"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="bottom|center"
+                android:layout_below="@+id/fragment_event_info_textview3"
+                android:text="@string/fragment_event_info_textview4"
+                android:textSize="13sp"
+                android:id="@+id/fragment_event_info_textview4"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightdarkColor"
+                android:layout_below="@+id/fragment_event_info_textview4"
+                android:id="@+id/view4"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="bottom|center"
+                android:layout_below="@+id/fragment_event_info_textview4"
+                android:text="@string/fragment_event_info_textview6"
+                android:textSize="13sp"
+                android:id="@+id/fragment_event_info_textview6"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightdarkColor"
+                android:layout_below="@+id/fragment_event_info_textview6"
+                android:id="@+id/view5"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="bottom|center"
+                android:layout_below="@+id/fragment_event_info_textview6"
+                android:text="@string/fragment_event_info_textview5"
+                android:textSize="13sp"
+                android:id="@+id/fragment_event_info_textview5"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightdarkColor"
+                android:layout_below="@+id/fragment_event_info_textview5"
+                android:id="@+id/view6"/>
+
+
+        </RelativeLayout>
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -42,12 +158,8 @@
                         android:layout_height="match_parent"
                         android:fitsSystemWindows="true"
                         android:scaleType="centerCrop"
+                        android:src="@drawable/weddingcard"
                         app:layout_collapseMode="parallax" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/image_gradient"/>
 
                 </FrameLayout>
 
@@ -79,40 +191,56 @@
 
                 </android.support.v7.widget.Toolbar>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="70dp"
-                    android:text="@string/fragment_event_info_textview1"
-                    android:textSize="16sp"
-                    android:id="@+id/fragment_event_info_textview1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="55dp"
-                    android:text="@string/fragment_event_info_textview2"
-                    android:textSize="13sp"
-                    android:id="@+id/fragment_event_info_textview2" />
-
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_height="wrap_content"
-            android:id="@+id/uploadPhotoButton"
+         <com.github.clans.fab.FloatingActionMenu
+             android:id="@+id/fragment_event_info_floating_button1"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             fab:menu_icon="@mipmap/menu_home"
+             fab:menu_labels_style="@style/MenuLabelsStyle"
+             fab:menu_labels_showAnimation="@anim/jump_from_down"
+             fab:menu_labels_hideAnimation="@anim/jump_to_down"
+             fab:menu_animationDelayPerItem="0"
+             fab:menu_shadowColor="#444"
+             fab:menu_colorNormal="@color/colorPrimary"
+             fab:menu_colorPressed="@color/colorPrimaryDark"
+             fab:menu_colorRipple="#F1F1F1"
+             fab:menu_fab_size="normal"
+             app:layout_anchor="@id/appbar"
+             app:layout_anchorGravity="right"
+             android:layout_marginRight="20dp"
+             android:layout_marginBottom="20dp">
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_event_info_button1"
             android:layout_width="wrap_content"
-            app:layout_anchor="@id/appbar"
-            app:layout_anchorGravity="bottom|right|end"
-            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/edit_purple"
+            fab:fab_label="@string/layout_event_info_button1"
+            style="@style/MenuButtonsStyle" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_event_info_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/delete_home"
+            fab:fab_label="@string/layout_event_info_button2"
+            style="@style/MenuButtonsStyle" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_event_info_button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@mipmap/menu_home"
-            android:clickable="true"/>
+            fab:fab_label="@string/layout_event_info_button3"
+            style="@style/MenuButtonsStyle" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 
     </android.support.design.widget.CoordinatorLayout>
 
-</FrameLayout>
+</RelativeLayout>

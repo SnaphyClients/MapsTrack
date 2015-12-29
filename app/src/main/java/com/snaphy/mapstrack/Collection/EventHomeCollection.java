@@ -6,10 +6,8 @@ import com.snaphy.mapstrack.Model.SelectContactModel;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -31,16 +29,10 @@ public class EventHomeCollection {
      */
     public void initialize() {
         eventHomeModelArrayList.clear();
+        date = Calendar.getInstance().getTime();
         /**
          *  TODO Fetch Data From Server
          */
-        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-        try {
-            date = dateFormat.parse("26 June 2016");
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         ArrayList<SelectContactModel> selectContactModels = new ArrayList<SelectContactModel>();
         selectContactModels.add(new SelectContactModel("Ravi Gupta","9873046993"));
         selectContactModels.add(new SelectContactModel("Robins Gupta","987389993"));
