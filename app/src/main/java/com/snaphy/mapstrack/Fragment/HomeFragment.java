@@ -146,6 +146,73 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         return view;
     }
 
+    /********************************************************* Event Subscribers******************************************/
+    /**
+     *  Event data is fetched from the server when first initialized
+     * @param eventHomeModel
+     */
+    @Subscriber(tag = EventHomeModel.onResetData)
+    private void onInitEvent(ArrayList<EventHomeModel> eventHomeModel) {
+        eventHomeModelArrayList.clear();
+
+        for(int i = 0; i<eventHomeModel.size(); i++) {
+            eventHomeModelArrayList.add(new EventHomeModel(eventHomeModel.get(i).getEventId(),
+                    eventHomeModel.get(i).getEventAddress(), eventHomeModel.get(i).getDescription(),
+                    eventHomeModel.get(i).getType(), eventHomeModel.get(i).getDate(),eventHomeModel.get(i).getContacts()));
+        }
+
+        homeEventAdapter.notifyDataSetChanged();
+    }
+
+
+    /**
+     *  Event data is removed on pressing delete button
+     * @param eventHomeModel
+     */
+    @Subscriber(tag = EventHomeModel.onRemoveData)
+    private void onRemoveEvent(EventHomeModel eventHomeModel) {
+
+        for(EventHomeModel element : eventHomeModelArrayList) {
+
+            if(element.getId() == eventHomeModel.getId()) {
+                int position = eventHomeModelArrayList.indexOf(element);
+                eventHomeModelArrayList.remove(position);
+            }
+        }
+        homeEventAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * When data is edited or added this method is called
+     * @param eventHomeModel
+     */
+    @Subscriber(tag = EventHomeModel.onChangeData)
+    private void onChangeEvent(EventHomeModel eventHomeModel) {
+
+        if(eventHomeModel.getId() == null) {
+            eventHomeModelArrayList.add(new EventHomeModel(eventHomeModel.getEventId(),
+                    eventHomeModel.getEventAddress(), eventHomeModel.getDescription(), eventHomeModel.getType(),
+                    eventHomeModel.getDate(), eventHomeModel.getContacts()));
+            homeEventAdapter.notifyDataSetChanged();
+        }
+
+        else {
+            for(EventHomeModel element : eventHomeModelArrayList) {
+
+                if(element.getId() == eventHomeModel.getId()) {
+                    int position = eventHomeModelArrayList.indexOf(element);
+                    eventHomeModelArrayList.set(position, eventHomeModel);
+                }
+            }
+            homeEventAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /********************************************************* Event Subscribers******************************************/
+
+
+
+    /********************************************************* Location Subscribers******************************************/
     /**
      *  Location data is fetched from the server when first initialized
      * @param locationHomeModel
@@ -206,6 +273,8 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
             homeLocationAdapter.notifyDataSetChanged();
         }
     }
+
+    /********************************************************* Location Subscribers******************************************/
 
 
     /**
