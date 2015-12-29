@@ -13,5 +13,7 @@ public final class Constants {
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 
     public static final String SHOW_EVENT_INFO = "HomeFragment:onEventClick";
+    public static final String SHOW_EVENT_EDIT = "EventInfoFragment:onEdit";
+
 
 }

@@ -84,22 +84,22 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         this.eventHomeModel = eventHomeModel;
         eventName.setText(eventHomeModel.getEventId());
 
-        CharSequence eName = drawTextViewDesign("Event Name : ",eventHomeModel.getEventId());
+        CharSequence eName = drawTextViewDesign("Event Name : ",this.eventHomeModel.getEventId());
         eventName2.setText(eName);
 
-        CharSequence eType = drawTextViewDesign("Event Type : ", eventHomeModel.getType());
+        CharSequence eType = drawTextViewDesign("Event Type : ", this.eventHomeModel.getType());
         eventType.setText(eType);
 
-        CharSequence eDate = drawTextViewDesign("Event Date : ", dateFormat.format(eventHomeModel.getDate()).toString());
+        CharSequence eDate = drawTextViewDesign("Event Date : ", dateFormat.format(this.eventHomeModel.getDate()).toString());
         eventDate.setText(eDate);
 
-        CharSequence eAddress = drawTextViewDesign("Event Address : ", eventHomeModel.getEventAddress());
+        CharSequence eAddress = drawTextViewDesign("Event Address : ", this.eventHomeModel.getEventAddress());
         eventAddress.setText(eAddress);
 
-        CharSequence eDescription = drawTextViewDesign("Event Description : ", eventHomeModel.getDescription());
+        CharSequence eDescription = drawTextViewDesign("Event Description : ", this.eventHomeModel.getDescription());
         eventDescription.setText(eDescription);
 
-        CharSequence eContact = drawTextViewDesign("Friends Invited : ", (String.valueOf(eventHomeModel.getContacts().size())));
+        CharSequence eContact = drawTextViewDesign("Friends Invited : ", (String.valueOf(this.eventHomeModel.getContacts().size())));
         contact.setText(eContact);
 
     }
@@ -120,6 +120,8 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button1) void editEvent() {
 
+        EventBus.getDefault().postSticky(this.eventHomeModel, Constants.SHOW_EVENT_EDIT);
+        mainActivity.replaceFragment(R.layout.fragment_create_event,null);
     }
 
     @OnClick(R.id.fragment_event_info_button2) void deleteEvent() {

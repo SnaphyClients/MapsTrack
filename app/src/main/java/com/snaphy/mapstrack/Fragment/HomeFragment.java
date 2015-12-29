@@ -197,6 +197,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         }
 
         else {
+            //TODO Update data of server with Id
             for(EventHomeModel element : eventHomeModelArrayList) {
 
                 if(element.getId() == eventHomeModel.getId()) {
@@ -299,7 +300,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.replaceFragment(R.id.fragment_cart_floating_button1, null);
+                mainActivity.replaceFragment(R.layout.fragment_create_event, null);
             }
         });
 
@@ -312,7 +313,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.replaceFragment(R.id.fragment_cart_floating_button2, null);
+                mainActivity.replaceFragment(R.layout.fragment_create_location, null);
             }
         });
 

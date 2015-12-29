@@ -100,11 +100,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 openTermsPage(fragmentTransaction);
                 break;
 
-            case R.id.fragment_cart_floating_button1 :
+            case R.layout.fragment_create_event :
                 createEvent(fragmentTransaction);
                 break;
 
-            case R.id.fragment_cart_floating_button2:
+            case R.layout.fragment_create_location:
                 createLocation(fragmentTransaction);
                 break;
 

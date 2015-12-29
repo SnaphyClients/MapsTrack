@@ -25,6 +25,7 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
@@ -33,6 +34,7 @@ import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
 
 import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -108,6 +110,15 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         dateEdittext.setKeyListener(null);
         selectPosition();
         return view;
+    }
+
+    @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
+    private void onEdit(EventHomeModel eventHomeModel) {
+
+        eventName.setText(eventHomeModel.getEventId());
+        eventDescription.setText(eventHomeModel.getDescription());
+        eventLocation.setText(eventHomeModel.getEventAddress());
+        dateEdittext.setText(eventHomeModel.getDate().toString());
     }
 
 //    public void onEvent(AddressEvent event){
