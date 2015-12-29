@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.snaphy.mapstrack.R;
+
+import butterknife.Bind;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +25,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "EventInfoFragment";
+    @Bind(R.id.fragment_event_info_textview0) TextView myEvent;
 
     public EventInfoFragment() {
         // Required empty public constructor

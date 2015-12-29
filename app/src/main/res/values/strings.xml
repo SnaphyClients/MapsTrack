@@ -100,4 +100,9 @@
     <string name="fragment_login_textview2">log in with</string>
     <string name="fragment_login_button1">Google +</string>
 
+    <!--Event Info-->
+    <string name="fragment_event_info_textview0">My Event</string>
+    <string name="fragment_event_info_textview1">Event Name</string>
+    <string name="fragment_event_info_textview2">26 June 2016</string>
+
 </resources>
