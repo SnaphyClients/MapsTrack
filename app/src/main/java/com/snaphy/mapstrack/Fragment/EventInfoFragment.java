@@ -125,7 +125,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_event_info_button3) void openMap() {
-        
+        mainActivity.replaceFragment(R.layout.fragment_map,null);
     }
 
     
