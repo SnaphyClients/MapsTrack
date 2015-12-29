@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
@@ -25,9 +24,6 @@ import com.google.android.gms.location.LocationServices;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Database.LocationContactDatabase;
-import com.snaphy.mapstrack.Database.LocationEventDatabase;
-import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
@@ -41,7 +37,6 @@ import org.simple.eventbus.Subscriber;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,22 +57,20 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     @Bind(R.id.fragment_home_textview2) TextView locationText;
     @Bind(R.id.fragment_cart_floating_button1) android.support.design.widget.FloatingActionButton floatingActionButton1;
     @Bind(R.id.fragment_cart_floating_button2) android.support.design.widget.FloatingActionButton floatingActionButton2;
+
     HomeEventAdapter homeEventAdapter;
     HomeLocationAdapter homeLocationAdapter;
+
     ArrayList<EventHomeModel> eventHomeModelArrayList = new ArrayList<EventHomeModel>();
     ArrayList<LocationHomeModel> locationHomeModelArrayList = new ArrayList<LocationHomeModel>();
+
     MainActivity mainActivity;
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     private GoogleApiClient mGoogleApiClient;
     ArrayList<String> contacts  = new ArrayList<String>();
-    ArrayList<String> locationContacts  = new ArrayList<String>();
     double latitude;
     double longitude;
-    List<LocationContactDatabase> locationContactDatabases;
-    List<LocationEventDatabase> locationEventDatabases;
-    List<TemporaryContactDatabase> temporaryContactDatabases;
-    List<LocationContactDatabase> contactDatabaseList;
 
 
     public HomeFragment() {
@@ -109,14 +102,10 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         eventText.setTypeface(typeface);
         locationText.setTypeface(typeface);
 
-
         final LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
         final LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
         layoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
-
-
-
 
         recyclerView1.setLayoutManager(layoutManager1);
         recyclerView2.setLayoutManager(layoutManager2);
@@ -151,21 +140,23 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         eventFloatingButtonClickListener();
         locationFloatingButtonClickListener();
 
-        locationEventDatabases = new Select().from(LocationEventDatabase.class).execute();
-
-
         initializeGooglePlacesApi();
         mGoogleApiClient.connect();
-        setLocationDataInAdapter();
 
         return view;
     }
 
+    /**
+     *  Location data is fetched from the server when first initialized
+     * @param locationHomeModel
+     */
     @Subscriber(tag = LocationHomeModel.onResetData)
     private void onInit(ArrayList<LocationHomeModel> locationHomeModel) {
         locationHomeModelArrayList.clear();
+
         for(int i = 0; i<locationHomeModel.size(); i++) {
-            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.get(i).getLocationName(),locationHomeModel.get(i).getLocationAddress(),
+            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.get(i).getLocationName(),
+                    locationHomeModel.get(i).getLocationAddress(),
                     locationHomeModel.get(i).getLocationId(),locationHomeModel.get(i).getContacts()));
         }
 
@@ -173,10 +164,15 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     }
 
 
-
+    /**
+     *  Location data is removed on pressing delete button
+     * @param locationHomeModel
+     */
     @Subscriber(tag = LocationHomeModel.onRemoveData)
     private void onRemove(LocationHomeModel locationHomeModel) {
+
         for(LocationHomeModel element : locationHomeModelArrayList) {
+
             if(element.getId() == locationHomeModel.getId()) {
                 int position = locationHomeModelArrayList.indexOf(element);
                 locationHomeModelArrayList.remove(position);
@@ -185,14 +181,23 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         homeLocationAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * When data is edited or added this method is called
+     * @param locationHomeModel
+     */
     @Subscriber(tag = LocationHomeModel.onChangeData)
     private void onChange(LocationHomeModel locationHomeModel) {
+
         if(locationHomeModel.getId() == null) {
             locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.getLocationName(),
-                    locationHomeModel.getLocationAddress(), locationHomeModel.getLocationId(), locationHomeModel.getContacts()));
+                    locationHomeModel.getLocationAddress(), locationHomeModel.getLocationId(),
+                    locationHomeModel.getContacts()));
             homeLocationAdapter.notifyDataSetChanged();
-        }  else {
+        }
+
+        else {
             for(LocationHomeModel element : locationHomeModelArrayList) {
+
                 if(element.getId() == locationHomeModel.getId()) {
                     int position = locationHomeModelArrayList.indexOf(element);
                     locationHomeModelArrayList.set(position, locationHomeModel);
@@ -201,8 +206,6 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
             homeLocationAdapter.notifyDataSetChanged();
         }
     }
-
-
 
 
     /**
@@ -246,25 +249,6 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
 
     }
 
-    /**
-     * Data in location has been initialize from here
-     */
-    public void setLocationDataInAdapter() {
-
-        if(locationEventDatabases != null) {
-            locationHomeModelArrayList.clear();
-        for(int i = 0; i<locationEventDatabases.size(); i++) {
-            List<LocationContactDatabase> contactDatabaseList = LocationContactDatabase.getAll(locationEventDatabases.get(i));
-            locationContacts.clear();
-            for(int j=0; j<contactDatabaseList.size() ; j++) {
-                locationContacts.add(i, contactDatabaseList.get(i).name);
-            }
-            /*locationHomeModelArrayList.add(new LocationHomeModel(locationEventDatabases.get(i).name, locationEventDatabases.get(i).address,
-                    locationEventDatabases.get(i).locationId, locationContacts));*/
-
-            }
-        }
-    }
 
     /**
      * Data in event has been initialize from here
@@ -273,7 +257,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         DateFormat dateFormat = SimpleDateFormat.getDateInstance();
         addDataToArrayList();
 
-        eventHomeModelArrayList.add(new EventHomeModel("Ravi123","DLF Phase 3, Gurgaon","Explore public service through this popular networking and recruiting program." +
+       /* eventHomeModelArrayList.add(new EventHomeModel("Ravi123","DLF Phase 3, Gurgaon","Explore public service through this popular networking and recruiting program." +
                 " The Government Careers Forum will feature a keynote presentation by" +
                 " Massachusetts State Representative Tackey Chan ’95, followed by round table" +
                 " networking sessions for students, alumni, faculty and staff with agency" +
@@ -295,7 +279,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
 
         eventHomeModelArrayList.add(new EventHomeModel("AnuOffice", "Sahara Mall, Sikandarpur","Granik will take questions from the audience after the screening. " +
                 "This event is sponsored by the Film, Television and Interactive Media Program " +
-                "and the Edie and Lew Wasserman Fund.","Meeting", dateFormat, contacts));
+                "and the Edie and Lew Wasserman Fund.","Meeting", dateFormat, contacts));*/
     }
 
     public void addDataToArrayList() {

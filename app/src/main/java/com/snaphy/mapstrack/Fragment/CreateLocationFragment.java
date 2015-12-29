@@ -3,7 +3,6 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
-import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
@@ -45,13 +43,16 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateLocationFragment";
+
     @Bind(R.id.fragment_create_location_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_location_edittext1) EditText locationName;
     @Bind(R.id.fragment_create_location_edittext2) EditText locationId;
+
     static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
+    MainActivity mainActivity;
+
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
-    MainActivity mainActivity;
     List<TemporaryContactDatabase> temporaryContactDatabases;
     ArrayList<LocationHomeModel> locationHomeModelArrayList = new ArrayList<LocationHomeModel>();
 
@@ -111,6 +112,11 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         showOnlyContentDialog(holder, adapter);
     }
 
+    /**
+     * Open dialog showing list of selected contacts
+     * @param holder
+     * @param adapter
+     */
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
         final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
                 .setContentHolder(holder)
@@ -143,6 +149,9 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         placesAutocompleteTextView.setText(event.getAddress());
     }*/
 
+    /**
+     * When back button is pressed in fragment
+     */
     private void backButtonClickListener() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,27 +161,32 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         });
     }
 
+    /**
+     * Contact are selected from list of avialable contact in phone contact
+     */
     @OnClick(R.id.fragment_create_location_button1) void selectContact() {
         mainActivity.replaceFragment(R.layout.layout_select_contact, null);
     }
 
+    /**
+     * When publish event button is clicked
+     */
     @OnClick(R.id.fragment_create_location_button2) void publishEvent() {
 
         for (int i = 0; i<temporaryContactDatabases.size(); i++) {
-            selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name, temporaryContactDatabases.get(i).number));
+            selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name,
+                    temporaryContactDatabases.get(i).number));
         }
+
         LocationHomeModel locationHomeModel =  new LocationHomeModel(locationName.getText().toString(),
                 placesAutocompleteTextView.getText().toString(),
                 locationId.getText().toString(), selectContactModelArrayList);
-        locationHomeModelArrayList.add(new LocationHomeModel("Ravi Home", "DLF Phase 3", "raviHome", new ArrayList<SelectContactModel>()));
 
-        Log.v(Constants.TAG, LocationHomeModel.onSave);
         EventBus.getDefault().post(locationHomeModel, LocationHomeModel.onSave);
         TemporaryContactDatabase.deleteAll();
         //TODO check its occurance
         setLocationDataInAdapter();
         mainActivity.onBackPressed();
-
 
     }
 
@@ -186,7 +200,6 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         for(int i = 0; i<temporaryContactDatabases.size();i++) {
             displayContactModelArrayList.add(new DisplayContactModel(temporaryContactDatabases.get(i).name));
         }
-        //displayContactModelArrayList.add(new DisplayContactModel("Ravi Gupta"));
 
     }
 

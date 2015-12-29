@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import com.snaphy.mapstrack.Event.LoginEvent;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
@@ -45,22 +44,18 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        EventBus.getDefault().registerSticky(this);
         startService(new Intent(getBaseContext(), BackgroundService.class));
+        // TODO Stop service in activity on destory method if required
         replaceFragment(R.layout.fragment_main, null);
-        //http://www.andreas-schrade.de/2015/11/28/android-how-to-use-the-greenrobot-eventbus/
     }
 
-    public void onEvent(LoginEvent event){
+   /* public void onEvent(LoginEvent event){
         if(event.isLogin()) {
             replaceFragment(R.layout.fragment_main, null);
         } else {
 
         }
-    }
-
-
-
+    }*/
 
     @Override
     public void onResume() {

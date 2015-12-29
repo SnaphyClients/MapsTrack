@@ -8,15 +8,22 @@ import java.util.ArrayList;
  */
 public class EventHomeModel {
 
+    private String id;
     private String eventId;
     private String eventAddress;
     private String description;
     private String type;
     private DateFormat date;
-    private ArrayList<String> contacts  = new ArrayList<String>();
+    private ArrayList<SelectContactModel> contacts  = new ArrayList<SelectContactModel>();
+
+    public static final String onSave = "EventHomeModel:onSave";
+    public static final String onDelete = "EventHomeModel:onDelete";
+    public static final String onResetData = "EventHomeModel:onReset";
+    public static final String onChangeData = "EventHomeModel:onChange";
+    public static final String onRemoveData = "EventHomeModel:onRemove";
 
 
-    public EventHomeModel(String eventId, String eventAddress, String description, String type, DateFormat date, ArrayList<String> contacts ){
+    public EventHomeModel(String eventId, String eventAddress, String description, String type, DateFormat date, ArrayList<SelectContactModel> contacts ){
         this.eventId = eventId;
         this.eventAddress = eventAddress;
         this.description = description;
@@ -24,6 +31,15 @@ public class EventHomeModel {
         this.date = date;
         this.contacts = contacts;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 
     public String getEventId() {
         return eventId;
@@ -65,11 +81,11 @@ public class EventHomeModel {
         this.date = date;
     }
 
-    public ArrayList<String> getContacts() {
+    public ArrayList<SelectContactModel> getContacts() {
         return contacts;
     }
 
-    public void setContacts(ArrayList<String> contacts) {
+    public void setContacts(ArrayList<SelectContactModel> contacts) {
         this.contacts = contacts;
     }
 

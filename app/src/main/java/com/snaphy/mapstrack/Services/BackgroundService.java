@@ -4,15 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+import com.snaphy.mapstrack.Collection.EventHomeCollection;
 import com.snaphy.mapstrack.Collection.LocationHomeCollection;
-import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Model.LocationHomeModel;
 
 import org.simple.eventbus.EventBus;
-
-import java.util.ArrayList;
 
 
 /**
@@ -20,8 +16,8 @@ import java.util.ArrayList;
  */
 public class BackgroundService extends Service {
 
-    ArrayList<LocationHomeModel> locationHomeModelArrayList = new ArrayList<LocationHomeModel>();
     LocationHomeCollection locationHomeCollection;
+    EventHomeCollection eventHomeCollection;
 
     @Nullable
     @Override
@@ -29,21 +25,28 @@ public class BackgroundService extends Service {
         return null;
     }
 
-
-
+    /**
+     *  This method is called to start the service from main Activity
+     * @param intent {Intent}
+     * @param flags {int}
+     * @param startId {int}
+     * @return int
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         EventBus.getDefault().registerSticky(this);
-        // Let it continue running until it is stopped.
+        eventHomeCollection = new EventHomeCollection();
         locationHomeCollection  = new LocationHomeCollection();
-        Log.v(Constants.TAG, "Service is Started");
         return START_STICKY;
     }
 
+    /**
+     * This method is used to kill service or destroy service
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        Log.v(Constants.TAG, "Service is Stopped");
     }
 }

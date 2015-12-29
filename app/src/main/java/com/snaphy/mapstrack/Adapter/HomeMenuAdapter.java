@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -26,6 +27,7 @@ public class HomeMenuAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     EventHomeModel eventHomeModel;
     Context context;
+    ArrayList<String> contacts = new ArrayList<String>();
 
     public HomeMenuAdapter(Context context, EventHomeModel eventHomeModel) {
         layoutInflater = LayoutInflater.from(context);
@@ -89,8 +91,12 @@ public class HomeMenuAdapter extends BaseAdapter {
         viewHolder.description.setText(eventHomeModel.getDescription());
         viewHolder.address.setText(eventHomeModel.getEventAddress());
 
+        for(int i = 0; i < eventHomeModel.getContacts().size(); i++) {
+            contacts.add(i , eventHomeModel.getContacts().get(i).getContactName());
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                R.layout.layout_dialog_contact, R.id.layout_fragment_dialog_contact_textview1, eventHomeModel.getContacts());
+                R.layout.layout_dialog_contact, R.id.layout_fragment_dialog_contact_textview1, contacts);
         // Sets the adapter for the ListView
         viewHolder.contactList.setAdapter(adapter);
         setListViewHeightBasedOnChildren(viewHolder.contactList);

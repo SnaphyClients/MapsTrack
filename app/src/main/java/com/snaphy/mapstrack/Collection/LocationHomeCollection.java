@@ -1,8 +1,5 @@
 package com.snaphy.mapstrack.Collection;
 
-import android.util.Log;
-
-import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.Model.SelectContactModel;
 
@@ -22,10 +19,11 @@ public class LocationHomeCollection {
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
         initialize();
-        EventBus.getDefault().post(new LocationHomeModel("Rob", "sdf", "sasa", new ArrayList<SelectContactModel>()), "test");
-        EventBus.getDefault().post(new LocationHomeModel("Rob", "sdkkf", "sasa", new ArrayList<SelectContactModel>()), "");
     }
 
+    /**
+     *  Data is fetch from the server when app will start
+     */
     public void initialize() {
         locationHomeModelArrayList.clear();
         /**
@@ -46,16 +44,13 @@ public class LocationHomeCollection {
 
     }
 
-
-    @Subscriber(tag ="test")
-    private void onSave_(LocationHomeModel locationHomeModel) {
-        Log.i(Constants.TAG, "hey i am getting default.");
-    }
-
-
+    /**
+     *  When new data is added or data is changed in fragment Location this method is called
+     * @param locationHomeModel
+     */
     @Subscriber(tag = LocationHomeModel.onSave)
     private void onSave(LocationHomeModel locationHomeModel) {
-        Log.i(Constants.TAG, "hey i am here.");
+
         if(locationHomeModel.getId() == null) { // New Data has been added in create location fragment
             locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.getLocationName(),
                     locationHomeModel.getLocationAddress(), locationHomeModel.getLocationId(), locationHomeModel.getContacts()));
@@ -79,7 +74,10 @@ public class LocationHomeCollection {
     }
 
 
-
+    /**
+     *  It is called when data is deleted from fragment
+     * @param locationHomeModel
+     */
     @Subscriber(tag = LocationHomeModel.onDelete)
     private void onDelete(LocationHomeModel locationHomeModel) {
         for(LocationHomeModel element : locationHomeModelArrayList) {
