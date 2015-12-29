@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
@@ -24,7 +25,9 @@ import com.google.android.gms.location.LocationServices;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Event.AddressEvent;
+import com.snaphy.mapstrack.Database.LocationContactDatabase;
+import com.snaphy.mapstrack.Database.LocationEventDatabase;
+import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
@@ -32,13 +35,16 @@ import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.RecyclerItemClickListener;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 import static com.google.android.gms.internal.zzip.runOnUiThread;
 
@@ -68,6 +74,10 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     ArrayList<String> locationContacts  = new ArrayList<String>();
     double latitude;
     double longitude;
+    List<LocationContactDatabase> locationContactDatabases;
+    List<LocationEventDatabase> locationEventDatabases;
+    List<TemporaryContactDatabase> temporaryContactDatabases;
+    List<LocationContactDatabase> contactDatabaseList;
 
 
     public HomeFragment() {
@@ -84,7 +94,8 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setEventDataInAdapter();
-        setLocationDataInAdapter();
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -104,6 +115,9 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         layoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
 
+
+
+
         recyclerView1.setLayoutManager(layoutManager1);
         recyclerView2.setLayoutManager(layoutManager2);
 
@@ -113,18 +127,22 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         recyclerView1.setAdapter(homeEventAdapter);
         recyclerView2.setAdapter(homeLocationAdapter);
 
+        homeEventAdapter.notifyDataSetChanged();
+        homeLocationAdapter.notifyDataSetChanged();
+
         recyclerView1.addOnItemTouchListener(
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mainActivity.replaceFragment(R.layout.fragment_map,null);
+                        mainActivity.replaceFragment(R.layout.fragment_map, null);
                     }
                 })
         );
 
         recyclerView2.addOnItemTouchListener(
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         mainActivity.replaceFragment(R.layout.fragment_map, null);
                     }
                 })
@@ -133,11 +151,59 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         eventFloatingButtonClickListener();
         locationFloatingButtonClickListener();
 
+        locationEventDatabases = new Select().from(LocationEventDatabase.class).execute();
+
+
         initializeGooglePlacesApi();
         mGoogleApiClient.connect();
+        setLocationDataInAdapter();
 
         return view;
     }
+
+    @Subscriber(tag = LocationHomeModel.onResetData)
+    private void onInit(ArrayList<LocationHomeModel> locationHomeModel) {
+        locationHomeModelArrayList.clear();
+        for(int i = 0; i<locationHomeModel.size(); i++) {
+            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.get(i).getLocationName(),locationHomeModel.get(i).getLocationAddress(),
+                    locationHomeModel.get(i).getLocationId(),locationHomeModel.get(i).getContacts()));
+        }
+
+        homeLocationAdapter.notifyDataSetChanged();
+    }
+
+
+
+    @Subscriber(tag = LocationHomeModel.onRemoveData)
+    private void onRemove(LocationHomeModel locationHomeModel) {
+        for(LocationHomeModel element : locationHomeModelArrayList) {
+            if(element.getId() == locationHomeModel.getId()) {
+                int position = locationHomeModelArrayList.indexOf(element);
+                locationHomeModelArrayList.remove(position);
+            }
+        }
+        homeLocationAdapter.notifyDataSetChanged();
+    }
+
+    @Subscriber(tag = LocationHomeModel.onChangeData)
+    private void onChange(LocationHomeModel locationHomeModel) {
+        if(locationHomeModel.getId() == null) {
+            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.getLocationName(),
+                    locationHomeModel.getLocationAddress(), locationHomeModel.getLocationId(), locationHomeModel.getContacts()));
+            homeLocationAdapter.notifyDataSetChanged();
+        }  else {
+            for(LocationHomeModel element : locationHomeModelArrayList) {
+                if(element.getId() == locationHomeModel.getId()) {
+                    int position = locationHomeModelArrayList.indexOf(element);
+                    locationHomeModelArrayList.set(position, locationHomeModel);
+                }
+            }
+            homeLocationAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+
 
     /**
      * Initialize google place api and last location of the app
@@ -184,12 +250,20 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
      * Data in location has been initialize from here
      */
     public void setLocationDataInAdapter() {
-        addDataToLocationArrayList();
-        locationHomeModelArrayList.add(new LocationHomeModel("Shanti Niketan", "DLF Phase 3, Gurgaon","sweetHome",contacts));
-        locationHomeModelArrayList.add(new LocationHomeModel("Anu Office", "Palam Vihar, Sector 25","officeOffice",contacts));
-        locationHomeModelArrayList.add(new LocationHomeModel("My Party", "Pitampura, Haryana","rock&Roll",contacts));
-        locationHomeModelArrayList.add(new LocationHomeModel("Ravi House","Cyber Hub, Cyber City","namoShiv",contacts));
-        locationHomeModelArrayList.add(new LocationHomeModel("Sid Home", "Sahara Mall, Sikandarpur", "dreamHome", contacts));
+
+        if(locationEventDatabases != null) {
+            locationHomeModelArrayList.clear();
+        for(int i = 0; i<locationEventDatabases.size(); i++) {
+            List<LocationContactDatabase> contactDatabaseList = LocationContactDatabase.getAll(locationEventDatabases.get(i));
+            locationContacts.clear();
+            for(int j=0; j<contactDatabaseList.size() ; j++) {
+                locationContacts.add(i, contactDatabaseList.get(i).name);
+            }
+            /*locationHomeModelArrayList.add(new LocationHomeModel(locationEventDatabases.get(i).name, locationEventDatabases.get(i).address,
+                    locationEventDatabases.get(i).locationId, locationContacts));*/
+
+            }
+        }
     }
 
     /**
@@ -233,14 +307,6 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         contacts.add(5,"Anurag Gupta");
     }
 
-    public void addDataToLocationArrayList() {
-        locationContacts.add(0,"Ravi Gupta");
-        locationContacts.add(1,"Siddarth Jain");
-        locationContacts.add(2,"Robins Gupta");
-        locationContacts.add(3,"Neha Jain");
-        locationContacts.add(4,"Monika");
-        locationContacts.add(5,"Anurag Gupta");
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -346,8 +412,8 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(mAddressOutput != null)
-                        EventBus.getDefault().postSticky(new AddressEvent(mAddressOutput));
+                        //if(mAddressOutput != null)
+                      //  EventBus.getDefault().postSticky(new AddressEvent(mAddressOutput));
                     }
                 });
 

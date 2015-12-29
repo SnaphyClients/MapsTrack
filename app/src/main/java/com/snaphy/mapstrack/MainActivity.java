@@ -1,5 +1,6 @@
 package com.snaphy.mapstrack;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -21,8 +22,7 @@ import com.snaphy.mapstrack.Fragment.ShowContactFragment;
 import com.snaphy.mapstrack.Fragment.ShowMapFragment;
 import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
-
-import de.greenrobot.event.EventBus;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         MainFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
@@ -45,8 +45,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().registerSticky(this);
-        replaceFragment(R.layout.fragment_login, null);
+//        EventBus.getDefault().registerSticky(this);
+        startService(new Intent(getBaseContext(), BackgroundService.class));
+        replaceFragment(R.layout.fragment_main, null);
         //http://www.andreas-schrade.de/2015/11/28/android-how-to-use-the-greenrobot-eventbus/
     }
 
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -66,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
     @Override
     public void onPause() {
-        EventBus.getDefault().unregister(this);
         super.onPause();
+        //EventBus.getDefault().unregister(this);
     }
 
     /**

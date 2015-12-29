@@ -211,6 +211,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         Toast.makeText(mainActivity,  "I am at "+position, Toast.LENGTH_SHORT).show();
         if(view.getId() == R.id.layout_fragment_show_contact_checkbox1) {
             Toast.makeText(mainActivity,  "I am a checkbox "+position, Toast.LENGTH_SHORT).show();
+
         }
         /*
          * You can use mContactUri as the content URI for retrieving

@@ -1,7 +1,6 @@
 package com.snaphy.mapstrack.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.R;
 
@@ -23,6 +21,7 @@ public class DisplayContactAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
+
     public DisplayContactAdapter(Context context, ArrayList<DisplayContactModel> displayContactModelArrayList) {
         layoutInflater = LayoutInflater.from(context);
         this.displayContactModelArrayList = displayContactModelArrayList;
@@ -69,7 +68,6 @@ public class DisplayContactAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
 
         }
-        Log.v(Constants.TAG,displayContactModelArrayList.get(position).getContactName());
         viewHolder.textview.setText(displayContactModelArrayList.get(position).getContactName());
 
         return view;

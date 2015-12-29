@@ -31,12 +31,14 @@ import com.snaphy.mapstrack.Event.ProfileEvent;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
+import org.simple.eventbus.EventBus;
+
 import java.io.InputStream;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
+
 
 /**
  * A simple {@link Fragment} subclass.

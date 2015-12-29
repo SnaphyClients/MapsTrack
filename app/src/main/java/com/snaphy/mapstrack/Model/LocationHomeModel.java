@@ -7,17 +7,31 @@ import java.util.ArrayList;
  */
 public class LocationHomeModel {
 
-
+    private String id;
     private String locationName;
     private String locationAddress;
     private String locationId;
-    private ArrayList<String> contacts  = new ArrayList<String>();
+    private ArrayList<SelectContactModel> contacts  = new ArrayList<SelectContactModel>();
 
-    public LocationHomeModel(String locationName, String locationAddress, String locationId, ArrayList<String> contacts){
+    public static final String onSave = "LocationHomeModel:onSave";
+    public static final String onDelete = "LocationHomeModel:onDelete";
+    public static final String onResetData = "LocationHomeModel:onReset";
+    public static final String onChangeData = "LocationHomeModel:onChange";
+    public static final String onRemoveData = "LocationHomeModel:onRemove";
+
+    public LocationHomeModel(String locationName, String locationAddress, String locationId, ArrayList<SelectContactModel> contacts){
         this.locationName = locationName;
         this.locationAddress = locationAddress;
         this.locationId = locationId;
         this.contacts = contacts;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLocationName() {
@@ -43,11 +57,12 @@ public class LocationHomeModel {
         this.locationId = locationId;
     }
 
-    public ArrayList<String> getContacts() {
+    public ArrayList<SelectContactModel> getContacts() {
         return contacts;
     }
 
-    public void setContacts(ArrayList<String> contacts) {
+    public void setContacts(ArrayList<SelectContactModel> contacts) {
         this.contacts = contacts;
     }
+
 }

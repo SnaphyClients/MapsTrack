@@ -69,7 +69,8 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         ImageButton menuOption = holder.moreOptions;
 
         locationName.setText(locationHomeModel.getLocationName());
-        locationAddress.setText(locationHomeModel.getLocationAddress());
+        String[] shortAddress = locationHomeModel.getLocationAddress().split(",");
+        locationAddress.setText(shortAddress[0]);
         menuOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

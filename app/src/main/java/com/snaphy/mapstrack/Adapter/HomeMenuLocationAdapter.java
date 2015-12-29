@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
 
+import java.util.ArrayList;
+
 /**
  * Created by Ravi-Gupta on 12/21/2015.
  */
@@ -22,6 +24,7 @@ public class HomeMenuLocationAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     LocationHomeModel locationHomeModel;
     Context context;
+    ArrayList<String> contacts = new ArrayList<String>();
 
     public HomeMenuLocationAdapter(Context context,  LocationHomeModel locationHomeModel) {
         layoutInflater = LayoutInflater.from(context);
@@ -79,8 +82,12 @@ public class HomeMenuLocationAdapter extends BaseAdapter {
         viewHolder.locationId.setText(locationHomeModel.getLocationId());
         viewHolder.address.setText(locationHomeModel.getLocationAddress());
 
+        for(int i = 0; i < locationHomeModel.getContacts().size(); i++) {
+            contacts.add(i , locationHomeModel.getContacts().get(i).getContactName());
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                R.layout.layout_dialog_contact, R.id.layout_fragment_dialog_contact_textview1, locationHomeModel.getContacts());
+                R.layout.layout_dialog_contact, R.id.layout_fragment_dialog_contact_textview1, contacts );
         // Sets the adapter for the ListView
         viewHolder.contactList.setAdapter(adapter);
         setListViewHeightBasedOnChildren(viewHolder.contactList);

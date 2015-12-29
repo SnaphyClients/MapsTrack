@@ -30,12 +30,14 @@ import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.R;
 
+import org.simple.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
+
 
 
 /**
@@ -81,10 +83,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         materialSpinner = (fr.ganfra.materialspinner.MaterialSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
         placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         backButtonClickListener();
-        boolean registered = EventBus.getDefault().isRegistered(this);
-        if(!registered) {
-            EventBus.getDefault().registerSticky(this);
-        }
+
+        EventBus.getDefault().registerSticky(this);
+
         setSpinner();
         datePickerClickListener(view);
         dateEdittext.setKeyListener(null);
