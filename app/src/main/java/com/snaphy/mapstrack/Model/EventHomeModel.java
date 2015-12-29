@@ -1,7 +1,7 @@
 package com.snaphy.mapstrack.Model;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Ravi-Gupta on 12/4/2015.
@@ -13,7 +13,7 @@ public class EventHomeModel {
     private String eventAddress;
     private String description;
     private String type;
-    private DateFormat date;
+    private Date date;
     private ArrayList<SelectContactModel> contacts  = new ArrayList<SelectContactModel>();
 
     public static final String onSave = "EventHomeModel:onSave";
@@ -23,7 +23,7 @@ public class EventHomeModel {
     public static final String onRemoveData = "EventHomeModel:onRemove";
 
 
-    public EventHomeModel(String eventId, String eventAddress, String description, String type, DateFormat date, ArrayList<SelectContactModel> contacts ){
+    public EventHomeModel(String eventId, String eventAddress, String description, String type, Date date, ArrayList<SelectContactModel> contacts ){
         this.eventId = eventId;
         this.eventAddress = eventAddress;
         this.description = description;
@@ -73,11 +73,11 @@ public class EventHomeModel {
         this.description = description;
     }
 
-    public DateFormat getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(DateFormat date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

@@ -54,7 +54,6 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
     List<TemporaryContactDatabase> temporaryContactDatabases;
-    ArrayList<LocationHomeModel> locationHomeModelArrayList = new ArrayList<LocationHomeModel>();
 
     public CreateLocationFragment() {
         // Required empty public constructor

@@ -15,7 +15,6 @@ import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by Ravi-Gupta on 12/7/2015.
@@ -86,7 +85,7 @@ public class HomeMenuAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
         viewHolder.eventId.setText(eventHomeModel.getEventId());
-        viewHolder.date.setText(String.valueOf(eventHomeModel.getDate().format(Calendar.getInstance().getTime())));
+        viewHolder.date.setText(String.valueOf(eventHomeModel.getDate()));
         viewHolder.type.setText(eventHomeModel.getType());
         viewHolder.description.setText(eventHomeModel.getDescription());
         viewHolder.address.setText(eventHomeModel.getEventAddress());

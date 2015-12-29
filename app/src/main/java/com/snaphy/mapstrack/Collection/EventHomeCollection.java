@@ -7,8 +7,10 @@ import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Ravi-Gupta on 12/29/2015.
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 public class EventHomeCollection {
 
     ArrayList<EventHomeModel> eventHomeModelArrayList = new ArrayList<EventHomeModel>();
+    Date date;
 
     public EventHomeCollection() {
         EventBus.getDefault().registerSticky(this);
@@ -32,6 +35,12 @@ public class EventHomeCollection {
          *  TODO Fetch Data From Server
          */
         DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+        try {
+            date = dateFormat.parse("26 June 2016");
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         ArrayList<SelectContactModel> selectContactModels = new ArrayList<SelectContactModel>();
         selectContactModels.add(new SelectContactModel("Ravi Gupta","9873046993"));
         selectContactModels.add(new SelectContactModel("Robins Gupta","987389993"));
@@ -42,25 +51,25 @@ public class EventHomeCollection {
                 " The Government Careers Forum will feature a keynote presentation by" +
                 " Massachusetts State Representative Tackey Chan ’95, followed by round table" +
                 " networking sessions for students, alumni, faculty and staff with agency" +
-                " representatives","Birthday", dateFormat, selectContactModels));
+                " representatives","Birthday", date, selectContactModels));
 
 
         eventHomeModelArrayList.add(new EventHomeModel("SidHome","Palam Vihar, Sector 25","Paul Romer, a prominent American economist and specialist on the theory of " +
                 "growth and innovation, will discuss charter cities and their potential impact on " +
-                "economic prosperity","Baby Shower", dateFormat, selectContactModels));
+                "economic prosperity","Baby Shower", date, selectContactModels));
 
 
         eventHomeModelArrayList.add(new EventHomeModel("RaghuMarriage","Pitampura, Haryana","Experience Virginia Woolf’s darkly elegant voice in an original stage adaptation " +
-                "of four compelling short stories.","Party", dateFormat, selectContactModels));
+                "of four compelling short stories.","Party", date, selectContactModels));
 
 
         eventHomeModelArrayList.add(new EventHomeModel("RobParty","Cyber Hub, Cyber City","Debra Granik '85 will screen and discuss her best-known work to date – the " +
-                "Oscar-nominated film \"Winter's Bone.\"","Marriage", dateFormat, selectContactModels));
+                "Oscar-nominated film \"Winter's Bone.\"","Marriage", date, selectContactModels));
 
 
         eventHomeModelArrayList.add(new EventHomeModel("AnuOffice", "Sahara Mall, Sikandarpur","Granik will take questions from the audience after the screening. " +
                 "This event is sponsored by the Film, Television and Interactive Media Program " +
-                "and the Edie and Lew Wasserman Fund.","Meeting", dateFormat, selectContactModels));
+                "and the Edie and Lew Wasserman Fund.","Meeting", date, selectContactModels));
 
         EventBus.getDefault().postSticky(eventHomeModelArrayList, EventHomeModel.onResetData);
 

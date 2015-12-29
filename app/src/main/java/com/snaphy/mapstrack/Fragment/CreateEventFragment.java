@@ -13,8 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
@@ -25,14 +25,21 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
-import com.snaphy.mapstrack.Event.AddressEvent;
+import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
+import com.snaphy.mapstrack.Model.EventHomeModel;
+import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
 
 import org.simple.eventbus.EventBus;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,15 +56,22 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateEventFragment";
     RecyclerView recyclerView;
+
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
+    @Bind(R.id.fragment_create_event_edittext2) EditText eventLocation;
+    @Bind(R.id.fragment_create_event_edittext1) EditText eventName;
+    @Bind(R.id.fragment_create_event_edittext4) EditText eventDescription;
+
     fr.ganfra.materialspinner.MaterialSpinner materialSpinner;
     static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
     DisplayContactAdapter displayContactAdapter;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
+    List<TemporaryContactDatabase> temporaryContactDatabases;
+    ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
     MainActivity mainActivity;
-
-
+    DateFormat dateFormat;
+    Date date;
 
 
     public CreateEventFragment() {
@@ -72,6 +86,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -80,12 +96,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
+
         materialSpinner = (fr.ganfra.materialspinner.MaterialSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
         placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         backButtonClickListener();
 
-        EventBus.getDefault().registerSticky(this);
-
+        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
+        dateFormat = new SimpleDateFormat();
         setSpinner();
         datePickerClickListener(view);
         dateEdittext.setKeyListener(null);
@@ -93,10 +110,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         return view;
     }
 
-    public void onEvent(AddressEvent event){
-        Toast.makeText(mainActivity,event.getAddress(),Toast.LENGTH_SHORT).show();
-        placesAutocompleteTextView.setText(event.getAddress());
-    }
+//    public void onEvent(AddressEvent event){
+//        Toast.makeText(mainActivity,event.getAddress(),Toast.LENGTH_SHORT).show();
+//        placesAutocompleteTextView.setText(event.getAddress());
+//    }
 
     /**
      * Show contacts button event listener
@@ -112,11 +129,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * Data in events has been initialize from here
      */
     public void setEventDataInAdapter() {
-        displayContactModelArrayList.add(new DisplayContactModel("Ravi Gupta"));
-        displayContactModelArrayList.add(new DisplayContactModel("Siddharth Jain"));
-        displayContactModelArrayList.add(new DisplayContactModel("Anurag Gupta"));
-        displayContactModelArrayList.add(new DisplayContactModel("Robins Gupta"));
-        displayContactModelArrayList.add(new DisplayContactModel("Jay Dixit"));
+        displayContactModelArrayList.clear();
+        for(int i = 0; i<temporaryContactDatabases.size();i++) {
+            displayContactModelArrayList.add(new DisplayContactModel(temporaryContactDatabases.get(i).name));
+        }
     }
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
@@ -208,7 +224,33 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_create_event_button4) void selectContact() {
-        mainActivity.replaceFragment(R.layout.layout_select_contact,null);
+        mainActivity.replaceFragment(R.layout.layout_select_contact, null);
+    }
+
+    @OnClick(R.id.fragment_create_event_button2) void publishEvent() {
+
+        for (int i = 0; i<temporaryContactDatabases.size(); i++) {
+            selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name,
+                    temporaryContactDatabases.get(i).number));
+        }
+
+        try {
+            date = dateFormat.parse(dateEdittext.getText().toString());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        EventHomeModel eventHomeModel =  new EventHomeModel(eventName.getText().toString(),
+                placesAutocompleteTextView.getText().toString(), eventDescription.getText().toString(),
+                materialSpinner.getSelectedItem().toString(), date
+                , selectContactModelArrayList);
+
+        EventBus.getDefault().post(eventHomeModel, EventHomeModel.onSave);
+        TemporaryContactDatabase.deleteAll();
+        //TODO check its occurance
+        setEventDataInAdapter();
+        mainActivity.onBackPressed();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
