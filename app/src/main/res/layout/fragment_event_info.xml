@@ -200,15 +200,15 @@
              android:id="@+id/fragment_event_info_floating_button1"
              android:layout_width="wrap_content"
              android:layout_height="match_parent"
-             fab:menu_icon="@mipmap/menu_home"
+             fab:menu_icon="@mipmap/menu"
              fab:menu_labels_style="@style/MenuLabelsStyle"
              fab:menu_labels_showAnimation="@anim/jump_from_down"
              fab:menu_labels_hideAnimation="@anim/jump_to_down"
              fab:menu_animationDelayPerItem="0"
-             fab:menu_shadowColor="#444"
+             fab:menu_shadowColor="#777777"
              fab:menu_colorNormal="@color/colorPrimary"
              fab:menu_colorPressed="@color/colorPrimaryDark"
-             fab:menu_colorRipple="#F1F1F1"
+             fab:menu_colorRipple="#FFFFFF"
              fab:menu_fab_size="normal"
              app:layout_anchor="@id/appbar"
              app:layout_anchorGravity="right"
@@ -220,7 +220,7 @@
             android:id="@+id/fragment_event_info_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/edit_purple"
+            android:src="@mipmap/edit"
             fab:fab_label="@string/layout_event_info_button1"
             style="@style/MenuButtonsStyle" />
 
@@ -228,7 +228,7 @@
             android:id="@+id/fragment_event_info_button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/delete_home"
+            android:src="@mipmap/delete"
             fab:fab_label="@string/layout_event_info_button2"
             style="@style/MenuButtonsStyle" />
 
@@ -236,7 +236,7 @@
             android:id="@+id/fragment_event_info_button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/menu_home"
+            android:src="@mipmap/map"
             fab:fab_label="@string/layout_event_info_button3"
             style="@style/MenuButtonsStyle" />
 

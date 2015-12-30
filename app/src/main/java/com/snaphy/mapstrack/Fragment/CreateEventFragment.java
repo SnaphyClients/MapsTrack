@@ -64,6 +64,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_create_event_edittext2) EditText eventLocation;
     @Bind(R.id.fragment_create_event_edittext1) EditText eventName;
     @Bind(R.id.fragment_create_event_edittext4) EditText eventDescription;
+    @Bind(R.id.fragment_event_floating_button1) com.github.clans.fab.FloatingActionMenu parentFloatingButton;
 
     fr.ganfra.materialspinner.MaterialSpinner materialSpinner;
     static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
@@ -102,6 +103,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         materialSpinner = (fr.ganfra.materialspinner.MaterialSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
         placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         backButtonClickListener();
+        parentFloatingButton.setIconAnimated(false);
 
         temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
         dateFormat = new SimpleDateFormat();

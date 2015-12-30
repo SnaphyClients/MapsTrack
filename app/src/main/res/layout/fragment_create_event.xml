@@ -8,7 +8,8 @@
     android:background="@color/background"
     android:clickable="true">
 
-<android.support.design.widget.CoordinatorLayout
+
+    <android.support.design.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,9 +22,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
                 android:id="@+id/fragment_create_event_relative_layout1">
 
                 <android.support.design.widget.TextInputLayout
@@ -168,8 +166,16 @@
 
                     </RadioGroup>
                 </LinearLayout>
+                <Button
+                    android:id="@+id/fragment_create_event_button2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/googleRed"
+                    android:textColor="@color/white"
+                    android:text="@string/fragment_create_event_button2"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
             </RelativeLayout>
-
     </RelativeLayout>
 
     <android.support.design.widget.AppBarLayout
@@ -196,8 +202,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
+                    android:background="@color/colorPrimaryBackgroundImage"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/weddingcard"
+                    android:src="@drawable/default_image"
                     app:layout_collapseMode="parallax" />
 
             </FrameLayout>
@@ -245,18 +252,18 @@
     </android.support.design.widget.AppBarLayout>
 
     <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/fragment_event_info_floating_button1"
+        android:id="@+id/fragment_event_floating_button1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        fab:menu_icon="@mipmap/menu_home"
+        fab:menu_icon="@mipmap/menu"
         fab:menu_labels_style="@style/MenuLabelsStyle"
         fab:menu_labels_showAnimation="@anim/jump_from_down"
         fab:menu_labels_hideAnimation="@anim/jump_to_down"
         fab:menu_animationDelayPerItem="0"
-        fab:menu_shadowColor="#444"
+        fab:menu_shadowColor="#777777"
         fab:menu_colorNormal="@color/colorPrimary"
         fab:menu_colorPressed="@color/colorPrimaryDark"
-        fab:menu_colorRipple="#F1F1F1"
+        fab:menu_colorRipple="#FFFFFF"
         fab:menu_fab_size="normal"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="right"
@@ -268,23 +275,16 @@
             android:id="@+id/fragment_create_event_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/edit_purple"
+            android:src="@mipmap/gallery"
             fab:fab_label="@string/fragment_create_event_button1"
             style="@style/MenuButtonsStyle" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fragment_create_event_button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/delete_home"
-            fab:fab_label="@string/fragment_create_event_button2"
-            style="@style/MenuButtonsStyle" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fragment_create_event_imagebutton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/menu_home"
+            android:src="@mipmap/show_friends"
             fab:fab_label="@string/fragment_create_event_button3"
             style="@style/MenuButtonsStyle" />
 
@@ -292,7 +292,7 @@
             android:id="@+id/fragment_create_event_button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/menu_home"
+            android:src="@mipmap/add_friend"
             fab:fab_label="@string/fragment_create_event_button4"
             style="@style/MenuButtonsStyle" />
 
