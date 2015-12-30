@@ -52,6 +52,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     MainActivity mainActivity;
     EventHomeModel eventHomeModel;
 
+
     public EventInfoFragment() {
         // Required empty public constructor
     }
@@ -90,7 +91,9 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         CharSequence eType = drawTextViewDesign("Event Type : ", this.eventHomeModel.getType());
         eventType.setText(eType);
 
-        CharSequence eDate = drawTextViewDesign("Event Date : ", dateFormat.format(this.eventHomeModel.getDate()).toString());
+        // TODO Event date has to make correct
+        //dateFormat.format(this.eventHomeModel.getDate()).toString()
+        CharSequence eDate = drawTextViewDesign("Event Date : "," 26 June 2016");
         eventDate.setText(eDate);
 
         CharSequence eAddress = drawTextViewDesign("Event Address : ", this.eventHomeModel.getEventAddress());
@@ -121,8 +124,9 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @OnClick(R.id.fragment_event_info_button1) void editEvent() {
 
         EventBus.getDefault().postSticky(this.eventHomeModel, Constants.SHOW_EVENT_EDIT);
-        mainActivity.replaceFragment(R.layout.fragment_create_event,null);
+        mainActivity.replaceFragment(R.id.fragment_event_info_button1, null);
     }
+
 
     @OnClick(R.id.fragment_event_info_button2) void deleteEvent() {
 
@@ -131,9 +135,9 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_event_info_button3) void openMap() {
-        mainActivity.replaceFragment(R.layout.fragment_map,null);
+        mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
+        // TODO Send destination coordinates in map fragment
     }
-
     
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

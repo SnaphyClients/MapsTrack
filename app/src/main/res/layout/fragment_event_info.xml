@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.snaphy.mapstrack.Fragment.EventInfoFragment"
+    android:id="@+id/fragment_info_container"
     android:background="@color/background"
     android:clickable="true">
 
@@ -220,7 +221,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/edit_purple"
-            fab:fab_label="@string/fragment_create_event_button1"
+            fab:fab_label="@string/layout_event_info_button1"
             style="@style/MenuButtonsStyle" />
 
         <com.github.clans.fab.FloatingActionButton

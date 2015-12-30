@@ -115,6 +115,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
     private void onEdit(EventHomeModel eventHomeModel) {
 
+        //TODO Update data will be called when create event fragment is called from event info
         eventName.setText(eventHomeModel.getEventId());
         eventDescription.setText(eventHomeModel.getDescription());
         eventLocation.setText(eventHomeModel.getEventAddress());
@@ -257,7 +258,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 materialSpinner.getSelectedItem().toString(), date
                 , selectContactModelArrayList);
 
-        EventBus.getDefault().post(eventHomeModel, EventHomeModel.onSave);
+            EventBus.getDefault().post(eventHomeModel, EventHomeModel.onSave);
+
+
         TemporaryContactDatabase.deleteAll();
         //TODO check its occurance
         setEventDataInAdapter();

@@ -127,6 +127,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             case R.layout.fragment_location_info:
                 openLocationInfo(fragmentTransaction);
                 break;
+
+            case R.id.fragment_event_info_button3:
+                openMapFromEventInfo(fragmentTransaction);
+                break;
+
+            case R.id.fragment_event_info_button1:
+                openEditFromEventInfo(fragmentTransaction);
+                break;
         }
     }
 
@@ -253,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         if (showMapFragment == null) {
             showMapFragment = ShowMapFragment.newInstance();
         }
-        fragmentTransaction.replace(R.id.main_container, showMapFragment, ShowMapFragment.TAG).addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_info_container, showMapFragment, ShowMapFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
@@ -295,6 +303,35 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.replace(R.id.main_container, locationInfoFragment, LocationInfoFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
     }
+
+    /**  Map Fragment from Event Info is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void openMapFromEventInfo(FragmentTransaction fragmentTransaction) {
+        ShowMapFragment showMapFragment = (ShowMapFragment) getSupportFragmentManager().
+                findFragmentByTag(ShowMapFragment.TAG);
+        if (showMapFragment == null) {
+            showMapFragment = ShowMapFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_info_container, showMapFragment, ShowMapFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**  Create Event from Event Info is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void openEditFromEventInfo(FragmentTransaction fragmentTransaction) {
+
+        CreateEventFragment createEventFragment = (CreateEventFragment) getSupportFragmentManager().
+                findFragmentByTag(CreateEventFragment.TAG);
+        if (createEventFragment == null) {
+            createEventFragment = CreateEventFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_info_container, createEventFragment, CreateEventFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+
 
 
 
