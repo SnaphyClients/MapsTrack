@@ -26,14 +26,4 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="12dp"/>
 
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_home_event_imageButton1"
-        android:src="@mipmap/menu_home"
-        android:background="@android:color/transparent"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
-
 </RelativeLayout>

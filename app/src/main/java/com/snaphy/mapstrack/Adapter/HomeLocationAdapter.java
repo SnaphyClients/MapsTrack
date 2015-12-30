@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
-import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
@@ -66,20 +64,10 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         // Set item views based on the data model
         TextView locationName = holder.locationName;
         TextView locationAddress = holder.locationAddress;
-        ImageButton menuOption = holder.moreOptions;
 
         locationName.setText(locationHomeModel.getLocationName());
         String[] shortAddress = locationHomeModel.getLocationAddress().split(",");
         locationAddress.setText(shortAddress[0]);
-        menuOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HomeMenuLocationAdapter adapter = new HomeMenuLocationAdapter(context,locationHomeModel);
-                Holder holder = new ListHolder();
-                showOnlyContentDialog(holder, adapter);
-            }
-        });
-
 
     }
     /**
@@ -99,7 +87,6 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         // for any view that will be set as you render a row
         @Bind(R.id.layout_home_location_textview1) TextView locationName;
         @Bind(R.id.layout_home_location_textview2) TextView locationAddress;
-        @Bind(R.id.layout_home_location_imageButton1) ImageButton moreOptions;
 
 
         // We also create a constructor that accepts the entire item row

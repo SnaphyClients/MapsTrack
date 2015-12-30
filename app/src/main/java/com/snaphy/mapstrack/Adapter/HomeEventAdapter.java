@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
-import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
@@ -68,19 +66,10 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
         // Set item views based on the data model
         TextView eventId = holder.eventId;
         TextView eventAddress = holder.eventAddress;
-        ImageButton menuOption = holder.menuOption;
 
         eventId.setText(eventHomeModel.getEventId());
         eventAddress.setText(eventHomeModel.getEventAddress());
 
-        menuOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HomeMenuAdapter adapter = new HomeMenuAdapter(context,eventHomeModel);
-                Holder holder = new ListHolder();
-                showOnlyContentDialog(holder, adapter);
-            }
-        });
     }
 
     /**
@@ -100,8 +89,6 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
         // for any view that will be set as you render a row
         @Bind(R.id.layout_home_event_textview1) TextView eventId;
         @Bind(R.id.layout_home_event_textview2) TextView eventAddress;
-        @Bind(R.id.layout_home_event_imageButton1) ImageButton menuOption;
-
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview

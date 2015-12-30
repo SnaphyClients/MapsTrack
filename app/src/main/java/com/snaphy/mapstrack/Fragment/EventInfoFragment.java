@@ -12,11 +12,21 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
+import com.orhanobut.dialogplus.OnCancelListener;
+import com.orhanobut.dialogplus.OnDismissListener;
+import com.orhanobut.dialogplus.OnItemClickListener;
+import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.Model.EventHomeModel;
+import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
 
 import org.simple.eventbus.EventBus;
@@ -24,6 +34,7 @@ import org.simple.eventbus.Subscriber;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,6 +62,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     DateFormat dateFormat;
     MainActivity mainActivity;
     EventHomeModel eventHomeModel;
+    ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
 
 
     public EventInfoFragment() {
@@ -84,6 +96,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
         this.eventHomeModel = eventHomeModel;
         eventName.setText(eventHomeModel.getEventId());
+        setContactData(eventHomeModel.getContacts());
 
         CharSequence eName = drawTextViewDesign("Event Name : ",this.eventHomeModel.getEventId());
         eventName2.setText(eName);
@@ -117,6 +130,16 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         return result;
     }
 
+    /**
+     * Data in events has been initialize from here
+     */
+    public void setContactData(ArrayList<SelectContactModel> selectContactModelArrayList) {
+        displayContactModelArrayList.clear();
+        for(int i = 0; i<selectContactModelArrayList.size();i++) {
+            displayContactModelArrayList.add(new DisplayContactModel(selectContactModelArrayList.get(i).getContactName()));
+        }
+    }
+
     @OnClick(R.id.fragment_event_info_image_button1) void backButton() {
         mainActivity.onBackPressed();
     }
@@ -137,6 +160,40 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @OnClick(R.id.fragment_event_info_button3) void openMap() {
         mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
         // TODO Send destination coordinates in map fragment
+    }
+
+    @OnClick(R.id.fragment_event_info_button4) void openContacts() {
+        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
+        Holder holder = new ListHolder();
+        showOnlyContentDialog(holder, adapter);
+    }
+
+    private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
+        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
+                .setContentHolder(holder)
+                .setAdapter(adapter)
+                . setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+
+                    }
+                })
+                .setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogPlus dialog) {
+
+                    }
+                })
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogPlus dialog) {
+
+                    }
+                })
+                .setCancelable(true)
+                .setExpanded(true)
+                .create();
+        dialog.show();
     }
     
     // TODO: Rename method, update argument and hook method into UI event
