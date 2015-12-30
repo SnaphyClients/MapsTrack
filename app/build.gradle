@@ -59,4 +59,5 @@ dependencies {
     compile 'org.simple:androideventbus:1.0.5'
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.github.jkwiecien:EasyImage:1.1.2'
+    compile 'com.github.tajchert:nammu:1.1.1'
 }

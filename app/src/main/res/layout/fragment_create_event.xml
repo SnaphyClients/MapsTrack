@@ -166,15 +166,6 @@
 
                     </RadioGroup>
                 </LinearLayout>
-                <Button
-                    android:id="@+id/fragment_create_event_button2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/googleRed"
-                    android:textColor="@color/white"
-                    android:text="@string/fragment_create_event_button2"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
             </RelativeLayout>
     </RelativeLayout>
 
@@ -294,6 +285,14 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/add_friend"
             fab:fab_label="@string/fragment_create_event_button4"
+            style="@style/MenuButtonsStyle" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_create_event_button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/publish"
+            fab:fab_label="@string/fragment_create_event_button2"
             style="@style/MenuButtonsStyle" />
 
     </com.github.clans.fab.FloatingActionMenu>

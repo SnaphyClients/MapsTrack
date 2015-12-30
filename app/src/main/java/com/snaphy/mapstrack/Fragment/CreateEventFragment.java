@@ -1,9 +1,14 @@
 package com.snaphy.mapstrack.Fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +18,12 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.activeandroid.query.Select;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
 import com.orhanobut.dialogplus.ListHolder;
@@ -36,6 +44,7 @@ import com.snaphy.mapstrack.R;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +55,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 
 
 /**
@@ -58,12 +70,14 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateEventFragment";
     RecyclerView recyclerView;
+    ImageLoader imageLoader;
 
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
     @Bind(R.id.fragment_create_event_edittext2) EditText eventLocation;
     @Bind(R.id.fragment_create_event_edittext1) EditText eventName;
     @Bind(R.id.fragment_create_event_edittext4) EditText eventDescription;
+    @Bind(R.id.fragment_event_info_imageview1) ImageView imageView;
     @Bind(R.id.fragment_event_floating_button1) com.github.clans.fab.FloatingActionMenu parentFloatingButton;
 
     fr.ganfra.materialspinner.MaterialSpinner materialSpinner;
@@ -89,6 +103,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageLoader = ImageLoader.getInstance();
+        this.imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
     }
@@ -104,6 +120,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         backButtonClickListener();
         parentFloatingButton.setIconAnimated(false);
+
+        EasyImage.configuration(mainActivity)
+                .setImagesFolderName("MapsTrack")
+                .saveInRootPicturesDirectory()
+                .setCopyExistingPicturesToPublicLocation(true);
 
         temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
         dateFormat = new SimpleDateFormat();
@@ -234,6 +255,49 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 });
                 pickerPopWin.showPopWin(mainActivity);
             }
+        });
+    }
+
+    @OnClick(R.id.fragment_create_event_button1) void openGallery() {
+
+        int permissionCheck = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            EasyImage.openDocuments(this);
+        } else {
+            Nammu.askForPermission(mainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionCallback() {
+                @Override
+                public void permissionGranted() {
+                    EasyImage.openGallery(mainActivity);
+                }
+
+                @Override
+                public void permissionRefused() {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        EasyImage.handleActivityResult(requestCode, resultCode, data, mainActivity, new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source) {
+                //Some error handling
+            }
+
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source) {
+                //Handle the image
+
+                final String uri = Uri.fromFile(imageFile).toString();
+                final String decoded = Uri.decode(uri);
+                Log.v(Constants.TAG, "Image File = " + uri + "");
+                imageLoader.displayImage(decoded, imageView);
+            }
+
         });
     }
 
