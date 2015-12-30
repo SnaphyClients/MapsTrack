@@ -424,8 +424,10 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //if(mAddressOutput != null)
-                      //  EventBus.getDefault().postSticky(new AddressEvent(mAddressOutput));
+                        if(mAddressOutput != null) {
+                            EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_EVENT);
+                            EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_LOCATION);
+                        }
                     }
                 });
 

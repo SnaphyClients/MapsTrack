@@ -135,6 +135,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         return view;
     }
 
+
+    @Subscriber(tag = Constants.SEND_ADDRESS_EVENT)
+    private void setAddress(String address) {
+        placesAutocompleteTextView.setText(address);
+    }
+
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
     private void onEdit(EventHomeModel eventHomeModel) {
 
@@ -144,11 +150,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         eventLocation.setText(eventHomeModel.getEventAddress());
         dateEdittext.setText(eventHomeModel.getDate().toString());
     }
-
-//    public void onEvent(AddressEvent event){
-//        Toast.makeText(mainActivity,event.getAddress(),Toast.LENGTH_SHORT).show();
-//        placesAutocompleteTextView.setText(event.getAddress());
-//    }
 
     /**
      * Show contacts button event listener
@@ -239,6 +240,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * This method is fired when any date from the date picker is selected
      * @param view
      */
+    //TODO Design DatePicker
     private void datePickerClickListener(View view) {
         dateEdittext.setOnClickListener(new View.OnClickListener() {
             @Override

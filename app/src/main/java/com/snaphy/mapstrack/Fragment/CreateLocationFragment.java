@@ -20,6 +20,7 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
@@ -28,6 +29,7 @@ import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
 
 import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,9 +146,10 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         dialog.show();
     }
 
-   /* public void onEvent(AddressEvent event){
-        placesAutocompleteTextView.setText(event.getAddress());
-    }*/
+    @Subscriber(tag = Constants.SEND_ADDRESS_LOCATION)
+    private void setAddress(String address) {
+        placesAutocompleteTextView.setText(address);
+    }
 
     /**
      * When back button is pressed in fragment

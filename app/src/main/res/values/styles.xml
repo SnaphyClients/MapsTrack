@@ -58,5 +58,15 @@
         <item name="fab_colorRipple">#FFFFFF</item>
     </style>
 
+    <style name="MenuButtonsStyleRed">
+        <item name="fab_size">mini</item>
+        <item name="fab_showAnimation">@anim/jump_from_down</item>
+        <item name="fab_hideAnimation">@anim/jump_to_down</item>
+        <item name="fab_shadowColor">#777777</item>
+        <item name="fab_colorNormal">#d34836</item>
+        <item name="fab_colorPressed">#d11136</item>
+        <item name="fab_colorRipple">#FFFFFF</item>
+    </style>
+
 
 </resources>

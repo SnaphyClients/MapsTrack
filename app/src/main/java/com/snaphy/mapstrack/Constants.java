@@ -14,6 +14,8 @@ public final class Constants {
 
     public static final String SHOW_EVENT_INFO = "HomeFragment:onEventClick";
     public static final String SHOW_EVENT_EDIT = "EventInfoFragment:onEdit";
+    public static final String SEND_ADDRESS_EVENT = "HomeFragment:sendAddressEvent";
+    public static final String SEND_ADDRESS_LOCATION = "HomeFragment:sendAddressLocation";
 
 
 }

@@ -293,7 +293,7 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/publish"
             fab:fab_label="@string/fragment_create_event_button2"
-            style="@style/MenuButtonsStyle" />
+            style="@style/MenuButtonsStyleRed" />
 
     </com.github.clans.fab.FloatingActionMenu>
 
