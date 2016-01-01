@@ -17,12 +17,15 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <ImageButton
             android:paddingRight="4dp"
             android:id="@+id/fragment_show_contact_imagebutton1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:src="@mipmap/back_arrow"
             android:background="@drawable/ripple_button" />
         <!-- </RelativeLayout>-->
@@ -30,11 +33,24 @@
         <TextView
             android:padding="2dp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/fragment_show_contact_textview0"
             android:textSize="18sp"
+            android:layout_centerVertical="true"
             android:textColor="@color/white"
+            android:layout_toRightOf="@+id/fragment_show_contact_imagebutton1"
             android:text="@string/fragment_show_contact_textview0" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ok"
+                android:background="@android:color/transparent"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:id="@+id/fragment_show_contact_button1"/>
+
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 

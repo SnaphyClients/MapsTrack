@@ -9,12 +9,17 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
 import com.orhanobut.dialogplus.ListHolder;
@@ -35,6 +40,7 @@ import org.simple.eventbus.Subscriber;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,6 +65,10 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_info_textview4) TextView eventAddress;
     @Bind(R.id.fragment_event_info_textview5) TextView eventDescription;
     @Bind(R.id.fragment_event_info_textview6) TextView contact;
+    @Bind(R.id.fragment_event_info_imageview1) ImageView imageView;
+    ImageLoader imageLoader;
+    LatLng latLng;
+
     DateFormat dateFormat;
     MainActivity mainActivity;
     EventHomeModel eventHomeModel;
@@ -77,6 +87,8 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageLoader = ImageLoader.getInstance();
+        this.imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
     }
@@ -97,6 +109,18 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         this.eventHomeModel = eventHomeModel;
         eventName.setText(eventHomeModel.getEventId());
         setContactData(eventHomeModel.getContacts());
+        latLng = new LatLng(eventHomeModel.getLatLong().get("latitude"),eventHomeModel.getLatLong().get("longitude"));
+        Log.v(Constants.TAG, "LatLong File = " + eventHomeModel.getLatLong().get("latitude") + eventHomeModel.getLatLong().get("longitude") + "");
+
+        Iterator<String> valueIterator = eventHomeModel.getImageURL().values().iterator();
+        String uri = "";
+        while (valueIterator.hasNext()) {
+            uri = uri + valueIterator.next();
+        }
+
+        Log.v(Constants.TAG, "Image File = " + uri + "");
+        imageLoader.displayImage(uri, imageView);
+
 
         CharSequence eName = drawTextViewDesign("Event Name : ",this.eventHomeModel.getEventId());
         eventName2.setText(eName);
@@ -159,8 +183,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button3) void openMap() {
         mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
-        // TODO Send destination coordinates in map fragment
-    }
+        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);    }
 
     @OnClick(R.id.fragment_event_info_button4) void openContacts() {
         DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);

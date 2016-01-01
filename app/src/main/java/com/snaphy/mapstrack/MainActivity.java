@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         if (showContactFragment == null) {
             showContactFragment = ShowContactFragment.newInstance();
         }
-        fragmentTransaction.replace(R.id.main_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_create_event_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         if (locationInfoFragment == null) {
             locationInfoFragment = LocationInfoFragment.newInstance();
         }
-        fragmentTransaction.replace(R.id.main_container, locationInfoFragment, LocationInfoFragment.TAG);
+        fragmentTransaction.replace(R.id.main_container, locationInfoFragment, LocationInfoFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 

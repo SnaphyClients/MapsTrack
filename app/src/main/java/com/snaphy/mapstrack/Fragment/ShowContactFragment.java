@@ -27,6 +27,9 @@ import com.snaphy.mapstrack.R;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -130,6 +133,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_show_contact, container, false);
+        ButterKnife.bind(this,view);
         mContactsList = (ListView) view.findViewById(R.id.fragment_show_contact_listview1);
         selectContactAdapter = new SelectContactAdapter(getActivity(),
                 R.layout.layout_select_contact,
@@ -146,6 +150,14 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @OnClick(R.id.fragment_show_contact_imagebutton1) void backButton() {
+        mainActivity.onBackPressed();
+    }
+
+    @OnClick(R.id.fragment_show_contact_button1) void contactSelected() {
+        mainActivity.onBackPressed();
     }
 
     @Override

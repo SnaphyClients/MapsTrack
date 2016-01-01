@@ -16,6 +16,10 @@ public final class Constants {
     public static final String SHOW_EVENT_EDIT = "EventInfoFragment:onEdit";
     public static final String SEND_ADDRESS_EVENT = "HomeFragment:sendAddressEvent";
     public static final String SEND_ADDRESS_LOCATION = "HomeFragment:sendAddressLocation";
+    public static final String SEND_EVENT_LATLONG = "FetchAddressIntentService:sendEventLatLong";
+    public static final String SEND_LOCATION_LATLONG = "FetchAddressIntentService:sendLocationLatLong";
+    public static final String SEND_MAP_COORDINATES_EVENT = "EventInfoFragment:eventDestinationCoordinates";
+    public static final String SEND_MAP_COORDINATES_LOCATION = "LocationInfoFragment:locationDestinationCoordinates";
 
 
 }

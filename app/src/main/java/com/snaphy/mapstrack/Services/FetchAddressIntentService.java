@@ -10,9 +10,12 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
 import com.snaphy.mapstrack.R;
+
+import org.simple.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,7 +84,9 @@ public class FetchAddressIntentService extends IntentService {
         else {
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<String>();
-
+            LatLng latlong = new LatLng(location.getLatitude(),location.getLongitude());
+            EventBus.getDefault().postSticky(latlong, Constants.SEND_EVENT_LATLONG);
+            EventBus.getDefault().postSticky(latlong, Constants.SEND_LOCATION_LATLONG);
             // Fetch the address lines using getAddressLine,
             // join them, and send them to the thread.
             for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {

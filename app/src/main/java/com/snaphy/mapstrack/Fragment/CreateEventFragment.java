@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,12 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.activeandroid.query.Select;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
+import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
@@ -50,6 +54,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -78,6 +84,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_create_event_edittext1) EditText eventName;
     @Bind(R.id.fragment_create_event_edittext4) EditText eventDescription;
     @Bind(R.id.fragment_event_info_imageview1) ImageView imageView;
+    @Bind(R.id.fragment_create_event_radio_button1) RadioButton publicRadioButton;
+    @Bind(R.id.fragment_create_event_radio_button2) RadioButton privateRadioButton;
+    @Bind(R.id.fragment_create_event_radio_group) RadioGroup radioGroup;
     @Bind(R.id.fragment_event_floating_button1) com.github.clans.fab.FloatingActionMenu parentFloatingButton;
 
     fr.ganfra.materialspinner.MaterialSpinner materialSpinner;
@@ -86,9 +95,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     List<TemporaryContactDatabase> temporaryContactDatabases;
     ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
+    HashMap<String,Double> latLongHashMap = new HashMap<String, Double>();
+    HashMap<String,String> imageURL =  new HashMap<String, String>();
     MainActivity mainActivity;
     DateFormat dateFormat;
     Date date;
+    boolean isPrivate;
 
 
     public CreateEventFragment() {
@@ -115,16 +127,18 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
-
         materialSpinner = (fr.ganfra.materialspinner.MaterialSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
         placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         backButtonClickListener();
         parentFloatingButton.setIconAnimated(false);
 
+        //TODO May be clear list contact list here
+
         EasyImage.configuration(mainActivity)
                 .setImagesFolderName("MapsTrack")
                 .saveInRootPicturesDirectory()
                 .setCopyExistingPicturesToPublicLocation(true);
+
 
         temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
         dateFormat = new SimpleDateFormat();
@@ -135,10 +149,42 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.getView().setFocusableInTouchMode(true);
+        this.getView().requestFocus();
+        this.getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    clearFields();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public void clearFields() {
+        eventName.setText("");
+        eventDescription.setText("");
+        dateEdittext.setText("");
+        publicRadioButton.setChecked(true);
+        //TODO Spinner check item
+
+    }
+
 
     @Subscriber(tag = Constants.SEND_ADDRESS_EVENT)
     private void setAddress(String address) {
         placesAutocompleteTextView.setText(address);
+    }
+
+    @Subscriber(tag = Constants.SEND_EVENT_LATLONG)
+    private void setLatLong(LatLng latLong) {
+        latLongHashMap.put("latitude",latLong.latitude);
+        latLongHashMap.put("longitude", latLong.longitude);
     }
 
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
@@ -149,6 +195,24 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         eventDescription.setText(eventHomeModel.getDescription());
         eventLocation.setText(eventHomeModel.getEventAddress());
         dateEdittext.setText(eventHomeModel.getDate().toString());
+
+        if(eventHomeModel.isPrivate()) {
+            privateRadioButton.setChecked(true);
+        } else {
+            publicRadioButton.setChecked(true);
+        }
+
+        Iterator<String> valueIterator = eventHomeModel.getImageURL().values().iterator();
+        String uri = "";
+        while (valueIterator.hasNext()) {
+            uri = uri + valueIterator.next();
+        }
+        Log.v(Constants.TAG, "Image File = " + uri + "");
+        imageLoader.displayImage(uri, imageView);
+
+        for(int i = 0; i<eventHomeModel.getContacts().size();i++) {
+            displayContactModelArrayList.add(new DisplayContactModel(eventHomeModel.getContacts().get(i).getContactName()));
+        }
     }
 
     /**
@@ -165,7 +229,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * Data in events has been initialize from here
      */
     public void setEventDataInAdapter() {
-        displayContactModelArrayList.clear();
+
         for(int i = 0; i<temporaryContactDatabases.size();i++) {
             displayContactModelArrayList.add(new DisplayContactModel(temporaryContactDatabases.get(i).name));
         }
@@ -231,6 +295,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearFields();
                 mainActivity.onBackPressed();
             }
         });
@@ -298,6 +363,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 final String decoded = Uri.decode(uri);
                 Log.v(Constants.TAG, "Image File = " + uri + "");
                 imageLoader.displayImage(decoded, imageView);
+                imageURL.put("name", "");
+                imageURL.put("container", uri);
             }
 
         });
@@ -309,9 +376,21 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_create_event_button2) void publishEvent() {
 
+        //TODO If user is editing event and then pressing publish then it will check its id
+        //if the id is not null means it is edited and then clear all back stack upto home fragment
+        //FragmentManager.popBackStack(String name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
         for (int i = 0; i<temporaryContactDatabases.size(); i++) {
             selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name,
                     temporaryContactDatabases.get(i).number));
+        }
+
+        int getCheckedButtonId = radioGroup.getCheckedRadioButtonId();
+        if( getCheckedButtonId == R.id.fragment_create_event_radio_button1) {
+            isPrivate = false;
+        }
+        else {
+            isPrivate = true;
         }
 
         try {
@@ -324,14 +403,14 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         EventHomeModel eventHomeModel =  new EventHomeModel(null,eventName.getText().toString(),
                 placesAutocompleteTextView.getText().toString(), eventDescription.getText().toString(),
                 materialSpinner.getSelectedItem().toString(), date
-                , selectContactModelArrayList);
+                , selectContactModelArrayList,imageURL,isPrivate,latLongHashMap);
 
             EventBus.getDefault().post(eventHomeModel, EventHomeModel.onSave);
-
 
         TemporaryContactDatabase.deleteAll();
         //TODO check its occurance
         setEventDataInAdapter();
+        clearFields();
         mainActivity.onBackPressed();
     }
 

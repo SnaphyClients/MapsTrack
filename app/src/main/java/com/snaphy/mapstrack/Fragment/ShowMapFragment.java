@@ -38,6 +38,9 @@ import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +66,8 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     @Bind(R.id.fragment_map_textview2) TextView time;
     String serverKey = "AIzaSyBMKfG1V911wOn3sx3cvhx01OsDqKzOmrs";
     LatLng position;
-    LatLng destination = new LatLng(28.4591179,77.0703644);
-    LatLng origin = new LatLng(28.4591179,77.0703644);
+    LatLng destination;
+    LatLng origin;
     LatLngBounds latLngBounds;
     GoogleMap googleMap;
 
@@ -81,6 +84,8 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -89,10 +94,21 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Subscriber(tag = Constants.SEND_MAP_COORDINATES_EVENT)
+    private void setDestination(LatLng latLng) {
+        destination = latLng;
+        Log.v(Constants.TAG, "Destination = "+ destination);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
+    }
 
-        return view;
+    @Subscriber(tag = Constants.SEND_EVENT_LATLONG)
+    private void setLatLong(LatLng latLong) {
+        origin = new LatLng(latLong.latitude, latLong.longitude);
+        Log.v(Constants.TAG, "Origin = "+origin);
     }
 
     @OnClick(R.id.fragment_map_imagebutton1) void backButton() {
