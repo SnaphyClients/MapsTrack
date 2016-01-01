@@ -139,8 +139,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 .saveInRootPicturesDirectory()
                 .setCopyExistingPicturesToPublicLocation(true);
 
-
-        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
         dateFormat = new SimpleDateFormat();
         setSpinner();
         datePickerClickListener(view);
@@ -158,6 +156,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    mainActivity.onBackPressed();
                     clearFields();
                     return true;
                 }
@@ -172,6 +171,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         dateEdittext.setText("");
         publicRadioButton.setChecked(true);
         //TODO Spinner check item
+        //TODO Clear Temporary database here
 
     }
 
@@ -210,6 +210,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         Log.v(Constants.TAG, "Image File = " + uri + "");
         imageLoader.displayImage(uri, imageView);
 
+        displayContactModelArrayList.clear();
         for(int i = 0; i<eventHomeModel.getContacts().size();i++) {
             displayContactModelArrayList.add(new DisplayContactModel(eventHomeModel.getContacts().get(i).getContactName()));
         }
@@ -230,6 +231,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      */
     public void setEventDataInAdapter() {
 
+        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
         for(int i = 0; i<temporaryContactDatabases.size();i++) {
             displayContactModelArrayList.add(new DisplayContactModel(temporaryContactDatabases.get(i).name));
         }
@@ -379,10 +381,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         //TODO If user is editing event and then pressing publish then it will check its id
         //if the id is not null means it is edited and then clear all back stack upto home fragment
         //FragmentManager.popBackStack(String name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-        for (int i = 0; i<temporaryContactDatabases.size(); i++) {
-            selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name,
-                    temporaryContactDatabases.get(i).number));
+        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
+        if(temporaryContactDatabases !=  null) {
+            for (int i = 0; i < temporaryContactDatabases.size(); i++) {
+                selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name,
+                        temporaryContactDatabases.get(i).number));
+            }
         }
 
         int getCheckedButtonId = radioGroup.getCheckedRadioButtonId();
@@ -408,8 +412,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             EventBus.getDefault().post(eventHomeModel, EventHomeModel.onSave);
 
         TemporaryContactDatabase.deleteAll();
-        //TODO check its occurance
-        setEventDataInAdapter();
         clearFields();
         mainActivity.onBackPressed();
     }
