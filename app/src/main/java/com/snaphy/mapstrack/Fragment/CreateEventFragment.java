@@ -42,6 +42,7 @@ import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.Model.EventHomeModel;
+import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
 
@@ -186,7 +187,18 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         latLongHashMap.put("latitude",latLong.latitude);
         latLongHashMap.put("longitude", latLong.longitude);
     }
-    
+
+    @Subscriber(tag = Constants.CREATE_EVENT_FROM_LOCATION)
+    private void createEventFromLocation(LocationHomeModel locationHomeModel) {
+        eventLocation.setText(locationHomeModel.getLocationAddress());
+        displayContactModelArrayList.clear();
+        for(int i = 0; i<locationHomeModel.getContacts().size();i++) {
+            displayContactModelArrayList.add(new DisplayContactModel(locationHomeModel.getContacts().get(i).getContactName()));
+        }
+        //TODO Check if lat long are from location or not
+        latLongHashMap.put("latitude",locationHomeModel.getLatLong().get("latitude"));
+        latLongHashMap.put("longitude", locationHomeModel.getLatLong().get("longitude"));
+    }
 
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
     private void onEdit(EventHomeModel eventHomeModel) {

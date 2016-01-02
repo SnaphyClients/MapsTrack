@@ -84,8 +84,6 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_create_location, container, false);
         ButterKnife.bind(this, view);
 
-        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
-
         placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_location_edittext3);
 
         backButtonClickListener();
@@ -110,8 +108,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_location_imagebutton2) void openContactDialog() {
-        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
         setLocationDataInAdapter();
+        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
         Holder holder = new ListHolder();
         showOnlyContentDialog(holder, adapter);
     }
@@ -160,6 +158,20 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         latLongHashMap.put("longitude", latLong.longitude);
     }
 
+    @Subscriber(tag = Constants.SHOW_LOCATION_EDIT)
+    private void onEdit(LocationHomeModel locationHomeModel) {
+
+        //TODO Update data will be called when create event fragment is called from event info
+        locationName.setText(locationHomeModel.getLocationName());
+        locationId.setText(locationHomeModel.getLocationId());
+        placesAutocompleteTextView.setText(locationHomeModel.getLocationAddress());
+
+        displayContactModelArrayList.clear();
+        for(int i = 0; i<locationHomeModel.getContacts().size();i++) {
+            displayContactModelArrayList.add(new DisplayContactModel(locationHomeModel.getContacts().get(i).getContactName()));
+        }
+    }
+
     /**
      * When back button is pressed in fragment
      */
@@ -176,7 +188,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Contact are selected from list of avialable contact in phone contact
      */
     @OnClick(R.id.fragment_create_location_button1) void selectContact() {
-        mainActivity.replaceFragment(R.layout.layout_select_contact, null);
+        mainActivity.replaceFragment(R.id.fragment_create_location_button1, null);
     }
 
     /**
@@ -184,6 +196,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      */
     @OnClick(R.id.fragment_create_location_button2) void publishLocation() {
 
+        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
         for (int i = 0; i<temporaryContactDatabases.size(); i++) {
             selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name,
                     temporaryContactDatabases.get(i).number));
@@ -207,7 +220,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      */
     public void setLocationDataInAdapter() {
 
-        displayContactModelArrayList.clear();
+        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
         for(int i = 0; i<temporaryContactDatabases.size();i++) {
             displayContactModelArrayList.add(new DisplayContactModel(temporaryContactDatabases.get(i).name));
         }

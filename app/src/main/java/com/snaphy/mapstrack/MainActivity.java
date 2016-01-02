@@ -147,6 +147,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             case R.id.fragment_location_info_button4:
                 createEventFromLocation(fragmentTransaction);
                 break;
+
+            case R.id.fragment_create_location_button1:
+                selectContactForLocation(fragmentTransaction);
+                break;
         }
     }
 
@@ -381,6 +385,20 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             createEventFragment = CreateEventFragment.newInstance();
         }
         fragmentTransaction.replace(R.id.fragment_location_info_container, createEventFragment, CreateEventFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * Open contact for location
+     * @param fragmentTransaction
+     */
+    private void selectContactForLocation(FragmentTransaction fragmentTransaction) {
+        ShowContactFragment showContactFragment = (ShowContactFragment) getSupportFragmentManager().
+                findFragmentByTag(ShowContactFragment.TAG);
+        if (showContactFragment == null) {
+            showContactFragment = ShowContactFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_create_location_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
