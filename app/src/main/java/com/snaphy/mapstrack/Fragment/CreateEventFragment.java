@@ -186,6 +186,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         latLongHashMap.put("latitude",latLong.latitude);
         latLongHashMap.put("longitude", latLong.longitude);
     }
+    
 
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
     private void onEdit(EventHomeModel eventHomeModel) {
