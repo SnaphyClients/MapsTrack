@@ -131,7 +131,9 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        LocationHomeModel locationHomeModel = locationHomeModelArrayList.get(position);
                         mainActivity.replaceFragment(R.layout.fragment_location_info, null);
+                        EventBus.getDefault().postSticky(locationHomeModel, Constants.SHOW_LOCATION_INFO);
                     }
                 })
         );
@@ -225,9 +227,10 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         locationHomeModelArrayList.clear();
 
         for(int i = 0; i<locationHomeModel.size(); i++) {
-            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.get(i).getLocationName(),
+            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.get(i).getId(),locationHomeModel.get(i).getLocationName(),
                     locationHomeModel.get(i).getLocationAddress(),
-                    locationHomeModel.get(i).getLocationId(),locationHomeModel.get(i).getContacts()));
+                    locationHomeModel.get(i).getLocationId(),locationHomeModel.get(i).getContacts(),
+                    locationHomeModel.get(i).getLatLong()));
         }
 
         homeLocationAdapter.notifyDataSetChanged();
@@ -246,6 +249,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
             if(element.getId() == locationHomeModel.getId()) {
                 int position = locationHomeModelArrayList.indexOf(element);
                 locationHomeModelArrayList.remove(position);
+                break;
             }
         }
         homeLocationAdapter.notifyDataSetChanged();
@@ -259,9 +263,9 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     private void onChange(LocationHomeModel locationHomeModel) {
 
         if(locationHomeModel.getId() == null) {
-            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.getLocationName(),
+            locationHomeModelArrayList.add(new LocationHomeModel(null,locationHomeModel.getLocationName(),
                     locationHomeModel.getLocationAddress(), locationHomeModel.getLocationId(),
-                    locationHomeModel.getContacts()));
+                    locationHomeModel.getContacts(), locationHomeModel.getLatLong()));
             homeLocationAdapter.notifyDataSetChanged();
         }
 

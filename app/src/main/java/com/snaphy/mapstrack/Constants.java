@@ -13,13 +13,16 @@ public final class Constants {
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 
     public static final String SHOW_EVENT_INFO = "HomeFragment:onEventClick";
+    public static final String SHOW_LOCATION_INFO = "HomeFragment:onLocationClick";
     public static final String SHOW_EVENT_EDIT = "EventInfoFragment:onEdit";
+    public static final String SHOW_LOCATION_EDIT = "LocationInfoFragment:onEdit";
     public static final String SEND_ADDRESS_EVENT = "HomeFragment:sendAddressEvent";
     public static final String SEND_ADDRESS_LOCATION = "HomeFragment:sendAddressLocation";
     public static final String SEND_EVENT_LATLONG = "FetchAddressIntentService:sendEventLatLong";
     public static final String SEND_LOCATION_LATLONG = "FetchAddressIntentService:sendLocationLatLong";
     public static final String SEND_MAP_COORDINATES_EVENT = "EventInfoFragment:eventDestinationCoordinates";
     public static final String SEND_MAP_COORDINATES_LOCATION = "LocationInfoFragment:locationDestinationCoordinates";
+    public static final String CREATE_EVENT_FROM_LOCATION = "LocationInfoFragment:createEventFromLocation";
 
 
 }

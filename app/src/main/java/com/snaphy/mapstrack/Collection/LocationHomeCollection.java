@@ -7,6 +7,7 @@ import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Ravi-Gupta on 12/27/2015.
@@ -34,11 +35,16 @@ public class LocationHomeCollection {
         selectContactModels.add(new SelectContactModel("Robins Gupta","987389993"));
         selectContactModels.add(new SelectContactModel("Anurag Gupta","9873045632"));
         selectContactModels.add(new SelectContactModel("Siddarth Jain","8745646993"));
+
+        HashMap<String,Double> latLong = new HashMap<String, Double>();
+        latLong.put("latitude", 28.4591179);
+        latLong.put("longitude", 77.1703644);
+
         //Remove this static code
-        locationHomeModelArrayList.add(new LocationHomeModel("Ravi Home","DLF Phase 3","raviHome",selectContactModels));
-        locationHomeModelArrayList.add(new LocationHomeModel("Sid House","Palam Vihar","sidHouse",selectContactModels));
-        locationHomeModelArrayList.add(new LocationHomeModel("Anurag Office", "Sikandarpur Station", "officeOfficeDLF Phase 3", selectContactModels));
-        locationHomeModelArrayList.add(new LocationHomeModel("Robin Home", "V Block, Gurgaon", "myHome", selectContactModels));
+        locationHomeModelArrayList.add(new LocationHomeModel("1","Ravi Home","DLF Phase 3","raviHome",selectContactModels, latLong));
+        locationHomeModelArrayList.add(new LocationHomeModel("2","Sid House","Palam Vihar","sidHouse",selectContactModels, latLong));
+        locationHomeModelArrayList.add(new LocationHomeModel("3", "Anurag Office", "Sikandarpur Station", "officeOfficeDLF Phase 3", selectContactModels, latLong));
+        locationHomeModelArrayList.add(new LocationHomeModel("4", "Robin Home", "V Block, Gurgaon", "myHome", selectContactModels, latLong));
 
         EventBus.getDefault().postSticky(locationHomeModelArrayList, LocationHomeModel.onResetData);
 
@@ -52,8 +58,9 @@ public class LocationHomeCollection {
     private void onSave(LocationHomeModel locationHomeModel) {
 
         if(locationHomeModel.getId() == null) { // New Data has been added in create location fragment
-            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.getLocationName(),
-                    locationHomeModel.getLocationAddress(), locationHomeModel.getLocationId(), locationHomeModel.getContacts()));
+            locationHomeModelArrayList.add(new LocationHomeModel(null,locationHomeModel.getLocationName(),
+                    locationHomeModel.getLocationAddress(), locationHomeModel.getLocationId(), locationHomeModel.getContacts(),
+                    locationHomeModel.getLatLong()));
             /**
              *  TODO Send POST request to server
              */
@@ -84,12 +91,13 @@ public class LocationHomeCollection {
             if(element.getId() == locationHomeModel.getId()) {
                 int position = locationHomeModelArrayList.indexOf(element);
                 locationHomeModelArrayList.remove(position);
+                break;
             }
         }
         /**
          * TODO Send DELETE request to server
          */
-        EventBus.getDefault().postSticky(locationHomeModel, LocationHomeModel.onRemoveData);
+        EventBus.getDefault().post(locationHomeModel, LocationHomeModel.onRemoveData);
     }
 
 

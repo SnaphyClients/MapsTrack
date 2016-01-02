@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         EventInfoFragment.OnFragmentInteractionListener, LocationInfoFragment.OnFragmentInteractionListener
 {
 
-    //TODO 1. Make all list work in home fragment
-    //TODO 2. Make menu items work in home fragment
+    //TODO 1. Make Contacts Selected if they are selected and show invite button
+    //TODO 2. On Publish Event remove all fragment from back stack
     //TODO 3. Make Login Page with google login
     //TODO 4. Make Share fragment dynamic (to delete contact list)
-    //TODO 6. Open Contacts and display in app
+    //TODO 6. Clear all the fields in CreateEvent Fragment
 
 
     @Override
@@ -134,6 +134,18 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             case R.id.fragment_event_info_button1:
                 openEditFromEventInfo(fragmentTransaction);
+                break;
+
+            case R.id.fragment_location_info_button1:
+                openEditFromLocationInfo(fragmentTransaction);
+                break;
+
+            case R.id.fragment_location_info_button2:
+                openMapFromLocationInfo(fragmentTransaction);
+                break;
+
+            case R.id.fragment_location_info_button4:
+                createEventFromLocation(fragmentTransaction);
                 break;
         }
     }
@@ -331,6 +343,46 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**  Map Fragment from Location Info is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void openMapFromLocationInfo(FragmentTransaction fragmentTransaction) {
+        ShowMapFragment showMapFragment = (ShowMapFragment) getSupportFragmentManager().
+                findFragmentByTag(ShowMapFragment.TAG);
+        if (showMapFragment == null) {
+            showMapFragment = ShowMapFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_location_info_container, showMapFragment, ShowMapFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**  Create Location from Location Info is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void openEditFromLocationInfo(FragmentTransaction fragmentTransaction) {
+
+        CreateLocationFragment createLocationFragment = (CreateLocationFragment) getSupportFragmentManager().
+                findFragmentByTag(CreateLocationFragment.TAG);
+        if (createLocationFragment == null) {
+            createLocationFragment = CreateLocationFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_location_info_container, createLocationFragment, CreateLocationFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**  Create Event from Location Info is open from here
+     * @param fragmentTransaction {FragmentTransaction}
+     */
+    private void createEventFromLocation(FragmentTransaction fragmentTransaction) {
+
+        CreateEventFragment createEventFragment = (CreateEventFragment) getSupportFragmentManager().
+                findFragmentByTag(CreateEventFragment.TAG);
+        if (createEventFragment == null) {
+            createEventFragment = CreateEventFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_location_info_container, createEventFragment, CreateEventFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
 
 
 

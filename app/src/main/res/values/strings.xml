@@ -113,4 +113,9 @@
     <string name="layout_event_info_button2">Delete Event</string>
     <string name="layout_event_info_button3">Open Map</string>
 
+    <!--Location Info-->
+    <string name="layout_location_info_button1">Edit Location</string>
+    <string name="layout_location_info_button2">Open Map</string>
+    <string name="layout_location_info_button3">Delete Location</string>
+    <string name="layout_location_info_button4">Create event using this location</string>
 </resources>

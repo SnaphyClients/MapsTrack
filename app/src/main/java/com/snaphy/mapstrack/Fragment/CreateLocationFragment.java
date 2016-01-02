@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.activeandroid.query.Select;
+import com.google.android.gms.maps.model.LatLng;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
 import com.orhanobut.dialogplus.ListHolder;
@@ -32,6 +33,7 @@ import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -45,6 +47,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateLocationFragment";
+    HashMap<String,Double> latLongHashMap = new HashMap<String, Double>();
 
     @Bind(R.id.fragment_create_location_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_location_edittext1) EditText locationName;
@@ -151,6 +154,12 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         placesAutocompleteTextView.setText(address);
     }
 
+    @Subscriber(tag = Constants.SEND_LOCATION_LATLONG)
+    private void setLatLong(LatLng latLong) {
+        latLongHashMap.put("latitude",latLong.latitude);
+        latLongHashMap.put("longitude", latLong.longitude);
+    }
+
     /**
      * When back button is pressed in fragment
      */
@@ -173,16 +182,16 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     /**
      * When publish event button is clicked
      */
-    @OnClick(R.id.fragment_create_location_button2) void publishEvent() {
+    @OnClick(R.id.fragment_create_location_button2) void publishLocation() {
 
         for (int i = 0; i<temporaryContactDatabases.size(); i++) {
             selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name,
                     temporaryContactDatabases.get(i).number));
         }
 
-        LocationHomeModel locationHomeModel =  new LocationHomeModel(locationName.getText().toString(),
+        LocationHomeModel locationHomeModel =  new LocationHomeModel(null,locationName.getText().toString(),
                 placesAutocompleteTextView.getText().toString(),
-                locationId.getText().toString(), selectContactModelArrayList);
+                locationId.getText().toString(), selectContactModelArrayList, latLongHashMap);
 
         EventBus.getDefault().post(locationHomeModel, LocationHomeModel.onSave);
         TemporaryContactDatabase.deleteAll();
