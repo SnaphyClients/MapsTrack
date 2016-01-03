@@ -66,8 +66,7 @@
         android:layout_below="@+id/fragment_profile_textview2"
         android:id="@+id/fragment_profile_button1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
+
         android:textColor="@color/googleRed"/>
 
     <LinearLayout

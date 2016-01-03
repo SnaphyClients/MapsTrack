@@ -87,6 +87,7 @@ public class FetchAddressIntentService extends IntentService {
             LatLng latlong = new LatLng(location.getLatitude(),location.getLongitude());
             EventBus.getDefault().postSticky(latlong, Constants.SEND_EVENT_LATLONG);
             EventBus.getDefault().postSticky(latlong, Constants.SEND_LOCATION_LATLONG);
+            EventBus.getDefault().postSticky(latlong, Constants.SEND_DEFAULT_LATLONG);
             // Fetch the address lines using getAddressLine,
             // join them, and send them to the thread.
             for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {

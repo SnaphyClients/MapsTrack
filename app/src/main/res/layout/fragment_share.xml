@@ -7,10 +7,23 @@
     android:clickable="true"
     android:background="@color/background">
 
-    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/fragment_share_listview1"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/fragment_share_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/white"
+        android:background="?attr/colorPrimary"
+        app:tabTextColor="@color/background"
+        app:tabSelectedTextColor="@color/white"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragment_share_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/fragment_share_tab_layout">
+    </android.support.v4.view.ViewPager>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"

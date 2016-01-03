@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,12 +8,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/layout_display_contact_textview1"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="20dp"
+        android:paddingTop= "15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:id="@+id/layout_fragment_display_contact_textview1"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:layout_weight="3"/>
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -22,9 +24,8 @@
         android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
-        android:id="@+id/layout_fragment_display_contact_imagebutton1"
-        android:layout_marginRight="20dp"/>
+        android:id="@+id/layout_fragment_display_contact_imagebutton1" />
 
 
 
-</RelativeLayout>
+</LinearLayout>

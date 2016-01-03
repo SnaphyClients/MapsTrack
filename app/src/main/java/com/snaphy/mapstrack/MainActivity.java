@@ -14,6 +14,8 @@ import com.snaphy.mapstrack.Fragment.EventInfoFragment;
 import com.snaphy.mapstrack.Fragment.FaqsFragment;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
 import com.snaphy.mapstrack.Fragment.LocationInfoFragment;
+import com.snaphy.mapstrack.Fragment.LocationShareByUserFragment;
+import com.snaphy.mapstrack.Fragment.LocationShareByUserFriendsFragment;
 import com.snaphy.mapstrack.Fragment.LoginFragment;
 import com.snaphy.mapstrack.Fragment.MainFragment;
 import com.snaphy.mapstrack.Fragment.ProfileFragment;
@@ -33,13 +35,15 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         TermsFragment.OnFragmentInteractionListener, CreateEventFragment.OnFragmentInteractionListener,
         CreateLocationFragment.OnFragmentInteractionListener, ShowContactFragment.OnFragmentInteractionListener,
         ShowMapFragment.OnFragmentInteractionListener, LoginFragment.OnFragmentInteractionListener,
-        EventInfoFragment.OnFragmentInteractionListener, LocationInfoFragment.OnFragmentInteractionListener
+        EventInfoFragment.OnFragmentInteractionListener, LocationInfoFragment.OnFragmentInteractionListener,
+        LocationShareByUserFragment.OnFragmentInteractionListener, LocationShareByUserFriendsFragment.OnFragmentInteractionListener
 {
 
     //TODO 1. Make Contacts Selected if they are selected and show invite button
     //TODO 2. On Publish Event remove all fragment from back stack
     //TODO 3. Make Login Page with google login
     //TODO 4. Make Share fragment dynamic (to delete contact list)
+    //TODO 5. Delete Button in contacts
     //TODO 6. Clear all the fields in CreateEvent Fragment
 
 
@@ -277,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         if (showMapFragment == null) {
             showMapFragment = ShowMapFragment.newInstance();
         }
-        fragmentTransaction.replace(R.id.fragment_info_container, showMapFragment, ShowMapFragment.TAG).addToBackStack(null);
+        fragmentTransaction.replace(R.id.main_container, showMapFragment, ShowMapFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 

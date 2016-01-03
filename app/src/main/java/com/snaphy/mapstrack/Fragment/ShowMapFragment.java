@@ -113,6 +113,15 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         mapFragment.getMapAsync(this);
     }
 
+    @Subscriber(tag = Constants.OPEN_MAP_FROM_LOCATION)
+    private void setFriendsDestination(LatLng latLng) {
+        destination = latLng;
+        Log.v(Constants.TAG, "Destination = "+ destination);
+        mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
+        mapFragment.getMapAsync(this);
+    }
+
+
     @Subscriber(tag = Constants.SEND_EVENT_LATLONG)
     private void setLatLong(LatLng latLong) {
         origin = new LatLng(latLong.latitude, latLong.longitude);
@@ -121,6 +130,12 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
     @Subscriber(tag = Constants.SEND_LOCATION_LATLONG)
     private void setLocationLatLong(LatLng latLong) {
+        origin = new LatLng(latLong.latitude, latLong.longitude);
+        Log.v(Constants.TAG, "Origin = "+origin);
+    }
+
+    @Subscriber(tag = Constants.SEND_DEFAULT_LATLONG)
+    private void setDefaultLatLong(LatLng latLong) {
         origin = new LatLng(latLong.latitude, latLong.longitude);
         Log.v(Constants.TAG, "Origin = "+origin);
     }

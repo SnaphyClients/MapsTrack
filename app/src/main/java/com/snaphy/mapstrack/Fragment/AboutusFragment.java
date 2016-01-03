@@ -3,36 +3,34 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
-import com.snaphy.mapstrack.Adapter.LocationShareTabAdapter;
-import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
- * Location shared by others or by user to others is maintained here in this fragment
+ * This fragment is located in settings frgament and used to display app info
  */
-public class ShareFragment extends android.support.v4.app.Fragment {
+public class AboutusFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
-    @Bind(R.id.fragment_share_tab_layout) TabLayout tabLayout;
-    @Bind(R.id.fragment_share_view_pager) ViewPager viewPager;
-    MainActivity mainActivity;
+    public static String TAG = "AboutusFragment";
+    @Bind(R.id.fragment_about_us_imagebutton1) ImageButton backArrow;
+    @Bind(R.id.fragment_about_us_textview0)TextView textView;
 
-    public ShareFragment() {
+    public AboutusFragment() {
         // Required empty public constructor
     }
 
-    public static ShareFragment newInstance() {
-        ShareFragment fragment = new ShareFragment();
+
+    public static AboutusFragment newInstance() {
+        AboutusFragment fragment = new AboutusFragment();
         return fragment;
     }
 
@@ -45,25 +43,22 @@ public class ShareFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view  =  inflater.inflate(R.layout.fragment_share, container, false);
+        View view = inflater.inflate(R.layout.fragment_aboutus, container, false);
         ButterKnife.bind(this, view);
-        viewPager.setAdapter(new LocationShareTabAdapter(getActivity().getSupportFragmentManager()));
-        tabLayout.setupWithViewPager(viewPager);
-        setTextInTabLayout();
+        pressBackButton();
         return view;
     }
 
-    /**
-     * Set Text for Tab Layout
-     */
-    public void setTextInTabLayout() {
-        tabLayout.getTabAt(0).setText("by you");
-        tabLayout.getTabAt(1).setText("by friends");
+    private void pressBackButton() {
+        //Back Button Click Listener
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
-    @OnClick(R.id.fragment_share_floating_button1) void addContactsButton() {
-        mainActivity.replaceFragment(R.layout.layout_select_contact,null);
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -75,7 +70,6 @@ public class ShareFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -95,7 +89,7 @@ public class ShareFragment extends android.support.v4.app.Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

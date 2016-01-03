@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.snaphy.mapstrack.Collection.EventHomeCollection;
 import com.snaphy.mapstrack.Collection.LocationHomeCollection;
+import com.snaphy.mapstrack.Collection.ShareLocationCollection;
 
 import org.simple.eventbus.EventBus;
 
@@ -18,6 +19,7 @@ public class BackgroundService extends Service {
 
     LocationHomeCollection locationHomeCollection;
     EventHomeCollection eventHomeCollection;
+    ShareLocationCollection shareLocationCollection;
 
     @Nullable
     @Override
@@ -38,6 +40,7 @@ public class BackgroundService extends Service {
         EventBus.getDefault().registerSticky(this);
         eventHomeCollection = new EventHomeCollection();
         locationHomeCollection  = new LocationHomeCollection();
+        shareLocationCollection = new ShareLocationCollection();
         return START_STICKY;
     }
 

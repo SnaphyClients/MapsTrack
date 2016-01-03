@@ -69,9 +69,9 @@ public class ProfileFragment extends Fragment implements
                 .addScope(Plus.SCOPE_PLUS_LOGIN).build();
 
         List<ProfileDatabase> profileInfo = new Select().from(ProfileDatabase.class).execute();
-        name.setText(profileInfo.get(0).name);
-        email.setText(profileInfo.get(0).emailId);
-        imageLoader.displayImage(profileInfo.get(0).pictureUrl, profilePicture);
+       // name.setText(profileInfo.get(0).name);
+       // email.setText(profileInfo.get(0).emailId);
+       // imageLoader.displayImage(profileInfo.get(0).pictureUrl, profilePicture);
         return view;
     }
 

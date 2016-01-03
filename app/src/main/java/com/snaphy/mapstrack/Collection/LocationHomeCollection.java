@@ -31,10 +31,10 @@ public class LocationHomeCollection {
          *  TODO Fetch Data From Server
          */
         ArrayList<SelectContactModel> selectContactModels = new ArrayList<SelectContactModel>();
-        selectContactModels.add(new SelectContactModel("Ravi Gupta","9873046993"));
-        selectContactModels.add(new SelectContactModel("Robins Gupta","987389993"));
-        selectContactModels.add(new SelectContactModel("Anurag Gupta","9873045632"));
-        selectContactModels.add(new SelectContactModel("Siddarth Jain","8745646993"));
+        selectContactModels.add(new SelectContactModel("1","Ravi Gupta","9873046993"));
+        selectContactModels.add(new SelectContactModel("2","Robins Gupta","987389993"));
+        selectContactModels.add(new SelectContactModel("3","Anurag Gupta","9873045632"));
+        selectContactModels.add(new SelectContactModel("4","Siddarth Jain","8745646993"));
 
         HashMap<String,Double> latLong = new HashMap<String, Double>();
         latLong.put("latitude", 28.4591179);

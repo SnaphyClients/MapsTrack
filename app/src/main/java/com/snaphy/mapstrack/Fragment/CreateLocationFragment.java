@@ -198,7 +198,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
         temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
         for (int i = 0; i<temporaryContactDatabases.size(); i++) {
-            selectContactModelArrayList.add(new SelectContactModel(temporaryContactDatabases.get(i).name,
+            selectContactModelArrayList.add(new SelectContactModel(null,temporaryContactDatabases.get(i).name,
                     temporaryContactDatabases.get(i).number));
         }
 
