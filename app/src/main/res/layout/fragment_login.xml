@@ -37,10 +37,16 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="5dp"/>
 
-    <com.google.android.gms.common.SignInButton
+    <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_login_button1"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/googleRed"
+        android:textColor="@color/white"
+        android:text="with google+"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:drawableLeft="@mipmap/publish"/>
 
 </RelativeLayout>

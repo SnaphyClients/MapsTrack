@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.snaphy.mapstrack.Collection.EventHomeCollection;
 import com.snaphy.mapstrack.Collection.LocationHomeCollection;
 import com.snaphy.mapstrack.Collection.ShareLocationCollection;
+import com.snaphy.mapstrack.Constants;
 
 import org.simple.eventbus.EventBus;
 
@@ -20,6 +21,7 @@ public class BackgroundService extends Service {
     LocationHomeCollection locationHomeCollection;
     EventHomeCollection eventHomeCollection;
     ShareLocationCollection shareLocationCollection;
+    boolean login = true;
 
     @Nullable
     @Override
@@ -38,6 +40,7 @@ public class BackgroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().post(login, Constants.IS_LOGIN);
         eventHomeCollection = new EventHomeCollection();
         locationHomeCollection  = new LocationHomeCollection();
         shareLocationCollection = new ShareLocationCollection();

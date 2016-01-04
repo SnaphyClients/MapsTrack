@@ -32,6 +32,7 @@ import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
 import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.io.InputStream;
 
@@ -79,8 +80,8 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //https://github.com/scottyab/secure-preferences
-        //Secure Prefrences or rooted phones
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -96,6 +97,18 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Vi
         return view;
     }
 
+    @Subscriber(tag = Constants.LOGOUT)
+    private void logout(String logout) {
+        Log.v(Constants.TAG, "Out Logout");
+        if (googleApiClient.isConnected()) {
+            Plus.AccountApi.clearDefaultAccount(googleApiClient);
+            googleApiClient.disconnect();
+            googleApiClient.connect();
+            Log.v(Constants.TAG, "In Logout");
+            mainActivity.onBackPressed();
+        }
+    }
+
     @OnClick(R.id.fragment_login_button1) void loginButton() {
         signInWithGooglePlus();
     }
@@ -108,13 +121,15 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Vi
     }
 
     private void resolveSignInError() {
-        if (mConnectionResult.hasResolution()) {
-            try {
-                mIntentInProgress = true;
-                mConnectionResult.startResolutionForResult(mainActivity, RC_SIGN_IN);
-            } catch (IntentSender.SendIntentException e) {
-                mIntentInProgress = false;
-                googleApiClient.connect();
+        if(mConnectionResult != null) {
+            if (mConnectionResult.hasResolution()) {
+                try {
+                    mIntentInProgress = true;
+                    mConnectionResult.startResolutionForResult(mainActivity, RC_SIGN_IN);
+                } catch (IntentSender.SendIntentException e) {
+                    mIntentInProgress = false;
+                    googleApiClient.connect();
+                }
             }
         }
     }
@@ -158,6 +173,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Vi
         getProfileInformation();
         //TODO Event bus is removed from here and main Activity
         EventBus.getDefault().postSticky(new LoginEvent(true));
+        mainActivity.replaceFragment(R.layout.fragment_main, null);
         Snackbar.make(getView(), "Welcome "+personName, Snackbar.LENGTH_SHORT).show();
 
     }
@@ -193,7 +209,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Vi
                 // replacing sz=X
                 personPhotoUrl = personPhotoUrl.substring(0,
                         personPhotoUrl.length() - 2)
-                        + 200;
+                        + 400;
 
                // new LoadProfileImage(imgProfilePic).execute(personPhotoUrl);
 

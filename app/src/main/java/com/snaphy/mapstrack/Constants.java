@@ -47,4 +47,7 @@ public final class Constants {
     public static final String ADD_CONTACTS_IN_SHARE_LOCATION = "SelectContactAdapter:addContact";
     public static final String SHOW_CONTACTS_IN_SHARE_LOCATION = "ShareLocationCollection:showContact";
 
+    public static final String IS_LOGIN = "BackgroundServices:isLogin";
+    public static final String LOGOUT = "ProfileFragment:logout";
+
 }

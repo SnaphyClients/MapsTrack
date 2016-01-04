@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
@@ -27,6 +28,9 @@ import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
 import com.snaphy.mapstrack.Services.BackgroundService;
 
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
+
 public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         MainFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener,
@@ -41,28 +45,33 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
     //TODO 1. Make Contacts Selected if they are selected and show invite button
     //TODO 2. On Publish Event remove all fragment from back stack
-    //TODO 3. Make Login Page with google login
-    //TODO 4. Make Share fragment dynamic (to delete contact list)
-    //TODO 5. Delete Button in contacts
-    //TODO 6. Clear all the fields in CreateEvent Fragment
+    //TODO 5. Delete Button in contacts in events and location
+    //TODO 4. Implement Search
+    //TODO 6. Clear all the fields in CreateEvent Fragment and CreateLocation
+
+    //TODO 3. Validation and Verify Number
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
         startService(new Intent(getBaseContext(), BackgroundService.class));
         // TODO Stop service in activity on destory method if required
-        replaceFragment(R.layout.fragment_main, null);
+
     }
 
-   /* public void onEvent(LoginEvent event){
-        if(event.isLogin()) {
+    @Subscriber(tag = Constants.IS_LOGIN)
+    private void isLogin(boolean login) {
+        if(login == true){
+            Log.v(Constants.TAG, "I am Login");
             replaceFragment(R.layout.fragment_main, null);
         } else {
-
+            replaceFragment(R.layout.fragment_login, null);
         }
-    }*/
+    }
 
     @Override
     public void onResume() {
@@ -298,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         if (loginFragment == null) {
             loginFragment = LoginFragment.newInstance();
         }
-        fragmentTransaction.replace(R.id.container, loginFragment, LoginFragment.TAG).addToBackStack(null);
+        fragmentTransaction.replace(R.id.container, loginFragment, LoginFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
