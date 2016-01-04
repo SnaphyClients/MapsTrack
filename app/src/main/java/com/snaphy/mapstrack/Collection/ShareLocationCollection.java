@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Collection;
 
 import com.snaphy.mapstrack.Constants;
+import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.Model.ShareLocationModel;
 
 import org.simple.eventbus.EventBus;
@@ -16,6 +17,7 @@ public class ShareLocationCollection {
 
     ArrayList<ShareLocationModel> locationSharedByUserArraylist = new ArrayList<ShareLocationModel>();
     ArrayList<ShareLocationModel> locationSharedByUserFriendsArraylist = new ArrayList<ShareLocationModel>();
+    ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
 
     public ShareLocationCollection() {
         EventBus.getDefault().registerSticky(this);
@@ -89,5 +91,19 @@ public class ShareLocationCollection {
         EventBus.getDefault().post(shareLocationModel, Constants.REMOVE_LOCATION_SHARED_BY_USER_FRIENDS);
     }
 
+    /**
+     *  When new contact is added
+     * @param selectContactModel
+     */
+    @Subscriber(tag = Constants.ADD_CONTACTS_IN_SHARE_LOCATION)
+    private void onSave(SelectContactModel selectContactModel) {
 
-}
+            selectContactModelArrayList.add(new SelectContactModel(null, selectContactModel.getContactName(),
+                    selectContactModel.getContactNumber()) );
+            /**
+             *  TODO Send POST request to server
+             */
+            EventBus.getDefault().post(selectContactModel, Constants.SHOW_CONTACTS_IN_SHARE_LOCATION);
+        }
+
+    }

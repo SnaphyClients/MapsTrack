@@ -44,4 +44,7 @@ public final class Constants {
     public static final String OPEN_MAP_FROM_LOCATION = "LocationShareAdapterContacts:openMap";
     public static final String SEND_DEFAULT_LATLONG = "FetchAddressIntentService:sendDefaultLatLong";
 
+    public static final String ADD_CONTACTS_IN_SHARE_LOCATION = "SelectContactAdapter:addContact";
+    public static final String SHOW_CONTACTS_IN_SHARE_LOCATION = "ShareLocationCollection:showContact";
+
 }

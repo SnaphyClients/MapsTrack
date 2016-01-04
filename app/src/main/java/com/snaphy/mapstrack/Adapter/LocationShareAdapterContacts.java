@@ -2,7 +2,6 @@ package com.snaphy.mapstrack.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,8 +74,7 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
         holder.deleteContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("",TAG);
-                Log.v("",Constants.LOCATION_SHARE_BY_USER_FRAGMENT);
+
                 if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
                     EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER);
                 } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
@@ -88,9 +86,13 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
         holder.contactName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                latLng = new LatLng(shareLocationModel.getLatLong().get("latitude"),shareLocationModel.getLatLong().get("longitude"));
-                mainActivity.replaceFragment(R.layout.fragment_map, null);
-                EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
+                if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
+                    // Nothing can be done here
+                } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
+                    latLng = new LatLng(shareLocationModel.getLatLong().get("latitude"),shareLocationModel.getLatLong().get("longitude"));
+                    mainActivity.replaceFragment(R.layout.fragment_map, null);
+                    EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
+                }
             }
         });
 

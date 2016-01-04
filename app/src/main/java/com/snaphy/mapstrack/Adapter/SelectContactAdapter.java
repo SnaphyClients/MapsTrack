@@ -11,8 +11,12 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
+import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
+
+import org.simple.eventbus.EventBus;
 
 /**
  * Created by Ravi-Gupta on 12/24/2015.
@@ -24,6 +28,7 @@ public class SelectContactAdapter extends SimpleCursorAdapter {
     private int layout;
     private Cursor data;
     private final LayoutInflater inflater;
+    SelectContactModel selectContactModel;
 
     public SelectContactAdapter(Context context,int layout, Cursor data,String[] from,int[] to) {
         super(context,layout,data,from,to);
@@ -31,6 +36,8 @@ public class SelectContactAdapter extends SimpleCursorAdapter {
         this.mContext = context;
         this.inflater=LayoutInflater.from(context);
         this.data=data;
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -65,6 +72,8 @@ public class SelectContactAdapter extends SimpleCursorAdapter {
                 temporaryContactDatabase.name = contactNameDataString;
                 temporaryContactDatabase.number = contactNumberDataString;
                 temporaryContactDatabase.save();
+                selectContactModel = new SelectContactModel(null, contactNameDataString, contactNumberDataString);
+                EventBus.getDefault().post(selectContactModel, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);
             }
         });
 

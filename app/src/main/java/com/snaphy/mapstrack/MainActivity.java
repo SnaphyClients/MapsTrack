@@ -155,6 +155,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             case R.id.fragment_create_location_button1:
                 selectContactForLocation(fragmentTransaction);
                 break;
+
+            case R.id.fragment_location_share_by_user_floating_button1:
+                selectContactForShareLocation(fragmentTransaction);
+                break;
         }
     }
 
@@ -403,6 +407,20 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             showContactFragment = ShowContactFragment.newInstance();
         }
         fragmentTransaction.replace(R.id.fragment_create_location_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * Open Contact for location sharing
+     * @param fragmentTransaction
+     */
+    private void selectContactForShareLocation(FragmentTransaction fragmentTransaction) {
+        ShowContactFragment showContactFragment = (ShowContactFragment) getSupportFragmentManager().
+                findFragmentByTag(ShowContactFragment.TAG);
+        if (showContactFragment == null) {
+            showContactFragment = ShowContactFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 

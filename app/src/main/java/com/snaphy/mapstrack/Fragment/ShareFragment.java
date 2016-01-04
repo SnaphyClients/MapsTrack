@@ -15,7 +15,6 @@ import com.snaphy.mapstrack.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Location shared by others or by user to others is maintained here in this fragment
@@ -59,10 +58,6 @@ public class ShareFragment extends android.support.v4.app.Fragment {
     public void setTextInTabLayout() {
         tabLayout.getTabAt(0).setText("by you");
         tabLayout.getTabAt(1).setText("by friends");
-    }
-
-    @OnClick(R.id.fragment_share_floating_button1) void addContactsButton() {
-        mainActivity.replaceFragment(R.layout.layout_select_contact,null);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

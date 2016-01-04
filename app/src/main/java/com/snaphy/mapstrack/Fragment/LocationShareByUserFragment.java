@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.snaphy.mapstrack.Adapter.LocationShareAdapterContacts;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.Model.ShareLocationModel;
 import com.snaphy.mapstrack.R;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -103,6 +105,19 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
                 break;
             }
         }
+        locationShareAdapterContacts.notifyDataSetChanged();
+    }
+
+    @OnClick(R.id.fragment_location_share_by_user_floating_button1) void addFriends() {
+        mainActivity.replaceFragment(R.id.fragment_location_share_by_user_floating_button1, null);
+    }
+
+    @Subscriber(tag = Constants.SHOW_CONTACTS_IN_SHARE_LOCATION)
+    private void onSave(SelectContactModel selectContactModel) {
+
+        shareLocationModelArrayList.add(new ShareLocationModel(null, selectContactModel.getContactName(),
+                selectContactModel.getContactNumber(), null));
+
         locationShareAdapterContacts.notifyDataSetChanged();
     }
 
