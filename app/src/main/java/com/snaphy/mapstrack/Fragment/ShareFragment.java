@@ -46,7 +46,7 @@ public class ShareFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view  =  inflater.inflate(R.layout.fragment_share, container, false);
         ButterKnife.bind(this, view);
-        viewPager.setAdapter(new LocationShareTabAdapter(getActivity().getSupportFragmentManager()));
+        viewPager.setAdapter(new LocationShareTabAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
         setTextInTabLayout();
         return view;
