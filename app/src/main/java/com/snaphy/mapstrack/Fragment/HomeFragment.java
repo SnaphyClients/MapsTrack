@@ -1,7 +1,9 @@
 package com.snaphy.mapstrack.Fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Geocoder;
 import android.location.Location;
@@ -9,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,8 +42,6 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.google.android.gms.internal.zzip.runOnUiThread;
-
 /**
  * It is a home fragment and it contains all the elements in the home page
  * ie... two recycler views, two floating buttons
@@ -62,7 +63,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     ArrayList<EventHomeModel> eventHomeModelArrayList = new ArrayList<EventHomeModel>();
     ArrayList<LocationHomeModel> locationHomeModelArrayList = new ArrayList<LocationHomeModel>();
 
-    MainActivity mainActivity;
+    static MainActivity mainActivity;
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     private GoogleApiClient mGoogleApiClient;
@@ -295,7 +296,11 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                 .addApi(ActivityRecognition.API)
                 .build();
 
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
     }
 
 
@@ -359,8 +364,12 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     public void onConnected(Bundle bundle) {
         // Gets the best and most recent location currently available,
         // which may be null in rare cases when a location is not available.
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+        int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+        }
 
         if (mLastLocation != null) {
             // Determine whether a Geocoder is available.
@@ -427,10 +436,10 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
 
             // Show a toast message if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
-                runOnUiThread(new Runnable() {
+                mainActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(mAddressOutput != null) {
+                        if (mAddressOutput != null) {
                             EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_EVENT);
                             EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_LOCATION);
                         }

@@ -262,6 +262,14 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp">
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_create_event_button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/map"
+            fab:fab_label="Set Your Location"
+            style="@style/MenuButtonsStyle" />
+
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fragment_create_event_button1"

@@ -14,6 +14,7 @@ import com.snaphy.mapstrack.Fragment.CreateLocationFragment;
 import com.snaphy.mapstrack.Fragment.EventInfoFragment;
 import com.snaphy.mapstrack.Fragment.FaqsFragment;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
+import com.snaphy.mapstrack.Fragment.LatitudeLongitudeFragment;
 import com.snaphy.mapstrack.Fragment.LocationInfoFragment;
 import com.snaphy.mapstrack.Fragment.LocationShareByUserFragment;
 import com.snaphy.mapstrack.Fragment.LocationShareByUserFriendsFragment;
@@ -40,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         CreateLocationFragment.OnFragmentInteractionListener, ShowContactFragment.OnFragmentInteractionListener,
         ShowMapFragment.OnFragmentInteractionListener, LoginFragment.OnFragmentInteractionListener,
         EventInfoFragment.OnFragmentInteractionListener, LocationInfoFragment.OnFragmentInteractionListener,
-        LocationShareByUserFragment.OnFragmentInteractionListener, LocationShareByUserFriendsFragment.OnFragmentInteractionListener
+        LocationShareByUserFragment.OnFragmentInteractionListener, LocationShareByUserFriendsFragment.OnFragmentInteractionListener,
+        LatitudeLongitudeFragment.OnFragmentInteractionListener
 {
 
     //TODO 1. Make Contacts Selected if they are selected and show invite button
@@ -167,6 +169,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             case R.id.fragment_location_share_by_user_floating_button1:
                 selectContactForShareLocation(fragmentTransaction);
+                break;
+
+            case R.id.fragment_create_event_button5:
+                openLatitudeLongitudeSelectionMap(fragmentTransaction);
                 break;
         }
     }
@@ -434,6 +440,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
+    /**
+     * Open Contact for location sharing
+     * @param fragmentTransaction
+     */
+    private void openLatitudeLongitudeSelectionMap(FragmentTransaction fragmentTransaction) {
+        LatitudeLongitudeFragment latitudeLongitudeFragment = (LatitudeLongitudeFragment) getSupportFragmentManager().
+                findFragmentByTag(LatitudeLongitudeFragment.TAG);
+        if (latitudeLongitudeFragment == null) {
+            latitudeLongitudeFragment = LatitudeLongitudeFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_create_event_container, latitudeLongitudeFragment, LatitudeLongitudeFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
 
 
     @Override

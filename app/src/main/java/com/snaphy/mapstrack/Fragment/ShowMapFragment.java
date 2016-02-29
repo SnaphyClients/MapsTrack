@@ -1,12 +1,15 @@
 package com.snaphy.mapstrack.Fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -173,6 +176,11 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     public void onMapReady(final GoogleMap googleMap) {
 
         this.googleMap = googleMap;
+        int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
+
+        }
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnMyLocationChangeListener(this);
         googleMap.addMarker(new MarkerOptions().position(destination).title("End Point"));

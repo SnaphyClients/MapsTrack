@@ -129,18 +129,22 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
             case 1 :
                 tabLayout.getTabAt(1).setIcon(R.mipmap.selected_share);
+                setHasOptionsMenu(true);
                 break;
 
             case 2 :
                 tabLayout.getTabAt(2).setIcon(R.mipmap.selected_profile);
+                setHasOptionsMenu(true);
                 break;
 
             case 3 :
                 tabLayout.getTabAt(3).setIcon(R.mipmap.selected_setting);
+                setHasOptionsMenu(true);
                 break;
 
             default:
                 tabLayout.getTabAt(0).setIcon(R.mipmap.selected_home);
+                setHasOptionsMenu(true);
         }
     }
 

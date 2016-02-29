@@ -40,6 +40,18 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     } //AutoComplete Textview library
 
+    compile('com.google.android.gms:play-services-location:8.4.0') {
+        exclude group: 'com.google.guava'
+    }
+    compile('com.google.android.gms:play-services-identity:8.4.0') {
+        exclude group: 'com.google.guava'
+    }
+    compile('com.strongloop:loopback-sdk-android:1.5.+') {
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+    compile('com.google.android.gms:play-services-plus:8.4.0') {
+        exclude group: 'com.google.guava'
+    }
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:design:23.1.1'
@@ -52,7 +64,6 @@ dependencies {
     compile 'com.brucetoo.pickview:library:1.0.0'
     compile 'com.seatgeek:placesautocomplete:0.1-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.google.android.gms:play-services:8.3.0'
     compile 'com.akexorcist:googledirectionlibrary:1.0.3'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
@@ -60,4 +71,5 @@ dependencies {
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.github.jkwiecien:EasyImage:1.1.2'
     compile 'com.github.tajchert:nammu:1.1.1'
+    compile 'com.android.support:multidex:1.0.1'
 }

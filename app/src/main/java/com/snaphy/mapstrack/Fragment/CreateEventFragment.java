@@ -389,6 +389,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         mainActivity.replaceFragment(R.layout.layout_select_contact, null);
     }
 
+    @OnClick (R.id.fragment_create_event_button5) void openMap() {
+        mainActivity.replaceFragment(R.id.fragment_create_event_button5, null);
+    }
+
     @OnClick(R.id.fragment_create_event_button2) void publishEvent() {
 
         //TODO If user is editing event and then pressing publish then it will check its id

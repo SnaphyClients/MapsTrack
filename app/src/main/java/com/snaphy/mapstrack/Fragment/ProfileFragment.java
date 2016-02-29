@@ -62,9 +62,9 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         List<ProfileDatabase> profileInfo = new Select().from(ProfileDatabase.class).execute();
-        name.setText(profileInfo.get(0).name);
-        email.setText(profileInfo.get(0).emailId);
-        imageLoader.displayImage(profileInfo.get(0).pictureUrl, profilePicture);
+//        name.setText(profileInfo.get(0).name);
+        //email.setText(profileInfo.get(0).emailId);
+        //imageLoader.displayImage(profileInfo.get(0).pictureUrl, profilePicture);
         return view;
     }
 
