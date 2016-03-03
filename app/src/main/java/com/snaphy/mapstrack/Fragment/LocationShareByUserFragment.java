@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.snaphy.mapstrack.Adapter.LocationShareAdapterContacts;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
-import com.snaphy.mapstrack.Model.SelectContactModel;
+import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.ShareLocationModel;
 import com.snaphy.mapstrack.R;
 
@@ -113,10 +113,13 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     }
 
     @Subscriber(tag = Constants.SHOW_CONTACTS_IN_SHARE_LOCATION)
-    private void onSave(SelectContactModel selectContactModel) {
-
-        shareLocationModelArrayList.add(new ShareLocationModel(null, selectContactModel.getContactName(),
-                selectContactModel.getContactNumber(), null));
+    private void onSave(ArrayList<ContactModel> contactModelArrayList) {
+        for(ContactModel contactModel: contactModelArrayList) {
+            if(contactModel.isSelected()) {
+                shareLocationModelArrayList.add(new ShareLocationModel(null, contactModel.getContactName(),
+                        contactModel.getContactNumber(), null));
+            }
+        }
 
         locationShareAdapterContacts.notifyDataSetChanged();
     }

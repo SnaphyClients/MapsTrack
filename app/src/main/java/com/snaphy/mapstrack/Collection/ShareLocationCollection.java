@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Collection;
 
 import com.snaphy.mapstrack.Constants;
+import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.Model.ShareLocationModel;
 
@@ -93,17 +94,22 @@ public class ShareLocationCollection {
 
     /**
      *  When new contact is added
-     * @param selectContactModel
+     * @param contactModelArrayList
      */
     @Subscriber(tag = Constants.ADD_CONTACTS_IN_SHARE_LOCATION)
-    private void onSave(SelectContactModel selectContactModel) {
+    private void onSave(ArrayList<ContactModel> contactModelArrayList) {
 
-            selectContactModelArrayList.add(new SelectContactModel(null, selectContactModel.getContactName(),
-                    selectContactModel.getContactNumber()) );
+            for(ContactModel contactModel : contactModelArrayList) {
+                if(contactModel.isSelected()) {
+                    selectContactModelArrayList.add(new SelectContactModel(null, contactModel.getContactName(),
+                            contactModel.getContactNumber()) );
+                }
+            }
+
             /**
              *  TODO Send POST request to server
              */
-            EventBus.getDefault().post(selectContactModel, Constants.SHOW_CONTACTS_IN_SHARE_LOCATION);
+            EventBus.getDefault().post(contactModelArrayList, Constants.SHOW_CONTACTS_IN_SHARE_LOCATION);
         }
 
     }

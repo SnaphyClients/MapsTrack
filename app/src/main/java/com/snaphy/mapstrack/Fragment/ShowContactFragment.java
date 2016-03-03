@@ -13,7 +13,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,19 +152,21 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                     @Override
                     public void onItemClick(View view, int position) {
                         ContactModel contactModel = contactModelArrayList.get(position);
-                        Log.v(Constants.TAG, contactModel.getContactName());
+
                         if(contactModel.isSelected()) {
                             contactModel.setIsSelected(false);
                             showContactAdapter.notifyDataSetChanged();
-                        } else {
+                        }
+                        else {
                             contactModel.setIsSelected(true);
+                            showContactAdapter.notifyDataSetChanged();
+
                             SelectContactModel selectContactModel;
                             temporaryContactDatabase.name = contactModel.getContactName();
                             temporaryContactDatabase.number = contactModel.getContactNumber();
                             temporaryContactDatabase.save();
                             selectContactModel = new SelectContactModel(null, contactModel.getContactName(), contactModel.getContactNumber());
-                            EventBus.getDefault().post(selectContactModel, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);
-                            showContactAdapter.notifyDataSetChanged();
+
                         }
 
                     }
@@ -188,6 +189,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @OnClick(R.id.fragment_show_contact_button1) void contactSelected() {
         mainActivity.onBackPressed();
+        EventBus.getDefault().post(contactModelArrayList, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);
     }
 
     @Override
