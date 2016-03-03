@@ -48,12 +48,24 @@ public class SelectContactAdapter extends SimpleCursorAdapter {
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         super.bindView(view, context, cursor);
+        View row = view;
+        Holder holder = null;
 
-        TextView contactName = (TextView)view.findViewById(R.id.layout_fragment_show_contact_textview1);
-        TextView contactNumber = (TextView)view.findViewById(R.id.layout_fragment_show_contact_textview2);
-        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.layout_fragment_show_contact_checkbox1);
-        checkBox.setOnCheckedChangeListener(null);
-        final TemporaryContactDatabase temporaryContactDatabase = new TemporaryContactDatabase();
+        final TemporaryContactDatabase temporaryContactDatabase;
+        if(row == null) {
+
+            holder.contactName = (TextView)view.findViewById(R.id.layout_fragment_show_contact_textview1);
+            holder.contactNumber = (TextView)view.findViewById(R.id.layout_fragment_show_contact_textview2);
+            holder.checkBox = (CheckBox) view.findViewById(R.id.layout_fragment_show_contact_checkbox1);
+            temporaryContactDatabase = new TemporaryContactDatabase();
+            row.setTag(holder);
+
+        } else {
+            holder = (Holder) view.getTag();
+            //holder.checkBox.setOnCheckedChangeListener(null);
+            temporaryContactDatabase = new TemporaryContactDatabase();
+        }
+
 
         int contactNameData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
         int contactNumberData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
@@ -61,10 +73,10 @@ public class SelectContactAdapter extends SimpleCursorAdapter {
         final String contactNameDataString = cursor.getString(contactNameData);
         final String contactNumberDataString = cursor.getString(contactNumberData);
 
-        contactName.setText(cursor.getString(contactNameData));
-        contactNumber.setText(cursor.getString(contactNumberData));
+        holder.contactName.setText(cursor.getString(contactNameData));
+        holder.contactNumber.setText(cursor.getString(contactNumberData));
 
-        checkBox.setOnClickListener(new View.OnClickListener() {
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, contactNameDataString + contactNumberDataString + "", Toast.LENGTH_SHORT).show();
@@ -77,6 +89,13 @@ public class SelectContactAdapter extends SimpleCursorAdapter {
             }
         });
 
+    }
+
+    static class Holder
+    {
+        TextView contactName;
+        TextView contactNumber;
+        CheckBox checkBox;
     }
 
 }

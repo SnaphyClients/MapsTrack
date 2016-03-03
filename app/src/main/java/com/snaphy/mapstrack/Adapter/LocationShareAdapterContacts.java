@@ -1,6 +1,8 @@
 package com.snaphy.mapstrack.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,12 +76,7 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
         holder.deleteContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
-                    EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER);
-                } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
-                    EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER_FRIENDS);
-                }
+                showDialog(shareLocationModel);
             }
         });
 
@@ -96,6 +93,28 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
             }
         });
 
+    }
+
+    private void showDialog(final ShareLocationModel shareLocationModel) {
+        new AlertDialog.Builder(mainActivity)
+                .setTitle("Delete Contact?")
+                .setMessage("Are you sure you want to delete this contact?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
+                            EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER);
+                        } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
+                            EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER_FRIENDS);
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     /**

@@ -123,7 +123,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
                     public void onItemClick(View view, int position) {
                         EventHomeModel eventHomeModel = eventHomeModelArrayList.get(position);
                         mainActivity.replaceFragment(R.layout.fragment_event_info, null);
-                        EventBus.getDefault().postSticky(eventHomeModel, Constants.SHOW_EVENT_INFO);
+                        EventBus.getDefault().post(eventHomeModel, Constants.SHOW_EVENT_INFO);
                     }
                 })
         );
@@ -156,7 +156,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     @Subscriber(tag = EventHomeModel.onResetData)
     private void onInitEvent(ArrayList<EventHomeModel> eventHomeModel) {
         eventHomeModelArrayList.clear();
-
+        EventBus.getDefault().removeStickyEvent(eventHomeModel.getClass(), EventHomeModel.onResetData);
         for(int i = 0; i<eventHomeModel.size(); i++) {
             eventHomeModelArrayList.add(new EventHomeModel(eventHomeModel.get(i).getId(),eventHomeModel.get(i).getEventId(),
                     eventHomeModel.get(i).getEventAddress(), eventHomeModel.get(i).getDescription(),

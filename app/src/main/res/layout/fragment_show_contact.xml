@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/back_arrow"
-            android:background="@drawable/ripple_button" />
+            android:background="@android:color/transparent"/>
         <!-- </RelativeLayout>-->
 
         <TextView
@@ -54,9 +54,13 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ListView android:id="@+id/fragment_show_contact_listview1"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_show_contact_recycler_view1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical"/>
+
 
 </RelativeLayout>

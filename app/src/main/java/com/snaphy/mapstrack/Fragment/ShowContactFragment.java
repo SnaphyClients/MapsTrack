@@ -11,22 +11,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.snaphy.mapstrack.Adapter.SelectContactAdapter;
+import com.snaphy.mapstrack.Adapter.ShowContactAdapter;
 import com.snaphy.mapstrack.Constants;
+import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.RecyclerItemClickListener;
+
+import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -39,13 +45,14 @@ import butterknife.OnClick;
  * create an instance of this fragment.
  */
 public class ShowContactFragment extends android.support.v4.app.Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>,
-        AdapterView.OnItemClickListener {
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "ShowContactFragment";
-    SelectContactAdapter selectContactAdapter;
-    ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
+    @Bind(R.id.fragment_show_contact_recycler_view1) RecyclerView recyclerView;
+    ShowContactAdapter showContactAdapter;
+    ArrayList<ContactModel> contactModelArrayList = new ArrayList<ContactModel>();
+    TemporaryContactDatabase temporaryContactDatabase;
 
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
@@ -126,6 +133,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(0, null, this);
+        temporaryContactDatabase = new TemporaryContactDatabase();
     }
 
     @Override
@@ -133,14 +141,36 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_show_contact, container, false);
-        ButterKnife.bind(this,view);
-        mContactsList = (ListView) view.findViewById(R.id.fragment_show_contact_listview1);
-        selectContactAdapter = new SelectContactAdapter(getActivity(),
-                R.layout.layout_select_contact,
-                null,
-                FROM_COLUMNS, TO_IDS);
-        mContactsList.setAdapter(selectContactAdapter);
-        mContactsList.setOnItemClickListener(this);
+        ButterKnife.bind(this, view);
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        showContactAdapter = new ShowContactAdapter(mainActivity,contactModelArrayList);
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        ContactModel contactModel = contactModelArrayList.get(position);
+                        Log.v(Constants.TAG, contactModel.getContactName());
+                        if(contactModel.isSelected()) {
+                            contactModel.setIsSelected(false);
+                            showContactAdapter.notifyDataSetChanged();
+                        } else {
+                            contactModel.setIsSelected(true);
+                            SelectContactModel selectContactModel;
+                            temporaryContactDatabase.name = contactModel.getContactName();
+                            temporaryContactDatabase.number = contactModel.getContactNumber();
+                            temporaryContactDatabase.save();
+                            selectContactModel = new SelectContactModel(null, contactModel.getContactName(), contactModel.getContactNumber());
+                            EventBus.getDefault().post(selectContactModel, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);
+                            showContactAdapter.notifyDataSetChanged();
+                        }
+
+                    }
+                })
+        );
 
         return view;
     }
@@ -199,50 +229,33 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Put the result Cursor in the adapter for the ListView
-        Log.v(Constants.TAG, data + "Yess");
-        selectContactAdapter.changeCursor(data);
+        //Log.v(Constants.TAG, data.get + "Yess");
+        while (data.moveToNext())
+        {
+
+            int contactNameData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
+            int contactNumberData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+            final String contactNameDataString = data.getString(contactNameData);
+            final String contactNumberDataString = data.getString(contactNumberData);
+
+            ContactModel contactModel= new ContactModel();
+            contactModel.setContactName(contactNameDataString);
+            contactModel.setContactNumber(contactNumberDataString);
+            contactModel.setIsSelected(false);
+            contactModelArrayList.add(contactModel);
+        }
+        recyclerView.setAdapter(showContactAdapter);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        selectContactAdapter.changeCursor(null);
+        //showContactAdapter.changeCursor(null);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // Get the Cursor
-        Cursor cursor = selectContactAdapter.getCursor();
-        // Move to the selected contact
-        cursor.moveToPosition(position);
-        // Get the _ID value
-       // mContactId = getLong(String.valueOf(CONTACT_ID_INDEX));
-        // Get the selected LOOKUP KEY
-        //mContactKey = String.valueOf(getLong(String.valueOf(LOOKUP_KEY_INDEX)));
-        // Create the contact's content Uri
-      //  mContactUri = ContactsContract.Contacts.getLookupUri(mContactId, mContactKey);
-        Toast.makeText(mainActivity,  "I am at "+position, Toast.LENGTH_SHORT).show();
-        if(view.getId() == R.id.layout_fragment_show_contact_checkbox1) {
-            Toast.makeText(mainActivity,  "I am a checkbox "+position, Toast.LENGTH_SHORT).show();
-
-        }
-        /*
-         * You can use mContactUri as the content URI for retrieving
-         * the details for a contact.
-         */
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

@@ -73,6 +73,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     MainActivity mainActivity;
     EventHomeModel eventHomeModel;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
+    static EventInfoFragment fragment;
 
 
     public EventInfoFragment() {
@@ -80,8 +81,15 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     }
 
     public static EventInfoFragment newInstance() {
-        EventInfoFragment fragment = new EventInfoFragment();
+        fragment = new EventInfoFragment();
+        EventBus.getDefault().register(fragment);
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(fragment);
     }
 
     @Override
@@ -89,8 +97,6 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
-        EventBus.getDefault().registerSticky(this);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -105,7 +111,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.SHOW_EVENT_INFO)
     private void showEventInfo(EventHomeModel eventHomeModel) {
-
+        EventBus.getDefault().unregister(fragment);
         this.eventHomeModel = eventHomeModel;
         eventName.setText(eventHomeModel.getEventId());
         setContactData(eventHomeModel.getContacts());
@@ -176,14 +182,14 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_event_info_button2) void deleteEvent() {
-
         EventBus.getDefault().post(this.eventHomeModel, EventHomeModel.onDelete);
         mainActivity.onBackPressed();
     }
 
     @OnClick(R.id.fragment_event_info_button3) void openMap() {
         mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
-        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);    }
+        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);
+    }
 
     @OnClick(R.id.fragment_event_info_button4) void openContacts() {
         DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);

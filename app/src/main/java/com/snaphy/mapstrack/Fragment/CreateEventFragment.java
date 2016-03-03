@@ -202,7 +202,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
     private void onEdit(EventHomeModel eventHomeModel) {
-
+        EventBus.getDefault().removeStickyEvent(eventHomeModel.getClass(), Constants.SHOW_EVENT_EDIT);
         //TODO Update data will be called when create event fragment is called from event info
         eventName.setText(eventHomeModel.getEventId());
         eventDescription.setText(eventHomeModel.getDescription());

@@ -102,6 +102,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
     @Subscriber(tag = Constants.SEND_MAP_COORDINATES_EVENT)
     private void setDestination(LatLng latLng) {
+        EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.SEND_MAP_COORDINATES_EVENT);
         destination = latLng;
         Log.v(Constants.TAG, "Destination = "+ destination);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
@@ -110,6 +111,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
     @Subscriber(tag = Constants.SEND_MAP_COORDINATES_LOCATION)
     private void setLocationDestination(LatLng latLng) {
+        EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.SEND_MAP_COORDINATES_LOCATION);
         destination = latLng;
         Log.v(Constants.TAG, "Destination = "+ destination);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
@@ -127,12 +129,14 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
     @Subscriber(tag = Constants.SEND_EVENT_LATLONG)
     private void setLatLong(LatLng latLong) {
+        EventBus.getDefault().removeStickyEvent(latLong.getClass(), Constants.SEND_EVENT_LATLONG);
         origin = new LatLng(latLong.latitude, latLong.longitude);
         Log.v(Constants.TAG, "Origin = " + origin);
     }
 
     @Subscriber(tag = Constants.SEND_LOCATION_LATLONG)
     private void setLocationLatLong(LatLng latLong) {
+        EventBus.getDefault().removeStickyEvent(latLong.getClass(), Constants.SEND_LOCATION_LATLONG);
         origin = new LatLng(latLong.latitude, latLong.longitude);
         Log.v(Constants.TAG, "Origin = "+origin);
     }
@@ -188,7 +192,11 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         googleMap.isTrafficEnabled();
         googleMap.setTrafficEnabled(true);
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 15));
+        if(origin != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 15));
+        } else {
+            Snackbar.make(getView(),"Cannot locate you at this moment, Please try again", Snackbar.LENGTH_INDEFINITE).show();
+        }
 
     }
 
