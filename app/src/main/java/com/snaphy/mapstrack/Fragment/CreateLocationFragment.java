@@ -24,6 +24,7 @@ import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.Model.SelectContactModel;
@@ -108,7 +109,6 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_location_imagebutton2) void openContactDialog() {
-        setLocationDataInAdapter();
         DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
         Holder holder = new ListHolder();
         showOnlyContentDialog(holder, adapter);
@@ -156,6 +156,15 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     private void setLatLong(LatLng latLong) {
         latLongHashMap.put("latitude",latLong.latitude);
         latLongHashMap.put("longitude", latLong.longitude);
+    }
+
+    @Subscriber ( tag = Constants.SEND_SELECTED_CONTACT_TO_CREATE_LOCATION_FRAGMENT)
+    public void saveSelectedContacts(ArrayList<ContactModel> contactModelArrayList) {
+        for(ContactModel contactModel : contactModelArrayList) {
+            if(contactModel.isSelected()) {
+                displayContactModelArrayList.add(new DisplayContactModel(contactModel.getContactName()));
+            }
+        }
     }
 
     @Subscriber(tag = Constants.SHOW_LOCATION_EDIT)

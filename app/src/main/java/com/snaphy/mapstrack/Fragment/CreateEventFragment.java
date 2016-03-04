@@ -40,6 +40,7 @@ import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
@@ -184,7 +185,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.SEND_EVENT_LATLONG)
     private void setLatLong(LatLng latLong) {
-        latLongHashMap.put("latitude",latLong.latitude);
+        latLongHashMap.put("latitude", latLong.latitude);
         latLongHashMap.put("longitude", latLong.longitude);
     }
 
@@ -196,7 +197,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             displayContactModelArrayList.add(new DisplayContactModel(locationHomeModel.getContacts().get(i).getContactName()));
         }
         //TODO Check if lat long are from location or not
-        latLongHashMap.put("latitude",locationHomeModel.getLatLong().get("latitude"));
+        latLongHashMap.put("latitude", locationHomeModel.getLatLong().get("latitude"));
         latLongHashMap.put("longitude", locationHomeModel.getLatLong().get("longitude"));
     }
 
@@ -233,20 +234,18 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_event_imagebutton2) void openContactDialog() {
-        setEventDataInAdapter();
         DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
         Holder holder = new ListHolder();
         showOnlyContentDialog(holder, adapter);
     }
 
-    /**
-     * Data in events has been initialize from here
-     */
-    public void setEventDataInAdapter() {
 
-        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
-        for(int i = 0; i<temporaryContactDatabases.size();i++) {
-            displayContactModelArrayList.add(new DisplayContactModel(temporaryContactDatabases.get(i).name));
+    @Subscriber ( tag = Constants.SEND_SELECTED_CONTACT_TO_CREATE_EVENT_FRAGMENT)
+    public void saveSelectedContacts(ArrayList<ContactModel> contactModelArrayList) {
+        for(ContactModel contactModel : contactModelArrayList) {
+            if(contactModel.isSelected()) {
+                displayContactModelArrayList.add(new DisplayContactModel(contactModel.getContactName()));
+            }
         }
     }
 

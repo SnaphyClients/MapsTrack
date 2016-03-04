@@ -23,7 +23,6 @@ import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
-import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.RecyclerItemClickListener;
 
@@ -160,12 +159,9 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                         else {
                             contactModel.setIsSelected(true);
                             showContactAdapter.notifyDataSetChanged();
-
-                            SelectContactModel selectContactModel;
                             temporaryContactDatabase.name = contactModel.getContactName();
                             temporaryContactDatabase.number = contactModel.getContactNumber();
                             temporaryContactDatabase.save();
-                            selectContactModel = new SelectContactModel(null, contactModel.getContactName(), contactModel.getContactNumber());
 
                         }
 
@@ -189,6 +185,8 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @OnClick(R.id.fragment_show_contact_button1) void contactSelected() {
         mainActivity.onBackPressed();
+        EventBus.getDefault().post(contactModelArrayList, Constants.SEND_SELECTED_CONTACT_TO_CREATE_EVENT_FRAGMENT);
+        EventBus.getDefault().post(contactModelArrayList, Constants.SEND_SELECTED_CONTACT_TO_CREATE_LOCATION_FRAGMENT);
         EventBus.getDefault().post(contactModelArrayList, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);
     }
 

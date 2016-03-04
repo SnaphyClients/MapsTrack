@@ -53,7 +53,7 @@ public class DisplayContactAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         View view = convertView;
 
@@ -69,6 +69,13 @@ public class DisplayContactAdapter extends BaseAdapter {
 
         }
         viewHolder.textview.setText(displayContactModelArrayList.get(position).getContactName());
+        viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayContactModelArrayList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
