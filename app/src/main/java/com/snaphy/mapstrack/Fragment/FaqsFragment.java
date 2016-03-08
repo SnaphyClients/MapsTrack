@@ -3,17 +3,19 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * This fragment contains the methods to display frequently asked questions in the app
@@ -23,7 +25,10 @@ public class FaqsFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
     public static String TAG = "FaqFragment";
     @Bind(R.id.fragment_faq_imagebutton1) ImageButton backArrow;
-    @Bind(R.id.fragment_faq_textview0)TextView textView;
+    @Bind(R.id.fragment_faq_textview1)TextView textView;
+    @Bind(R.id.fragment_faq_progressBar) SmoothProgressBar progressBar;
+    MainActivity mainActivity;
+    View rootView;
 
     public FaqsFragment() {
         // Required empty public constructor
@@ -45,6 +50,9 @@ public class FaqsFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_faq, container, false);
         ButterKnife.bind(this, view);
+        rootView = view;
+        textView.setMovementMethod(new ScrollingMovementMethod());
+        setFaqText();
         pressBackButton();
         return view;
     }
@@ -54,6 +62,35 @@ public class FaqsFragment extends android.support.v4.app.Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    public void setFaqText() {
+        /*companyInfoRepository = mainActivity.getLoopBackAdapter().createRepository(CompanyInfoRepository.class);
+        Map<String, Object> filter = new HashMap<>();
+        Map<String, String> where = new HashMap<>();
+        where.put("type","faqs");
+        filter.put("where", where);
+        companyInfoRepository.find(filter, new ListCallback<CompanyInfo>() {
+            @Override
+            public void onSuccess(List<CompanyInfo> objects) {
+                if (objects != null) {
+                    if (objects.size() != 0) {
+                        faqs = objects.get(0).getHtml().toString();
+                        textView.setText(Html.fromHtml(faqs));
+                        mainActivity.stopProgressBar(progressBar);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(Constants.TAG, t + "");
+                mainActivity.stopProgressBar(progressBar);
+                if(rootview != null) {
+                    Snackbar.make(rootview, "Error fetching data", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });*/
     }
 
     private void pressBackButton() {
@@ -70,6 +107,7 @@ public class FaqsFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

@@ -1,18 +1,23 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  This fragment is used to display contact info in the app
@@ -22,7 +27,10 @@ public class ContactFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
     public static String TAG = "ContactFragment";
     @Bind(R.id.fragment_contact_imagebutton1) ImageButton backArrow;
-    @Bind(R.id.fragment_contact_textview0)TextView textView;
+    @Bind(R.id.fragment_contact_textview1)TextView textView;
+    @Bind(R.id.fragment_contact_button1) Button contactUs;
+    @Bind(R.id.fragment_contact_button2) Button emailUs;
+    String text;
 
     public ContactFragment() {
         // Required empty public constructor
@@ -44,8 +52,31 @@ public class ContactFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
         ButterKnife.bind(this, view);
+        setContactText();
         pressBackButton();
         return view;
+    }
+
+    public void setContactText() {
+        setText();
+        textView.setText(Html.fromHtml(text));
+    }
+
+    public void setText() {
+        text = "<p>We would love to hear from you" +
+                ".Please contact us or write us in case of any query<p/>";
+    }
+
+    @OnClick( R.id.fragment_contact_button1) void contactButton() {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse(Constants.APP_PHONE));
+        startActivity(callIntent);
+    }
+
+    @OnClick (R.id.fragment_contact_button2) void emailButton()  {
+        Intent intent = new Intent (Intent.ACTION_VIEW , Uri.parse("mailto:" + Constants.APP_MAIL));
+        intent.setType("text/plain");
+        startActivity(intent);
     }
 
     private void pressBackButton() {

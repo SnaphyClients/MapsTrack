@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@mipmap/back_arrow"
-            android:background="@drawable/ripple_button" />
+            android:background="@android:color/transparent" />
         <!-- </RelativeLayout>-->
 
         <TextView
@@ -39,4 +39,25 @@
 
     </android.support.v7.widget.Toolbar>
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:padding="15dp"
+        android:id="@+id/fragment_terms_textview1"
+        android:layout_centerInParent="true"/>
+
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/GNowProgressBar"
+        android:indeterminate="true"
+        android:background="@android:color/transparent"
+        android:id="@+id/fragment_terms_progressBar"
+        android:layout_below="@+id/toolbar"
+        android:minHeight="4dp" />
+
+</RelativeLayout>

@@ -3,16 +3,19 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * All terms and conditions are controlled in this fragment
@@ -22,7 +25,10 @@ public class TermsFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
     public static String TAG = "TermsFragment";
     @Bind(R.id.fragment_terms_imagebutton1) ImageButton backArrow;
-    @Bind(R.id.fragment_terms_textview0)TextView textView;
+    @Bind(R.id.fragment_terms_textview1)TextView textView;
+    @Bind(R.id.fragment_terms_progressBar) SmoothProgressBar progressBar;
+    View rootview;
+    MainActivity mainActivity;
 
     public TermsFragment() {
         // Required empty public constructor
@@ -44,6 +50,9 @@ public class TermsFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_terms, container, false);
         ButterKnife.bind(this,view);
+        rootview = view;
+        textView.setMovementMethod(new ScrollingMovementMethod());
+        setTermsText();
         pressBackButton();
         return view;
     }
@@ -58,7 +67,35 @@ public class TermsFragment extends android.support.v4.app.Fragment {
         });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    public void setTermsText() {
+        /*companyInfoRepository = mainActivity.getLoopBackAdapter().createRepository(CompanyInfoRepository.class);
+        Map<String, Object> filter = new HashMap<>();
+        Map<String, String> where = new HashMap<>();
+        where.put("type","t&c");
+        filter.put("where", where);
+        companyInfoRepository.find(filter, new ListCallback<CompanyInfo>() {
+            @Override
+            public void onSuccess(List<CompanyInfo> objects) {
+                if (objects != null) {
+                    if (objects.size() != 0) {
+                        termsContent = objects.get(0).getHtml().toString();
+                        terms.setText(Html.fromHtml(termsContent));
+                        mainActivity.stopProgressBar(progressBar);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(Constants.TAG, t + "");
+                if(rootview != null) {
+                    Snackbar.make(rootview, "Error fetching data", Snackbar.LENGTH_SHORT).show();
+                }
+                mainActivity.stopProgressBar(progressBar);
+            }
+        });*/
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -68,6 +105,7 @@ public class TermsFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

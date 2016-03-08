@@ -5,12 +5,18 @@ package com.snaphy.mapstrack;
  */
 public final class Constants {
     public static final String TAG = "MapsTrack";
+    public static final String CLIENT_ID = "624660143780-l2jd9j9q7iksiager7821501msoe1r8r.apps.googleusercontent.com";
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
     public static final String PACKAGE_NAME = "com.snaphy.mapstrack";
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
+
+    public static final String APP_MAIL = "info@mapstrack.com";
+    public static final String APP_PHONE = "tel:+91-9873046993";
+    public static String APP_PLAY_STORE = "com.drugcorner.slider";
+    public static String APP_SHARE_TEXT = "Finding event made easy \n\n";
 
     public static final String SHOW_EVENT_INFO = "HomeFragment:onEventClick";
     public static final String SHOW_LOCATION_INFO = "HomeFragment:onLocationClick";

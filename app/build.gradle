@@ -72,4 +72,6 @@ dependencies {
     compile 'com.github.tajchert:nammu:1.1.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'org.simple:androideventbus:1.0.5.1'
+    compile 'com.google.android.gms:play-services-auth:8.4.0'
+    compile 'com.github.castorflex.smoothprogressbar:library:1.0.0'
 }
