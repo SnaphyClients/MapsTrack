@@ -15,9 +15,11 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.ProfileDatabase;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.EditProfileModel;
 import com.snaphy.mapstrack.R;
 
 import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.util.List;
 
@@ -50,6 +52,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
     }
@@ -73,7 +76,30 @@ public class ProfileFragment extends Fragment {
     }
 
     @OnClick(R.id.fragment_profile_button2) void editProfile() {
+        EditProfileModel editProfileModel = new EditProfileModel();
+        String nameArray[] = name.getText().toString().split(" ");
 
+        if(!nameArray[0].isEmpty()) {
+            editProfileModel.setFirstName(nameArray[0]);
+            if(!nameArray[1].isEmpty()) {
+                editProfileModel.setLastName(nameArray[1]);
+            }
+        }
+
+        editProfileModel.setMobileNumber(phone.getText().toString());
+
+        if(profilePicture.getDrawable() != null) {
+            editProfileModel.setImage(profilePicture.getDrawable());
+        }
+        EventBus.getDefault().postSticky(editProfileModel, Constants.REQUEST_EDIT_PROFILE_FRAGMENT);
+        mainActivity.replaceFragment(R.layout.fragment_edit_profile, null);
+    }
+
+    @Subscriber ( tag = Constants.RESPONSE_EDIT_PROFILE_FRAGMENT)
+    public void saveEditedData(EditProfileModel editProfileModel) {
+        name.setText(editProfileModel.getFirstName().toString() +" "+ editProfileModel.getLastName().toString());
+        phone.setText(editProfileModel.getMobileNumber());
+        profilePicture.setImageDrawable(editProfileModel.getImage());
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -58,4 +58,7 @@ public final class Constants {
     public static final String IS_LOGIN = "BackgroundServices:isLogin";
     public static final String LOGOUT = "ProfileFragment:logout";
 
+    public static final String REQUEST_EDIT_PROFILE_FRAGMENT = "RequestEditProfileFragment";
+    public static final String RESPONSE_EDIT_PROFILE_FRAGMENT = "ResponseEditProfileFragment";
+
 }

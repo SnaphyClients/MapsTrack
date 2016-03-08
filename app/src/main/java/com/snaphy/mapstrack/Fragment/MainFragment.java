@@ -250,7 +250,17 @@ public class MainFragment extends android.support.v4.app.Fragment {
         getActivity().getMenuInflater().inflate(R.menu.search_item, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_filter){
+            mainActivity.replaceFragment(R.layout.fragment_filter, null);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**

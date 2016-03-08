@@ -40,8 +40,12 @@
         <service
             android:name="com.snaphy.mapstrack.Services.FetchAddressIntentService"
             android:exported="false"/>
-
         <service android:name="com.snaphy.mapstrack.Services.BackgroundService" />
+        <receiver android:name=".Fragment.OTPFragment$IncomingSms" >
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

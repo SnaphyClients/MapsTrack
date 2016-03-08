@@ -1,0 +1,186 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:clickable="true"
+    tools:context="com.snaphy.mapstrack.Fragment.OTPFragment">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="0dp"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:paddingRight="4dp"
+                android:id="@+id/fragment_otp_verification_imagebutton1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/back_arrow"
+                android:background="@android:color/transparent" />
+
+
+            <TextView
+                android:padding="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/fragment_otp_verification_textview1"
+                android:textSize="20sp"
+                android:layout_weight="3"
+                android:textColor="#FFF"
+                android:text="Verify Number"
+                android:gravity="center|left"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/GNowProgressBar"
+        android:indeterminate="true"
+        android:background="@android:color/transparent"
+        android:id="@+id/fragment_otp_verification_progressBar"
+        android:layout_below="@+id/toolbar"
+        android:minHeight="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/toolbar"
+        android:weightSum="7"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+91"
+            android:layout_marginLeft="15dp"
+            android:padding="12dp"
+            android:textSize="13sp"
+            android:layout_weight="1"
+            android:layout_marginTop="15dp"
+            android:background="@color/white"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Enter Mobile Number"
+            android:background="@drawable/round_edit_text"
+            android:padding="12dp"
+            android:id="@+id/fragment_otp_verification_edittext2"
+            android:layout_weight="4"
+            android:textSize="13sp"
+            android:textColor="#777"
+            android:maxLength="10"
+            android:inputType="number"
+            android:layout_marginTop="15dp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:background="@color/darkBackground"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GO"
+            android:padding="12dp"
+            android:layout_marginTop="15dp"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:id="@+id/fragment_otp_verification_button3"
+            android:background="@android:color/white"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_otp_verification_textview2"
+            android:text="Detecting Verification Code"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="18dp"/>
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_otp_verification_textview4"
+            android:text="OR"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_otp_verification_textview5"
+            android:text="Enter Manually"
+            android:gravity="center"
+            android:layout_marginBottom="15dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_otp_verification_edittext1"
+            android:gravity="center"
+            android:hint="Enter Code"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:singleLine="true"
+            android:digits="1234567890"
+            android:maxLength="4"
+            android:inputType="number"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_otp_verification_button2"
+            android:text="Resend verification code"
+            android:textAllCaps="false"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center"
+            android:textColor="#36B666"
+            android:visibility="gone"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:text="Validation Failed"
+            android:gravity="bottom|center"
+            android:textColor="@android:color/holo_red_dark"
+            android:id="@+id/fragment_otp_verification_textview6"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,150 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.snaphy.mapstrack.Fragment.EditProfileFragment"
+    android:background="@color/background"
+    android:id="@+id/fragment_edit_profile_container"
+    android:clickable="true">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="0dp"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+
+        <ImageButton
+            android:paddingRight="4dp"
+            android:id="@+id/fragment_edit_profile_image_button0"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@mipmap/back_arrow"
+            android:background="@color/colorPrimary" />
+        <!-- </RelativeLayout>-->
+
+        <TextView
+            android:padding="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_cart_textview0"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:text="Edit Profile" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fragment_edit_profile_picture"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
+            android:src="@drawable/default_image"
+            app:civ_border_width="0dp"
+            app:civ_border_color="#FF000000"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"/>
+
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="27.5dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/fragment_edit_profile_imageview1"
+            android:src="@drawable/profile_border"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp"
+            android:layout_below="@+id/fragment_edit_profile_imageview1">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333"
+                    android:hint="First Name"
+                    android:paddingTop="7dp"
+                    android:inputType="text"
+                    android:textSize="14sp"
+                    android:id="@+id/fragment_edit_profile_edittext1"
+                    android:layout_marginBottom="7dp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333"
+                    android:hint="Last Name"
+                    android:paddingTop="5dp"
+                    android:inputType="text"
+                    android:textSize="14sp"
+                    android:id="@+id/fragment_edit_profile_edittext2"
+                    android:layout_marginBottom="7dp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333"
+                    android:hint="Mobile Number"
+                    android:paddingTop="5dp"
+                    android:inputType="number"
+                    android:textSize="14sp"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:id="@+id/fragment_edit_profile_edittext3"
+                    android:layout_marginBottom="7dp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/googleRed"
+        android:layout_alignParentBottom="true"
+        android:text="Save"
+        android:layout_gravity="right"
+        android:textColor="@color/white"
+        android:id="@+id/fragment_edit_profile_button1"/>
+</RelativeLayout>

@@ -5,14 +5,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
 
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
 import com.snaphy.mapstrack.Fragment.CreateLocationFragment;
+import com.snaphy.mapstrack.Fragment.EditProfileFragment;
 import com.snaphy.mapstrack.Fragment.EventInfoFragment;
 import com.snaphy.mapstrack.Fragment.FaqsFragment;
+import com.snaphy.mapstrack.Fragment.FilterFragment;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
 import com.snaphy.mapstrack.Fragment.LatitudeLongitudeFragment;
 import com.snaphy.mapstrack.Fragment.LocationInfoFragment;
@@ -20,6 +22,7 @@ import com.snaphy.mapstrack.Fragment.LocationShareByUserFragment;
 import com.snaphy.mapstrack.Fragment.LocationShareByUserFriendsFragment;
 import com.snaphy.mapstrack.Fragment.LoginFragment;
 import com.snaphy.mapstrack.Fragment.MainFragment;
+import com.snaphy.mapstrack.Fragment.OTPFragment;
 import com.snaphy.mapstrack.Fragment.ProfileFragment;
 import com.snaphy.mapstrack.Fragment.SettingFragment;
 import com.snaphy.mapstrack.Fragment.ShareFragment;
@@ -32,6 +35,8 @@ import com.snaphy.mapstrack.Services.BackgroundService;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
 public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         MainFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener,
@@ -42,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         ShowMapFragment.OnFragmentInteractionListener, LoginFragment.OnFragmentInteractionListener,
         EventInfoFragment.OnFragmentInteractionListener, LocationInfoFragment.OnFragmentInteractionListener,
         LocationShareByUserFragment.OnFragmentInteractionListener, LocationShareByUserFriendsFragment.OnFragmentInteractionListener,
-        LatitudeLongitudeFragment.OnFragmentInteractionListener
+        LatitudeLongitudeFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
+        OTPFragment.OnFragmentInteractionListener, FilterFragment.OnFragmentInteractionListener
 {
 
     //TODO 1. Make Contacts Selected if they are selected and show invite button
@@ -67,12 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
     @Subscriber(tag = Constants.IS_LOGIN)
     private void isLogin(boolean login) {
-        if(login == true){
-            Log.v(Constants.TAG, "I am Login");
-            replaceFragment(R.layout.fragment_main, null);
-        } else {
-            replaceFragment(R.layout.fragment_login, null);
-        }
+        replaceFragment(R.layout.fragment_login, null);
     }
 
     @Override
@@ -173,6 +174,22 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             case R.id.fragment_create_event_button5:
                 openLatitudeLongitudeSelectionMap(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_edit_profile:
+                openEditProfile(fragmentTransaction);
+                break;
+
+            case R.id.fragment_edit_profile_edittext3:
+                openOTPFromEditProfile(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_ot:
+                openVerifyOTP(fragmentTransaction);
+                break;
+
+            case R.layout.fragment_filter:
+                openFilterFragment(fragmentTransaction);
                 break;
         }
     }
@@ -452,6 +469,62 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
         fragmentTransaction.replace(R.id.fragment_create_event_container, latitudeLongitudeFragment, LatitudeLongitudeFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void openEditProfile(FragmentTransaction fragmentTransaction) {
+        EditProfileFragment editProfileFragment = (EditProfileFragment) getSupportFragmentManager().
+                findFragmentByTag(EditProfileFragment.TAG);
+        if (editProfileFragment == null) {
+            editProfileFragment = EditProfileFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, editProfileFragment, EditProfileFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void  openOTPFromEditProfile(FragmentTransaction fragmentTransaction) {
+        OTPFragment otpFragment = (OTPFragment) getSupportFragmentManager().
+                findFragmentByTag(OTPFragment.TAG);
+        if (otpFragment == null) {
+            otpFragment = OTPFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_edit_profile_container, otpFragment, OTPFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void  openVerifyOTP(FragmentTransaction fragmentTransaction) {
+        OTPFragment otpFragment = (OTPFragment) getSupportFragmentManager().
+                findFragmentByTag(OTPFragment.TAG);
+        if (otpFragment == null) {
+            otpFragment = OTPFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.container, otpFragment, OTPFragment.TAG);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void openFilterFragment(FragmentTransaction fragmentTransaction) {
+        FilterFragment filterFragment = (FilterFragment) getSupportFragmentManager().
+                findFragmentByTag(FilterFragment.TAG);
+        if (filterFragment == null) {
+            filterFragment = FilterFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.main_container, filterFragment, FilterFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    public void startProgressBar(SmoothProgressBar progressBar) {
+        if(progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.progressiveStart();
+        }
+        //OR Use Progress Dialog
+    }
+
+    public void stopProgressBar(SmoothProgressBar progressBar) {
+        if(progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+            progressBar.progressiveStop();
+        }
+        //OR Use Progress Dialog
     }
 
 

@@ -160,6 +160,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
             GoogleSignInAccount acct = result.getSignInAccount();
             if(acct.getIdToken() != null) {
                 //sendTokenToServer(acct.getIdToken());
+                mainActivity.replaceFragment(R.layout.fragment_ot, null);
             }
 
         } else {
