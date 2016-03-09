@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.snaphy.mapstrack.Fragment.LatitudeLongitudeFragment"
     android:clickable="true"
     android:id="@+id/fragment_latitude_longitude_container">
@@ -12,5 +13,32 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/toolbar"
+        android:weightSum="7"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp">
+
+
+        <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+            android:id="@+id/fragment_lat_long_place_autocomplete1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:background="@drawable/round_edit_text"
+            android:padding="12dp"
+            android:textSize="13sp"
+            android:textColor="#777"
+            android:hint="Search Location"
+            android:layout_weight="4"
+            android:layout_marginTop="50dp"
+            app:pacv_googleMapsApiKey="AIzaSyDOkFISQfDfooJwIxYhbYEoOOvcMn8Hoqk" />
+
+    </LinearLayout>
 
 </RelativeLayout>

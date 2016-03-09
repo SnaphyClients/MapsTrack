@@ -34,8 +34,6 @@ import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
-import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
-import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
@@ -91,7 +89,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_create_event_radio_group) RadioGroup radioGroup;
     @Bind(R.id.fragment_event_floating_button1) com.github.clans.fab.FloatingActionMenu parentFloatingButton;
 
-    fr.ganfra.materialspinner.MaterialSpinner materialSpinner;
+    com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner materialSpinner;
     static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
     DisplayContactAdapter displayContactAdapter;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
@@ -129,8 +127,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
-        materialSpinner = (fr.ganfra.materialspinner.MaterialSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
-        placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
+        materialSpinner = (com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
+        //placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         backButtonClickListener();
         parentFloatingButton.setIconAnimated(false);
 
@@ -145,7 +143,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         setSpinner();
         datePickerClickListener(view);
         dateEdittext.setKeyListener(null);
-        selectPosition();
+        //selectPosition();
         return view;
     }
 
@@ -180,7 +178,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.SEND_ADDRESS_EVENT)
     private void setAddress(String address) {
-        placesAutocompleteTextView.setText(address);
+       // placesAutocompleteTextView.setText(address);
     }
 
     @Subscriber(tag = Constants.SEND_EVENT_LATLONG)
@@ -282,8 +280,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      */
     public void setSpinner() {
         String[] ITEMS = {"Marriage", "Birthday", "Meeting", "Party", "Get Togeather", "Baby Shower"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, ITEMS);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_dropdown_item_1line, ITEMS);
+        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        materialSpinner.setFocusable(true);
+        materialSpinner.setFocusableInTouchMode(true);
+        materialSpinner.setThreshold(1);
         materialSpinner.setAdapter(adapter);
     }
 
@@ -293,14 +294,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * When certain position is selected from the drop down in auto complete
      * this method is fired
      */
-    private void selectPosition() {
+    /*private void selectPosition() {
         placesAutocompleteTextView.setOnPlaceSelectedListener(new OnPlaceSelectedListener() {
             @Override
             public void onPlaceSelected(Place place) {
-
             }
         });
-    }
+    }*/
 
     /**
      * When back button is the toolbar is pressed this method is fired
@@ -421,8 +421,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         }
 
         EventHomeModel eventHomeModel =  new EventHomeModel(null,eventName.getText().toString(),
-                placesAutocompleteTextView.getText().toString(), eventDescription.getText().toString(),
-                materialSpinner.getSelectedItem().toString(), date
+                eventLocation.getText().toString(), eventDescription.getText().toString(),
+                materialSpinner.getText().toString(), date
                 , selectContactModelArrayList,imageURL,isPrivate,latLongHashMap);
 
             EventBus.getDefault().post(eventHomeModel, EventHomeModel.onSave);

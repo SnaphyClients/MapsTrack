@@ -53,26 +53,28 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <fr.ganfra.materialspinner.MaterialSpinner
+
+                <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
                     android:id="@+id/fragment_create_event_spinner1"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_below="@+id/fragment_create_event_textInputLayout1"
-                    app:ms_arrowColor="@color/colorPrimary"
-                    app:ms_arrowSize="13dp"
-                    app:ms_floatingLabelColor="@color/lightTextColor"
-                    app:ms_floatingLabelText="@string/fragment_create_event_placeHolder"
-                    app:ms_hint="@string/fragment_create_event_hint"
-                    app:ms_multiline="false"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"/>
+                    android:textSize="14sp"
+                    android:textColor="#777"
+                    android:hint="Event Type"
+                    android:paddingTop="2dp"
+                    app:met_floatingLabel="normal"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:focusable="false" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/fragment_create_event_textInputLayout4"
                     android:layout_below="@+id/fragment_create_event_spinner1"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="7dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="10dp">
 
@@ -101,13 +103,22 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/fragment_create_event_textInputLayout2">
 
-                        <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+                        <!--<com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
                             android:id="@+id/fragment_create_event_edittext2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/fragment_create_event_edittext2"
                             app:pacv_googleMapsApiKey="AIzaSyDOkFISQfDfooJwIxYhbYEoOOvcMn8Hoqk"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="gone"/>-->
+
+                        <EditText
+                            android:id="@+id/fragment_create_event_edittext2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:hint="@string/fragment_create_event_edittext2"
+                            android:textSize="14sp"/>
 
                     </android.support.design.widget.TextInputLayout>
 

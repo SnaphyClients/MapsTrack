@@ -3,9 +3,12 @@ package com.snaphy.mapstrack.Fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -22,9 +25,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
+import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
+import com.seatgeek.placesautocomplete.model.Place;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.GPSTracker;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +55,8 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     GPSTracker gps;
     Marker marker;
     MainActivity mainActivity;
+    GoogleMap globalGoogleMap;
+    PlacesAutocompleteTextView placesAutocompleteTextView;
 
     public LatitudeLongitudeFragment() {
         // Required empty public constructor
@@ -55,6 +70,8 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -62,15 +79,50 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_latitude_longitude, container, false);
-
+        placesAutocompleteTextView = (PlacesAutocompleteTextView) view.findViewById(R.id.fragment_lat_long_place_autocomplete1);
         gps=new GPSTracker(mainActivity);
         supportMapFragment = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.fragment_latitude_longitude_map));
         supportMapFragment.getMapAsync(this);
-
+        setPlaces();
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    @Subscriber(tag = Constants.SEND_ADDRESS_EVENT)
+    private void setAddress(String address) {
+         placesAutocompleteTextView.setText(address);
+    }
+
+    public void setPlaces() {
+        placesAutocompleteTextView.setOnPlaceSelectedListener(
+                new OnPlaceSelectedListener() {
+                    @Override
+                    public void onPlaceSelected(final Place place) {
+                        Snackbar.make(getView(), place.description + "", Snackbar.LENGTH_SHORT).show();
+                        setNewMarkerLocation(place.description);
+                    }
+                }
+        );
+    }
+
+    public void setNewMarkerLocation(String address) {
+        Geocoder coder = new Geocoder(mainActivity);
+        try {
+            ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(address, 50);
+            for(Address add : adresses){
+                double longitude = add.getLongitude();
+                double latitude = add.getLatitude();
+                LatLng latLng = new LatLng(latitude, longitude);
+                marker.setPosition(latLng);
+                globalGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
+                globalGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14));
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -100,6 +152,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
 
         double curlat=gps.getLatitude();
         double curlon=gps.getLongitude();
+        globalGoogleMap = googleMap;
         LatLng currentpos=new LatLng(curlat, curlon);
         int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION);
         int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -146,7 +199,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
 
     @Override
     public void onMyLocationChange(Location location) {
-
+        placesAutocompleteTextView.setCurrentLocation(location);
     }
 
     /**

@@ -18,8 +18,6 @@ import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
-import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
-import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
@@ -53,8 +51,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_create_location_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_location_edittext1) EditText locationName;
     @Bind(R.id.fragment_create_location_edittext2) EditText locationId;
+    @Bind(R.id.fragment_create_location_edittext3) EditText locationAddress;
 
-    static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
     MainActivity mainActivity;
 
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
@@ -85,25 +83,10 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_create_location, container, false);
         ButterKnife.bind(this, view);
 
-        placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_location_edittext3);
-
         backButtonClickListener();
-        selectPosition();
         return view;
     }
 
-    /**
-     * When certain position is selected from the drop down in auto complete
-     * this method is fired
-     */
-    private void selectPosition() {
-        placesAutocompleteTextView.setOnPlaceSelectedListener(new OnPlaceSelectedListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-
-            }
-        });
-    }
 
     /**
      * Show contacts button event listener
@@ -149,7 +132,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.SEND_ADDRESS_LOCATION)
     private void setAddress(String address) {
-        placesAutocompleteTextView.setText(address);
+       // placesAutocompleteTextView.setText(address);
     }
 
     @Subscriber(tag = Constants.SEND_LOCATION_LATLONG)
@@ -173,7 +156,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         //TODO Update data will be called when create event fragment is called from event info
         locationName.setText(locationHomeModel.getLocationName());
         locationId.setText(locationHomeModel.getLocationId());
-        placesAutocompleteTextView.setText(locationHomeModel.getLocationAddress());
+        locationAddress.setText(locationHomeModel.getLocationAddress());
 
         displayContactModelArrayList.clear();
         for(int i = 0; i<locationHomeModel.getContacts().size();i++) {
@@ -200,6 +183,10 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         mainActivity.replaceFragment(R.id.fragment_create_location_button1, null);
     }
 
+    @OnClick(R.id.fragment_create_location_button5) void setLocation() {
+        mainActivity.replaceFragment(R.id.fragment_create_location_button5, null);
+    }
+
     /**
      * When publish event button is clicked
      */
@@ -212,7 +199,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         }
 
         LocationHomeModel locationHomeModel =  new LocationHomeModel(null,locationName.getText().toString(),
-                placesAutocompleteTextView.getText().toString(),
+                locationAddress.getText().toString(),
                 locationId.getText().toString(), selectContactModelArrayList, latLongHashMap);
 
         EventBus.getDefault().post(locationHomeModel, LocationHomeModel.onSave);

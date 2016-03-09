@@ -95,14 +95,22 @@
                 android:layout_weight="3"
                 android:paddingBottom="5dp">
 
-                <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+                <!--<com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
                     android:id="@+id/fragment_create_location_edittext3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="@string/fragment_create_location_edittext3"
                     app:pacv_googleMapsApiKey="AIzaSyDOkFISQfDfooJwIxYhbYEoOOvcMn8Hoqk"
-                    android:textSize="14sp" />
+                    android:textSize="14sp" />-->
+
+                <EditText
+                    android:id="@+id/fragment_create_location_edittext3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:hint="@string/fragment_create_location_edittext3"
+                    android:textSize="14sp"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -235,6 +243,14 @@
         app:layout_anchorGravity="right"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_create_location_button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/map"
+            fab:fab_label="Set Your Location"
+            style="@style/MenuButtonsStyle" />
 
 
         <com.github.clans.fab.FloatingActionButton

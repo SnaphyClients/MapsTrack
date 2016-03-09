@@ -176,6 +176,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 openLatitudeLongitudeSelectionMap(fragmentTransaction);
                 break;
 
+            case R.id.fragment_create_location_button5:
+                openLatitudeLongitudeSelectionMapFromLocation(fragmentTransaction);
+                break;
+
             case R.layout.fragment_edit_profile:
                 openEditProfile(fragmentTransaction);
                 break;
@@ -498,6 +502,20 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             latitudeLongitudeFragment = LatitudeLongitudeFragment.newInstance();
         }
         fragmentTransaction.replace(R.id.fragment_create_event_container, latitudeLongitudeFragment, LatitudeLongitudeFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * Open Contact for location sharing
+     * @param fragmentTransaction
+     */
+    private void openLatitudeLongitudeSelectionMapFromLocation(FragmentTransaction fragmentTransaction) {
+        LatitudeLongitudeFragment latitudeLongitudeFragment = (LatitudeLongitudeFragment) getSupportFragmentManager().
+                findFragmentByTag(LatitudeLongitudeFragment.TAG);
+        if (latitudeLongitudeFragment == null) {
+            latitudeLongitudeFragment = LatitudeLongitudeFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_create_location_container, latitudeLongitudeFragment, LatitudeLongitudeFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
