@@ -4,24 +4,25 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.activeandroid.query.Select;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Database.ProfileDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EditProfileModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
+import com.strongloop.android.loopback.callbacks.VoidCallback;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -64,15 +65,30 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
 
-        List<ProfileDatabase> profileInfo = new Select().from(ProfileDatabase.class).execute();
-//        name.setText(profileInfo.get(0).name);
-        //email.setText(profileInfo.get(0).emailId);
-        //imageLoader.displayImage(profileInfo.get(0).pictureUrl, profilePicture);
+
         return view;
     }
 
     @OnClick(R.id.fragment_profile_button1) void logoutButton() {
-        EventBus.getDefault().post("logout", Constants.LOGOUT);
+        if(BackgroundService.getCustomerRepository() == null){
+            CustomerRepository customerRepository = mainActivity.getLoopBackAdapter().createRepository(CustomerRepository.class);
+            BackgroundService.setCustomerRepository(customerRepository);
+        }
+
+        BackgroundService.getCustomerRepository().logout(new VoidCallback() {
+            @Override
+            public void onSuccess() {
+                //Move to login fragment..
+                mainActivity.moveToLogin();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(Constants.TAG, t.toString());
+                Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @OnClick(R.id.fragment_profile_button2) void editProfile() {
@@ -97,7 +113,7 @@ public class ProfileFragment extends Fragment {
 
     @Subscriber ( tag = Constants.RESPONSE_EDIT_PROFILE_FRAGMENT)
     public void saveEditedData(EditProfileModel editProfileModel) {
-        name.setText(editProfileModel.getFirstName().toString() +" "+ editProfileModel.getLastName().toString());
+        name.setText(editProfileModel.getFirstName().toString() + " " + editProfileModel.getLastName().toString());
         phone.setText(editProfileModel.getMobileNumber());
         profilePicture.setImageDrawable(editProfileModel.getImage());
     }
@@ -141,5 +157,34 @@ public class ProfileFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+
+    public void addProfileData(){
+        //TODO REMVOE STATIC DATA..
+        if(BackgroundService.getCustomer() != null){
+            String userName = "";
+            String userEmail = "";
+            if(!BackgroundService.getCustomer().getFirstName().isEmpty()){
+                userName = BackgroundService.getCustomer().getFirstName();
+                if(!BackgroundService.getCustomer().getLastName().isEmpty()){
+                    userName = userName + " " + BackgroundService.getCustomer().getLastName();
+                }
+                name.setText(userName);
+            }
+
+            if(BackgroundService.getCustomer().getEmail() != null){
+                userEmail = BackgroundService.getCustomer().getEmail();
+                email.setText(userEmail);
+            }
+
+            if(BackgroundService.getCustomer().getPhoneNumber() != null){
+                phone.setText(BackgroundService.getCustomer().getPhoneNumber());
+            }
+
+            if(BackgroundService.getCustomer().getProfilePic() != null){
+
+            }
+        }
     }
 }

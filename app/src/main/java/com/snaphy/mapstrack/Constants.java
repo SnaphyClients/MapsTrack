@@ -23,7 +23,7 @@ public final class Constants {
      * from the API Console, as described in "Getting Started."
      */
     public static String SENDER_ID = "673699478279";
-    public static String LOOPBACK_APP_ID = "drugcorner-push-application";
+    public static String LOOPBACK_APP_ID = "mapstrack-snaphy-push-application";
 
     public static final String APP_MAIL = "info@mapstrack.com";
     public static final String APP_PHONE = "tel:+91-9873046993";

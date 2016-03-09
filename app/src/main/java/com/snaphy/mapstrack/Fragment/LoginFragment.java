@@ -19,14 +19,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.BackgroundService;
-
-import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subscriber;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -73,8 +69,6 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().registerSticky(this);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -91,22 +85,14 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
                 .requestIdToken(Constants.CLIENT_ID)
                 .requestEmail()
                 .build();
-
         initializeGoogleApiClient();
+        mainActivity.googleSignOut();
         return view;
     }
 
-    @Subscriber(tag = Constants.LOGOUT)
-    private void logout(String logout) {
-        Log.v(Constants.TAG, "Out Logout");
-        if (googleApiClient.isConnected()) {
-            Plus.AccountApi.clearDefaultAccount(googleApiClient);
-            googleApiClient.disconnect();
-            googleApiClient.connect();
-            Log.v(Constants.TAG, "In Logout");
-            mainActivity.onBackPressed();
-        }
-    }
+
+
+
 
     @OnClick(R.id.fragment_login_button1) void loginButton() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
@@ -118,35 +104,12 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
                 .enableAutoManage(mainActivity /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        //BackgroundService.googleApiClient = googleApiClient;
+
+        BackgroundService.setGoogleApiClient(googleApiClient);
         googleApiClient.connect();
     }
 
-   /* public void sendTokenToServer(String token) {
-        CustomerRepository customerRepository = mainActivity.getLoopBackAdapter().createRepository(CustomerRepository.class);
-        customerRepository.loginWithGoogle(token, new Adapter.JsonObjectCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                if (response != null) {
-                    Log.i(Constants.TAG, "Google = " + response.toString());
-                    mainActivity.addUser(response);
-                    //mainActivity.replaceFragment(R.layout.fragment_main, null);
 
-                } else {
-                    Log.v(Constants.TAG, "Null");
-                }
-
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                Snackbar.make(getView(), "Something went wrong", Snackbar.LENGTH_SHORT).show();
-                Log.e(Constants.TAG, t.toString());
-
-            }
-        });
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int responseCode,
@@ -163,6 +126,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             if(acct.getIdToken() != null) {
+                Log.v(Constants.TAG, acct.getIdToken());
                 BackgroundService.setAccessToken(acct.getIdToken());
                 mainActivity.replaceFragment(R.layout.fragment_ot, null);
             }

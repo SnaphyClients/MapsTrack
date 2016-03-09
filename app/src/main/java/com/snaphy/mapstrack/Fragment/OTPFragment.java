@@ -105,7 +105,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
                 String code = enterCodeEditText.getText().toString().trim();
                 if (codeLength == 4) {
-
+                    loginWithCode(code);
                     //mainActivity.replaceFragment(R.layout.fragment_main, null);
                 }
             }//onTextChanged
@@ -138,7 +138,8 @@ public class OTPFragment extends android.support.v4.app.Fragment {
                         //mainActivity.replaceFragment(R.layout.fragment_main, null);
 
                     } else {
-                        Log.v(Constants.TAG, "Null");
+                        Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                        Log.v(Constants.TAG, "Null returned from server.");
                     }
                 }
 

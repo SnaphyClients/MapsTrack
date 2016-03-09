@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.snaphy.mapstrack.Collection.EventHomeCollection;
 import com.snaphy.mapstrack.Collection.LocationHomeCollection;
 import com.snaphy.mapstrack.Collection.ShareLocationCollection;
@@ -56,7 +57,15 @@ public class BackgroundService extends Service {
         BackgroundService.customer = customer;
     }
 
+    public static GoogleApiClient getGoogleApiClient() {
+        return googleApiClient;
+    }
 
+    public static void setGoogleApiClient(GoogleApiClient googleApiClient) {
+        BackgroundService.googleApiClient = googleApiClient;
+    }
+
+    private static GoogleApiClient googleApiClient;
 
     @Nullable
     @Override
