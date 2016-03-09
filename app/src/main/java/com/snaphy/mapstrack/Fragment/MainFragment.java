@@ -3,9 +3,11 @@ package com.snaphy.mapstrack.Fragment;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,11 +15,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.snaphy.mapstrack.Adapter.CustomizeSearchAdapter;
 import com.snaphy.mapstrack.Adapter.HomeTabLayoutAdapter;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.SearchSuggestions;
 import com.snaphy.mapstrack.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,7 +43,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_main_view_pager) ViewPager viewPager;
     @Bind(R.id.search_view) MaterialSearchView searchView;
     @Bind(R.id.main_toolbar) android.support.v7.widget.Toolbar toolbar;
+    String sugg[] = {"Birthday", "Party", "Marriage"};
     MainActivity mainActivity;
+    CustomizeSearchAdapter customizeSearchAdapter;
+    List<SearchSuggestions> searchSuggestionsList = new ArrayList<>();
 
     public MainFragment() {
         // Required empty public constructor
@@ -60,10 +73,19 @@ public class MainFragment extends android.support.v4.app.Fragment {
         setHasOptionsMenu(true);
         viewPager.setAdapter(new HomeTabLayoutAdapter(mainActivity.getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+        setData();
         searchSetting();
         setIconInTabLayout();
         tabLayoutListener();
         return view;
+    }
+
+    public  void setData() {
+        searchSuggestionsList.add(new SearchSuggestions(true, "Marriage"));
+        searchSuggestionsList.add(new SearchSuggestions(false, "Event"));
+        searchSuggestionsList.add(new SearchSuggestions(true, "Party"));
+        searchSuggestionsList.add(new SearchSuggestions(true, "Function"));
+
     }
 
     /**
@@ -76,17 +98,33 @@ public class MainFragment extends android.support.v4.app.Fragment {
     public void searchSetting() {
         searchView.setVoiceSearch(false);
         searchView.setCursorDrawable(R.drawable.color_cursor_white);
-        //searchView.setSuggestions(getResources().getStringArray(R.array.fragment_recipe_category_suggestion));
+        customizeSearchAdapter = new CustomizeSearchAdapter(getActivity(), searchSuggestionsList);
+        //searchView.setSuggestions(sugg);
+        searchView.setAdapter(customizeSearchAdapter);
+        searchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SearchSuggestions query = (SearchSuggestions)parent.getItemAtPosition(position);
+                Snackbar.make(getView(), query.getSuggestion(), Snackbar.LENGTH_SHORT).show();
+                Log.v(Constants.TAG, query.getSuggestion());
+                searchView.closeSearch();
+            }
+        });
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //Do some magic
+                Snackbar.make(getView(), query, Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, query, Toast.LENGTH_SHORT).show();
+                Log.v(Constants.TAG, query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Do some magic
+                Snackbar.make(getView(), newText, Snackbar.LENGTH_SHORT).show();
+                //Log.v(Constants.TAG, newText);
                 return false;
             }
         });

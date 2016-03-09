@@ -238,12 +238,23 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
             final String contactNameDataString = data.getString(contactNameData);
             final String contactNumberDataString = data.getString(contactNumberData);
+            //http://stackoverflow.com/questions/3813195/regular-expression-for-indian-mobile-numbers
+            //^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$
 
             ContactModel contactModel= new ContactModel();
             contactModel.setContactName(contactNameDataString);
             contactModel.setContactNumber(contactNumberDataString);
             contactModel.setIsSelected(false);
+            /*Pattern phonePattern = Pattern.compile("^(?:(?:\\+|0{0,2})91(\\s*[\\-]\\s*)?|[0]?)?[789]\\d{9}$");
+            Matcher phoneMatcher = phonePattern.matcher(contactNumberDataString);
+            if (!phoneMatcher.matches()) {
+                //Snackbar.make(getView(), "Enter Correct Phone Number", Snackbar.LENGTH_SHORT).show();
+
+            } else {
+                //contactModelArrayList.add(contactModel);
+            }*/
             contactModelArrayList.add(contactModel);
+
         }
         recyclerView.setAdapter(showContactAdapter);
     }

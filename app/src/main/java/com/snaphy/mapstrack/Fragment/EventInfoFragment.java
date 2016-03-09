@@ -191,6 +191,11 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);
     }
 
+    @OnClick(R.id.fragment_event_info_button5) void addFriends() {
+        mainActivity.replaceFragment(R.id.fragment_event_info_button5, null);
+    }
+
+
     @OnClick(R.id.fragment_event_info_button4) void openContacts() {
         DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
         Holder holder = new ListHolder();

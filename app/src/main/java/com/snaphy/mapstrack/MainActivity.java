@@ -191,6 +191,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             case R.layout.fragment_filter:
                 openFilterFragment(fragmentTransaction);
                 break;
+
+            case R.id.fragment_location_info_button6:
+                openAddFriendsFromLocationInfo(fragmentTransaction);
+                break;
+
+            case R.id.fragment_event_info_button5:
+                openAddFriendsFromEventInfo(fragmentTransaction);
+                break;
         }
     }
 
@@ -441,6 +449,28 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.replace(R.id.fragment_create_location_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
+
+    private void openAddFriendsFromEventInfo(FragmentTransaction fragmentTransaction) {
+        ShowContactFragment showContactFragment = (ShowContactFragment) getSupportFragmentManager().
+                findFragmentByTag(ShowContactFragment.TAG);
+        if (showContactFragment == null) {
+            showContactFragment = ShowContactFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_info_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void openAddFriendsFromLocationInfo(FragmentTransaction fragmentTransaction) {
+        ShowContactFragment showContactFragment = (ShowContactFragment) getSupportFragmentManager().
+                findFragmentByTag(ShowContactFragment.TAG);
+        if (showContactFragment == null) {
+            showContactFragment = ShowContactFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.fragment_location_info_container, showContactFragment, ShowContactFragment.TAG).addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+
 
     /**
      * Open Contact for location sharing

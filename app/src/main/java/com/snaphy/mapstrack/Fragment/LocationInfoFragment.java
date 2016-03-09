@@ -164,6 +164,10 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
         mainActivity.replaceFragment(R.id.fragment_location_info_button4, null);
         EventBus.getDefault().postSticky(this.locationHomeModel, Constants.CREATE_EVENT_FROM_LOCATION);    }
 
+    @OnClick(R.id.fragment_location_info_button6) void addFriends() {
+        mainActivity.replaceFragment(R.id.fragment_location_info_button6,null);
+    }
+
 
     @OnClick(R.id.fragment_location_info_button5) void openContacts() {
         DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);

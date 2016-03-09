@@ -234,6 +234,14 @@
             fab:fab_label="@string/layout_location_info_button4"
             style="@style/MenuButtonsStyle" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_location_info_button6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/add_friend"
+            fab:fab_label="Add Friends"
+            style="@style/MenuButtonsStyle" />
+
     </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>
