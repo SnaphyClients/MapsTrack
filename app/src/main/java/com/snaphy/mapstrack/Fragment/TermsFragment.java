@@ -3,15 +3,26 @@ package com.snaphy.mapstrack.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.CompanyInfo;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.CompanyInfoRepository;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+import com.strongloop.android.loopback.callbacks.ListCallback;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,6 +40,8 @@ public class TermsFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_terms_progressBar) SmoothProgressBar progressBar;
     View rootview;
     MainActivity mainActivity;
+    CompanyInfoRepository companyInfoRepository;
+    String termsContent;
 
     public TermsFragment() {
         // Required empty public constructor
@@ -68,7 +81,7 @@ public class TermsFragment extends android.support.v4.app.Fragment {
     }
 
     public void setTermsText() {
-        /*companyInfoRepository = mainActivity.getLoopBackAdapter().createRepository(CompanyInfoRepository.class);
+        companyInfoRepository = mainActivity.getLoopBackAdapter().createRepository(CompanyInfoRepository.class);
         Map<String, Object> filter = new HashMap<>();
         Map<String, String> where = new HashMap<>();
         where.put("type","t&c");
@@ -79,7 +92,7 @@ public class TermsFragment extends android.support.v4.app.Fragment {
                 if (objects != null) {
                     if (objects.size() != 0) {
                         termsContent = objects.get(0).getHtml().toString();
-                        terms.setText(Html.fromHtml(termsContent));
+                        textView.setText(Html.fromHtml(termsContent));
                         mainActivity.stopProgressBar(progressBar);
                     }
                 }
@@ -93,7 +106,7 @@ public class TermsFragment extends android.support.v4.app.Fragment {
                 }
                 mainActivity.stopProgressBar(progressBar);
             }
-        });*/
+        });
     }
 
     public void onButtonPressed(Uri uri) {

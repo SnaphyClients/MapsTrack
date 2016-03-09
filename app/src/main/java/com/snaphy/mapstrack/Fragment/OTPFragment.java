@@ -18,10 +18,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
+import com.strongloop.android.remoting.adapters.Adapter;
+
+import org.json.JSONObject;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,7 +105,8 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
                 String code = enterCodeEditText.getText().toString().trim();
                 if (codeLength == 4) {
-                    mainActivity.replaceFragment(R.layout.fragment_main, null);
+
+                    //mainActivity.replaceFragment(R.layout.fragment_main, null);
                 }
             }//onTextChanged
 
@@ -118,11 +125,58 @@ public class OTPFragment extends android.support.v4.app.Fragment {
         }
     }
 
+
+    public void loginWithCode(String code){
+        if(!BackgroundService.getAccessToken().isEmpty()){
+            CustomerRepository customerRepository = mainActivity.getLoopBackAdapter().createRepository(CustomerRepository.class);
+            customerRepository.loginWithCode(BackgroundService.getAccessToken(), code, mobileNumber.getText().toString(), new Adapter.JsonObjectCallback() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    if (response != null) {
+                        Log.i(Constants.TAG, "Google = " + response.toString());
+                        mainActivity.addUser(response);
+                        //mainActivity.replaceFragment(R.layout.fragment_main, null);
+
+                    } else {
+                        Log.v(Constants.TAG, "Null");
+                    }
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Toast.makeText(mainActivity, "Invalid code", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     @OnClick (R.id.fragment_otp_verification_button3) void requestOTP() {
         if(isPhoneValidate(mobileNumber.getText().toString())) {
             //TODO SEND OTP METHOD CALLED
+            requestOtpServer(mobileNumber.getText().toString());
+
         } else {
             Snackbar.make(rootview, "Enter Valid Mobile Number", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    public void requestOtpServer(String number){
+        if(!BackgroundService.getAccessToken().isEmpty()){
+            CustomerRepository customerRepository = mainActivity.getLoopBackAdapter().createRepository(CustomerRepository.class);
+            customerRepository.requestOtp(mobileNumber.getText().toString(), new Adapter.JsonObjectCallback() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    Log.i(Constants.TAG, response + "");
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Snackbar.make(rootview, "Enter Valid Mobile Number", Snackbar.LENGTH_SHORT).show();
+                    //TODO ADD RETRY BUTTON.. CALL THIS SAME METHOD..
+                }
+            });
         }
     }
 

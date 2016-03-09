@@ -13,10 +13,24 @@ public final class Constants {
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 
+    public static String baseUrl = "http://192.168.1.100:3000";
+    //public static String baseUrl = "http://ec2-54-209-33-191.compute-1.amazonaws.com:3000";
+    public static String apiUrl = baseUrl+"/api";
+    public static final String AMAZON_CLOUD_FRONT_URL = "http://d2ppet2ho4r908.cloudfront.net/";
+
+    /**
+     * Substitute you own sender ID here. This is the project number you got
+     * from the API Console, as described in "Getting Started."
+     */
+    public static String SENDER_ID = "673699478279";
+    public static String LOOPBACK_APP_ID = "drugcorner-push-application";
+
     public static final String APP_MAIL = "info@mapstrack.com";
     public static final String APP_PHONE = "tel:+91-9873046993";
     public static String APP_PLAY_STORE = "com.drugcorner.slider";
     public static String APP_SHARE_TEXT = "Finding event made easy \n\n";
+
+    public static String ERROR_MESSAGE = "Something went wrong!";
 
     public static final String SHOW_EVENT_INFO = "HomeFragment:onEventClick";
     public static final String SHOW_LOCATION_INFO = "HomeFragment:onLocationClick";

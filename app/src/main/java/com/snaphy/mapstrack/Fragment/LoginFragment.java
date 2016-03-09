@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.google.android.gms.plus.Plus;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -54,6 +56,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
     private static final int RC_SIGN_IN = 0;
     GoogleSignInOptions gso;
     String personName;
+    View rootView;
 
     //Client Id
     //624660143780-1k79af7cuirj7df67p1otbnnb70adiue.apps.googleusercontent.com
@@ -80,6 +83,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
+        rootView = view;
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Hobo.ttf");
         mapsText.setTypeface(typeface);
         trackText.setTypeface(typeface);
@@ -159,12 +163,12 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             if(acct.getIdToken() != null) {
-                //sendTokenToServer(acct.getIdToken());
+                BackgroundService.setAccessToken(acct.getIdToken());
                 mainActivity.replaceFragment(R.layout.fragment_ot, null);
             }
 
         } else {
-
+            Snackbar.make(rootView, Constants.ERROR_MESSAGE, Snackbar.LENGTH_SHORT).show();
         }
     }
 

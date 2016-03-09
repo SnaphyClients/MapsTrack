@@ -1,0 +1,24 @@
+language: java
+
+jdk:
+  - openjdk6
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
+
+script:
+  - mvn clean install jacoco:report coveralls:jacoco
+  - mvn -f math-plugin/pom.xml clean package jacoco:report
+  - mvn -f string-plugin/pom.xml clean package jacoco:report
+  - mvn -f lodash-plugin/pom.xml clean package jacoco:report
+  - mvn -f examples/pom.xml clean package
+
+before_install:
+  - sudo hostname "$(hostname | cut -c1-63)"
+  - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
+
+before_script:
+  - pip install --user codecov
+
+after_success:
+  - codecov

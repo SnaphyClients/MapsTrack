@@ -1,12 +1,23 @@
 package com.snaphy.mapstrack;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
@@ -31,9 +42,20 @@ import com.snaphy.mapstrack.Fragment.ShowMapFragment;
 import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
 import com.snaphy.mapstrack.Services.BackgroundService;
+import com.strongloop.android.loopback.AccessToken;
+import com.strongloop.android.loopback.AccessTokenRepository;
+import com.strongloop.android.loopback.LocalInstallation;
+import com.strongloop.android.loopback.RestAdapter;
+import com.strongloop.android.loopback.callbacks.ObjectCallback;
+import com.strongloop.android.loopback.callbacks.VoidCallback;
+import com.strongloop.android.remoting.JsonUtil;
 
+import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subscriber;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -60,21 +82,104 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     //TODO 3. Validation and Verify Number
 
 
+    /*Push Implementation*/
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    GoogleCloudMessaging gcm;
+    Context context;
+    RestAdapter restAdapter;
+    private static LocalInstallation installation;
+    public static LocalInstallation getInstallation() {
+        return installation;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
+        //DONT DELETLE THIS LINE..WARNING
+        getLoopBackAdapter();
+
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
         startService(new Intent(getBaseContext(), BackgroundService.class));
         // TODO Stop service in activity on destory method if required
+        context = getApplicationContext();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Check device for Play Services APK.
+                checkPlayServices();
+            }
+        }, 100);
+
+        //Now check for login...
+        checkLogin();
+    }
+
+
+    public void setProgress(ProgressDialog progress) {
+        progress.setIndeterminate(true);
+        progress.setMessage("Loading...");
+        progress.setCancelable(false);
+        progress.setCanceledOnTouchOutside(false);
+        progress.show();
+    }
+
+
+    public void checkLogin(){
+        if(BackgroundService.getCustomerRepository() == null){
+            CustomerRepository customerRepository = getLoopBackAdapter().createRepository(CustomerRepository.class);
+            BackgroundService.setCustomerRepository(customerRepository);
+        }
+
+        // later in one of the Activity classes
+        Customer current = BackgroundService.getCustomerRepository().getCachedCurrentUser();
+
+        if (current != null) {
+
+            BackgroundService.setCustomer(current);
+            //Move to home fragment
+            moveToHome();
+        } else {
+            //SHOW PROGRESS DIALOG
+            final ProgressDialog progress = new ProgressDialog(this);
+            setProgress(progress);
+            BackgroundService.getCustomerRepository().findCurrentUser(new ObjectCallback<Customer>() {
+                @Override
+                public void onSuccess(Customer object) {
+                    //CLOSE PROGRESS DIALOG
+                    progress.dismiss();
+                    BackgroundService.setCustomer(object);
+                    //Move to home fragment
+                    moveToHome();
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    //CLOSE PROGRESS DIALOG
+                    progress.dismiss();
+                    // you have to login first
+                    BackgroundService.setCustomer(null);
+                    moveToLogin();
+                }
+            });
+
+        }
 
     }
 
-    @Subscriber(tag = Constants.IS_LOGIN)
-    private void isLogin(boolean login) {
+
+    public void moveToLogin(){
         replaceFragment(R.layout.fragment_login, null);
     }
+
+
+
+
+
 
     @Override
     public void onResume() {
@@ -574,6 +679,193 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
         //OR Use Progress Dialog
     }
+
+
+
+    /**
+     * Updates the registration for push notifications.
+     */
+    public void updateRegistration(String userId) {
+        gcm = GoogleCloudMessaging.getInstance(this);
+        final RestAdapter adapter = getLoopBackAdapter();
+        // 2. Create LocalInstallation instance
+        final LocalInstallation installation =  new LocalInstallation(context, adapter);
+
+        // 3. Update Installation properties that were not pre-filled
+        /*TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        LOOPBACK_APP_ID = mngr.getDeviceId();*/
+        // Enter the id of the LoopBack Application
+        installation.setAppId(Constants.LOOPBACK_APP_ID);
+       /* Log.i(TAG, LOOPBACK_APP_ID);*/
+        // Substitute a real id of the user logged in this application
+        installation.setUserId(userId);
+
+        // 4. Check if we have a valid GCM registration id
+        if (installation.getDeviceToken() != null) {
+            // 5a. We have a valid GCM token, all we need to do now
+            //     is to save the installation to the server
+            saveInstallation(installation);
+        } else {
+            // 5b. We don't have a valid GCM token. Get one from GCM
+            // and save the installation afterwards.
+            registerInBackground(installation);
+        }
+    }
+
+    /**
+     * Checks the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    public boolean checkPlayServices() {
+        final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(Constants.TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Registers the application with GCM servers asynchronously.
+     * <p>
+     * Stores the registration ID in the provided LocalInstallation
+     */
+    private void registerInBackground(final LocalInstallation installation) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(final Void... params) {
+                try {
+                    final String regid = gcm.register(Constants.SENDER_ID);
+                    installation.setDeviceToken(regid);
+                    return "Device registered, registration ID=" + regid;
+                } catch (final IOException ex) {
+                    Log.e(Constants.TAG, "GCM registration failed.", ex);
+                    return "Cannot register with GCM:" + ex.getMessage();
+                    // If there is an error, don't just keep trying to register.
+                    // Require the user to click a button again, or perform
+                    // exponential back-off.
+                }
+            }
+
+            @Override
+            protected void onPostExecute(final String msg) {
+
+                saveInstallation(installation);
+            }
+        }.execute(null, null, null);
+    }
+
+    /**
+     * Saves the Installation to the LoopBack server and reports the result.
+     * @param installation_
+     */
+    void saveInstallation(final LocalInstallation installation_) {
+        installation_.save(new VoidCallback() {
+
+            @Override
+            public void onSuccess() {
+                final Object id = installation_.getId();
+                installation = installation_;
+                final String msg = "Installation saved with id " + id;
+                Log.i(Constants.TAG, msg);
+
+
+            }
+
+            @Override
+            public void onError(final Throwable t) {
+                Log.e(Constants.TAG, "Error saving Installation.", t);
+
+            }
+        });
+    }
+
+
+    public void registerInstallation(Customer customer){
+        if (checkPlayServices()) {
+            if (customer != null) {
+                // logged in
+                Log.d(Constants.TAG, "User logged in successfully");
+                updateRegistration((String) customer.getId());
+            } else {
+                // anonymous user
+                Log.d(Constants.TAG, "User not logged in ");
+                updateRegistration("Anonymous retailer");
+            }
+        } else {
+            Log.e(Constants.TAG, "No valid Google Play Services APK found.");
+        }
+    }
+
+
+
+    public RestAdapter getLoopBackAdapter() {
+        if (restAdapter == null) {
+
+            restAdapter = new RestAdapter(
+                    getApplicationContext(),
+                    Constants.apiUrl);
+            BackgroundService.setLoopBackAdapter(restAdapter);
+        }
+        return restAdapter;
+    }
+
+
+    public void moveToHome(){
+        //NOW move to home fragment..
+        replaceFragment(R.layout.fragment_main, null);
+    }
+
+
+    /**
+     * AddUser method for adding user once the user is successfully signed in
+     * @param  response
+     */
+    public void addUser(JSONObject response){
+
+        if(response != null){
+            Map<String, Object> responseMap = JsonUtil.fromJson(response);
+            Map<String, Object> accessTokenMap = new HashMap<>();
+            accessTokenMap.put("id", responseMap.get("id"));
+            accessTokenMap.put("ttl", responseMap.get("ttl"));
+            AccessTokenRepository accessTokenRepository = getLoopBackAdapter().createRepository(AccessTokenRepository.class);
+
+
+            JSONObject userJson = response.optJSONObject("user");
+            Log.i(Constants.TAG, userJson.toString());
+            if(BackgroundService.getCustomerRepository() == null){
+                CustomerRepository customerRepository = getLoopBackAdapter().createRepository(CustomerRepository.class);
+                BackgroundService.setCustomerRepository(customerRepository);
+            }
+            Customer user = userJson != null
+                    ? BackgroundService.getCustomerRepository().createObject(JsonUtil.fromJson(userJson))
+                    : null;
+            accessTokenMap.put("userId", user.getId());
+            AccessToken accessToken = accessTokenRepository.createObject(accessTokenMap);
+            getLoopBackAdapter().setAccessToken(accessToken.getId().toString());
+            BackgroundService.getCustomerRepository().setCurrentUserId(accessToken.getUserId());
+            BackgroundService.getCustomerRepository().setCachedCurrentUser(user);
+
+            //Now set the customer repo
+            //BackgroundService.setCustomerRepository(BackgroundService.getCustomerRepository());
+            //Now add Customer to BackgroundService.
+            BackgroundService.setCustomer(user);
+
+            //Now move to home fragment finally..
+            moveToHome();
+        }else{
+            Toast.makeText(this, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 
 
     @Override
