@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,10 @@ import com.bumptech.glide.Glide;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EditProfileModel;
+import com.snaphy.mapstrack.Model.ImageModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
+import com.strongloop.android.loopback.callbacks.ObjectCallback;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -60,6 +64,8 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
     Button saveButton;
     File editedImage;
     View rootview;
+
+
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -113,9 +119,7 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
             Snackbar.make(rootview, "Invalid First Name", Snackbar.LENGTH_SHORT).show();
         } else if(!isNameValid(lastName.getText().toString())) {
             Snackbar.make(rootview, "Invalid Last Name", Snackbar.LENGTH_SHORT).show();
-        } /*else if(!isPhoneValidate(mobileNumber.getText().toString())) {
-            Snackbar.make(rootview, "Enter Correct Phone Number", Snackbar.LENGTH_SHORT).show();
-        }*/ else {
+        }  else {
             isValidate = true;
         }
         return true;
@@ -136,40 +140,54 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
                 editProfileModel.setFirstName(firstName.getText().toString());
                 editProfileModel.setLastName(lastName.getText().toString());
                 editProfileModel.setImage(imageView.getDrawable());
-                //editProfileModel.setMobileNumber(mobileNumber.getText().toString());
                 EventBus.getDefault().post(editProfileModel, Constants.RESPONSE_EDIT_PROFILE_FRAGMENT);
+                uploadImageAndUpdateData();
                 mainActivity.onBackPressed();
-                //TODO Open OTP Fragment
-                /*//Now save data to server..
-                if (BackgroundService.getCustomer() != null) {
-                    BackgroundService.getCustomer().setFirstName(firstName.getText().toString());
-                    BackgroundService.getCustomer().setLastName(lastName.getText().toString());
-                    if (editedImage != null) {
-                        //Save image first..
-                        mainActivity.uploadWithCallback(Constants.GRUBERR_CONTAINER, editedImage, new ObjectCallback<ImageModel>() {
-                            @Override
-                            public void onSuccess(ImageModel object) {
-                                //Now also set customer image model..
-                                BackgroundService.getCustomer().setProfilePic(object.getHashMap());
-                                saveCustomer();
-                            }
-
-                            @Override
-                            public void onError(Throwable t) {
-                                Log.e(Constants.TAG, t.toString());
-                                Toast.makeText(mainActivity, "Error updating profile at this moment", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } else {
-                        //Just save customer..
-                        saveCustomer();
-                    }
-
-                }*/
 
             }
         });
     }
+
+
+    public void uploadImageAndUpdateData(){
+        BackgroundService.getCustomer().setFirstName(firstName.getText().toString());
+        BackgroundService.getCustomer().setLastName(lastName.getText().toString());
+        if(editedImage != null){
+            mainActivity.uploadWithCallback(Constants.GRUBERR_CONTAINER, editedImage, new ObjectCallback<ImageModel>() {
+                @Override
+                public void onSuccess(ImageModel object) {
+                    if(object != null){
+                        BackgroundService.getCustomer().setProfilePic(object.getHashMap());
+                    }
+
+                    //Now save the data..
+                    saveData();
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Log.e(Constants.TAG, t.toString());
+                }
+            });
+        }else{
+            //just update the data..
+            saveData();
+        }
+
+
+
+    }
+
+
+    private void saveData(){
+        mainActivity.updateCustomer(BackgroundService.getCustomer());
+    }
+
+
+
+
+
 
     public void imageViewClickListener() {
         imageView.setOnClickListener(new View.OnClickListener() {

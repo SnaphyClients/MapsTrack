@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
-
+        addProfileData();
 
         return view;
     }
@@ -74,16 +74,18 @@ public class ProfileFragment extends Fragment {
             CustomerRepository customerRepository = mainActivity.getLoopBackAdapter().createRepository(CustomerRepository.class);
             BackgroundService.setCustomerRepository(customerRepository);
         }
-
+        //TODO SHOW LOADING BAR
         BackgroundService.getCustomerRepository().logout(new VoidCallback() {
             @Override
             public void onSuccess() {
+                //TODO CLOSE LOADING BAR
                 //Move to login fragment..
                 mainActivity.moveToLogin();
             }
 
             @Override
             public void onError(Throwable t) {
+                //TODO CLOSE LOADING BAR
                 Log.e(Constants.TAG, t.toString());
                 Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
             }
@@ -183,7 +185,7 @@ public class ProfileFragment extends Fragment {
             }
 
             if(BackgroundService.getCustomer().getProfilePic() != null){
-
+                mainActivity.loadUnsignedUrl(BackgroundService.getCustomer().getProfilePic(), profilePicture);
             }
         }
     }

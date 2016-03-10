@@ -807,7 +807,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 installation = installation_;
                 final String msg = "Installation saved with id " + id;
                 Log.i(Constants.TAG, msg);
-
+                //Now save the installation id with customer..
+                if(BackgroundService.getCustomer() != null){
+                    //Add registration id to customer..
+                    BackgroundService.getCustomer().setRegistrationId((String) id);
+                    updateCustomer(BackgroundService.getCustomer());
+                }
 
             }
 
@@ -825,7 +830,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             if (customer != null) {
                 // logged in
                 Log.d(Constants.TAG, "User logged in successfully");
-                updateRegistration((String) customer.getId());
+                updateRegistration((String)customer.getId());
             } else {
                 // anonymous user
                 Log.d(Constants.TAG, "User not logged in ");
@@ -1206,6 +1211,26 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             Log.e(Constants.TAG, e.toString());
             Log.e(Constants.TAG, "Error Downloading Image");
         }
+    }
+
+
+    public void updateCustomer(Customer customer){
+        Map<String, ? extends Object> data = customer.convertMap();
+        //Remove the password field..
+        data.remove("password");
+        final MainActivity that = this;
+        BackgroundService.getCustomerRepository().updateAttributes((String)customer.getId(), data, new ObjectCallback<Customer>() {
+            @Override
+            public void onSuccess(Customer object) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(Constants.TAG, t.toString());
+                Toast.makeText(that, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

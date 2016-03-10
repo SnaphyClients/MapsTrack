@@ -29,6 +29,7 @@ public final class Constants {
     public static final String APP_PHONE = "tel:+91-9873046993";
     public static String APP_PLAY_STORE = "com.drugcorner.slider";
     public static String APP_SHARE_TEXT = "Finding event made easy \n\n";
+    public static final String GRUBERR_CONTAINER = "gruberr-recipes";
 
     public static String ERROR_MESSAGE = "Something went wrong!";
 
