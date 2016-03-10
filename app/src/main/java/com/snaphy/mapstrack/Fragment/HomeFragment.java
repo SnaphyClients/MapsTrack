@@ -1,29 +1,16 @@
 package com.snaphy.mapstrack.Fragment;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.location.LocationServices;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
 import com.snaphy.mapstrack.Collection.TrackCollection;
@@ -33,8 +20,6 @@ import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.RecyclerItemClickListener;
-import com.snaphy.mapstrack.Services.BackgroundService;
-import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -49,8 +34,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  * It is a home fragment and it contains all the elements in the home page
  * ie... two recycler views, two floating buttons
  */
-public class HomeFragment extends android.support.v4.app.Fragment implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+public class HomeFragment extends android.support.v4.app.Fragment{
 
     private OnFragmentInteractionListener mListener;
     @Bind(R.id.fragment_home_recycler_view1) RecyclerView recyclerView1;
@@ -67,12 +51,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     ArrayList<LocationHomeModel> locationHomeModelArrayList = new ArrayList<LocationHomeModel>();
 
     static MainActivity mainActivity;
-    protected Location mLastLocation;
-    private AddressResultReceiver mResultReceiver;
-    private GoogleApiClient mGoogleApiClient;
     ArrayList<String> contacts  = new ArrayList<String>();
-    double latitude;
-    double longitude;
     LinearLayoutManager layoutManager1;
     LinearLayoutManager layoutManager2;
 
@@ -155,9 +134,6 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         eventFloatingButtonClickListener();
         locationFloatingButtonClickListener();
 
-        initializeGooglePlacesApi();
-        mGoogleApiClient.connect();
-
         recyclerViewLoadMoreEventData();
         recyclerViewLoadMoreLocationData();
 
@@ -178,26 +154,6 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     }
 
     /********************************************************Subscribers for event and locations**************************/
-
-
-
-    /**
-     * Initialize google place api and last location of the app
-     */
-    private void initializeGooglePlacesApi() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(ActivityRecognition.API)
-                .build();
-
-        int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION);
-        int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
-    }
 
 
     /**
@@ -310,101 +266,6 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    /**
-     * When google api is connected it start intent service from this method
-     * @param bundle
-     */
-    @Override
-    public void onConnected(Bundle bundle) {
-        // Gets the best and most recent location currently available,
-        // which may be null in rare cases when a location is not available.
-        int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION);
-        int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
-        }
-
-        if (mLastLocation != null) {
-            // Determine whether a Geocoder is available.
-            //http://stackoverflow.com/questions/17519198/how-to-get-the-current-location-latitude-and-longitude-in-android
-            latitude = mLastLocation.getLatitude();
-            longitude = mLastLocation.getLongitude();
-            if (!Geocoder.isPresent()) {
-                return;
-            }
-
-            startIntentService();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    /**
-     * This method is responsible to start the service ie..FetchAddressIntentService to fetch
-     * the address and display it in edittext
-     */
-    protected void startIntentService() {
-        Intent intent = new Intent(getActivity(),FetchAddressIntentService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
-        mainActivity.startService(intent);
-    }
-
-
-
-    /**
-     * It is a class which is used to get result received from the service
-     * The result is in many forms including
-     * Error for no address found,time out etc...
-     * Or Address, if correct address is found
-     */
-    public static class AddressResultReceiver extends ResultReceiver {
-
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        /**
-         * This method is fired when result is received from the service
-         * @param resultCode
-         * @param resultData
-         */
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string
-            // or an error message sent from the intent service.
-            final String mAddressOutput;
-            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            Log.v(Constants.TAG, mAddressOutput);
-            //displayAddressOutput();
-
-            // Show a toast message if an address was found.
-            if (resultCode == Constants.SUCCESS_RESULT) {
-                mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mAddressOutput != null) {
-                            EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_EVENT);
-                            EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_LOCATION);
-                        }
-                    }
-                });
-
-            }
-
-        }
     }
 
 

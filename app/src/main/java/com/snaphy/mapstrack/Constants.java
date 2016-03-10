@@ -39,6 +39,8 @@ public final class Constants {
     public static final String REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT = "RequestLoadMoreEventFromHomeFragment";
     public static final String REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT = "RequestLoadMoreLocationFromHomeFragment";
 
+    public static final String INITIALIZE_BACKGROUND_SERVICE = "InitializeBackgroundService";
+
     public static final String SHOW_EVENT_INFO = "HomeFragment:onEventClick";
     public static final String SHOW_LOCATION_INFO = "HomeFragment:onLocationClick";
 

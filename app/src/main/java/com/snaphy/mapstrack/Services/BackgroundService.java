@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Collection.EventHomeCollection;
 import com.snaphy.mapstrack.Collection.LocationHomeCollection;
 import com.snaphy.mapstrack.Collection.ShareLocationCollection;
@@ -26,6 +27,16 @@ public class BackgroundService extends Service {
     EventHomeCollection eventHomeCollection;
     ShareLocationCollection shareLocationCollection;
     static RestAdapter restAdapter;
+
+    public static LatLng getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public static void setCurrentLocation(LatLng currentLocation) {
+        BackgroundService.currentLocation = currentLocation;
+    }
+
+    private static LatLng currentLocation;
 
     static public TrackCollection getTrackCollection() {
         return trackCollection;

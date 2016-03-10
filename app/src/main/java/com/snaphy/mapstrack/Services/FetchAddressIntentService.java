@@ -12,7 +12,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Fragment.HomeFragment;
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
 import org.simple.eventbus.EventBus;
@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class FetchAddressIntentService extends IntentService {
 
-    private HomeFragment.AddressResultReceiver mReceiver;
+    private MainActivity.AddressResultReceiver mReceiver;
 
     public FetchAddressIntentService() {
         super("FetchAddressIntentServices");
@@ -48,7 +48,7 @@ public class FetchAddressIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        mReceiver = new HomeFragment.AddressResultReceiver(new Handler());
+        mReceiver = new MainActivity.AddressResultReceiver(new Handler());
         String errorMessage = "";
         // Get the location passed to this service through an extra.
         Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
@@ -85,9 +85,7 @@ public class FetchAddressIntentService extends IntentService {
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<String>();
             LatLng latlong = new LatLng(location.getLatitude(),location.getLongitude());
-            EventBus.getDefault().postSticky(latlong, Constants.SEND_EVENT_LATLONG);
-            EventBus.getDefault().postSticky(latlong, Constants.SEND_LOCATION_LATLONG);
-            EventBus.getDefault().postSticky(latlong, Constants.SEND_DEFAULT_LATLONG);
+            EventBus.getDefault().post(latlong, Constants.INITIALIZE_BACKGROUND_SERVICE);
             // Fetch the address lines using getAddressLine,
             // join them, and send them to the thread.
             for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {

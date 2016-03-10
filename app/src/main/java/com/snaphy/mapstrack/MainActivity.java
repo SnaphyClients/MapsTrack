@@ -1,15 +1,21 @@
 package com.snaphy.mapstrack;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -27,9 +33,13 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
@@ -58,6 +68,7 @@ import com.snaphy.mapstrack.Model.CustomContainerRepository;
 import com.snaphy.mapstrack.Model.CustomFileRepository;
 import com.snaphy.mapstrack.Model.ImageModel;
 import com.snaphy.mapstrack.Services.BackgroundService;
+import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 import com.strongloop.android.loopback.AccessToken;
 import com.strongloop.android.loopback.AccessTokenRepository;
 import com.strongloop.android.loopback.LocalInstallation;
@@ -69,6 +80,7 @@ import com.strongloop.android.remoting.adapters.Adapter;
 
 import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -91,7 +103,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         EventInfoFragment.OnFragmentInteractionListener, LocationInfoFragment.OnFragmentInteractionListener,
         LocationShareByUserFragment.OnFragmentInteractionListener, LocationShareByUserFriendsFragment.OnFragmentInteractionListener,
         LatitudeLongitudeFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
-        OTPFragment.OnFragmentInteractionListener, FilterFragment.OnFragmentInteractionListener
+        OTPFragment.OnFragmentInteractionListener, FilterFragment.OnFragmentInteractionListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
 
     //TODO 1. Make Contacts Selected if they are selected and show invite button
@@ -103,6 +116,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     //TODO 3. Validation and Verify Number
 
 
+    protected Location mLastLocation;
+    private AddressResultReceiver mResultReceiver;
+    private GoogleApiClient mGoogleApiClient;
+    double latitude;
+    double longitude;
+    static MainActivity mainActivity;
     /*Push Implementation*/
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     GoogleCloudMessaging gcm;
@@ -118,13 +137,15 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainActivity = this;
+        initializeGooglePlacesApi();
+        mGoogleApiClient.connect();
         //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
         //DONT DELETLE THIS LINE..WARNING
         getLoopBackAdapter();
 
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
-        startService(new Intent(getBaseContext(), BackgroundService.class));
         // TODO Stop service in activity on destory method if required
         context = getApplicationContext();
         final Handler handler = new Handler();
@@ -137,6 +158,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }, 100);
 
         //Now check for login...
+    }
+
+    @Subscriber ( tag = Constants.INITIALIZE_BACKGROUND_SERVICE )
+    public void initializeBackground(LatLng latLng) {
+        startService(new Intent(getBaseContext(), BackgroundService.class));
+        BackgroundService.setCurrentLocation(latLng);
         checkLogin();
     }
 
@@ -808,7 +835,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 final String msg = "Installation saved with id " + id;
                 Log.i(Constants.TAG, msg);
                 //Now save the installation id with customer..
-                if(BackgroundService.getCustomer() != null){
+                if (BackgroundService.getCustomer() != null) {
                     //Add registration id to customer..
                     BackgroundService.getCustomer().setRegistrationId((String) id);
                     updateCustomer(BackgroundService.getCustomer());
@@ -857,7 +884,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
     public void moveToHome(){
         //NOW move to home fragment..
-        replaceFragment(R.layout.fragment_main, null);
+        if(BackgroundService.getCurrentLocation() != null) {
+            replaceFragment(R.layout.fragment_main, null);
+        } else {
+            startIntentService();
+        }
+
     }
 
 
@@ -1232,6 +1264,126 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             }
         });
     }
+
+    /**
+     * Initialize google place api and last location of the app
+     */
+    private void initializeGooglePlacesApi() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(ActivityRecognition.API)
+                .build();
+
+        int permissionCheck1 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
+    }
+
+    /**
+     * When google api is connected it start intent service from this method
+     * @param bundle
+     */
+    @Override
+    public void onConnected(Bundle bundle) {
+        // Gets the best and most recent location currently available,
+        // which may be null in rare cases when a location is not available.
+        int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+        }
+
+        if (mLastLocation != null) {
+            // Determine whether a Geocoder is available.
+            //http://stackoverflow.com/questions/17519198/how-to-get-the-current-location-latitude-and-longitude-in-android
+            latitude = mLastLocation.getLatitude();
+            longitude = mLastLocation.getLongitude();
+            if (!Geocoder.isPresent()) {
+                return;
+            }
+
+            startIntentService();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    /**
+     * This method is responsible to start the service ie..FetchAddressIntentService to fetch
+     * the address and display it in edittext
+     */
+    protected void startIntentService() {
+        Intent intent = new Intent(this,FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        this.startService(intent);
+    }
+
+
+    /**
+     * It is a class which is used to get result received from the service
+     * The result is in many forms including
+     * Error for no address found,time out etc...
+     * Or Address, if correct address is found
+     */
+    public static class AddressResultReceiver extends ResultReceiver {
+
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        /**
+         * This method is fired when result is received from the service
+         * @param resultCode
+         * @param resultData
+         */
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            final String mAddressOutput;
+            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            Log.v(Constants.TAG, mAddressOutput);
+            //displayAddressOutput();
+
+            // Show a toast message if an address was found.
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mAddressOutput != null) {
+                            EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_EVENT);
+                            EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_LOCATION);
+                            Log.v(Constants.TAG, "MainActivity = " + mAddressOutput);
+                            Log.v(Constants.TAG,"MainActivity = "+ BackgroundService.getCurrentLocation().latitude);
+                            Log.v(Constants.TAG,"MainActivity = "+ BackgroundService.getCurrentLocation().longitude);
+                        }
+                    }
+                });
+
+            } else {
+                Log.v(Constants.TAG,"Try again");
+                //startIntentService();
+            }
+
+        }
+    }
+
+
 
 
 

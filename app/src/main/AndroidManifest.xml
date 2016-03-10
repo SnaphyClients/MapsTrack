@@ -56,7 +56,7 @@
 
 
         <receiver
-            android:name=".GcmBroadcastReceiver"
+            android:name=".Services.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <!-- Receives the actual messages. -->
@@ -65,7 +65,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".GcmIntentService" />
+        <service android:name=".Services.GcmIntentService" />
 
         <!--
           Embed the version of Google Play services that the application
