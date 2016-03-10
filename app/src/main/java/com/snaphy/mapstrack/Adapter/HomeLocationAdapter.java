@@ -5,18 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.Holder;
-import com.orhanobut.dialogplus.OnCancelListener;
-import com.orhanobut.dialogplus.OnDismissListener;
-import com.orhanobut.dialogplus.OnItemClickListener;
-import com.snaphy.mapstrack.Model.LocationHomeModel;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,11 +22,10 @@ import butterknife.ButterKnife;
  */
 public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapter.ViewHolder> {
 
-    ArrayList<LocationHomeModel> locationHomeModels  = new ArrayList<LocationHomeModel>();
-    Context context;
-    public HomeLocationAdapter(Context context, ArrayList<LocationHomeModel> locationHomeModels) {
-        this.locationHomeModels = locationHomeModels;
-        this.context = context;
+    List<Track> locationList;
+
+    public HomeLocationAdapter(List<Track> locationList) {
+        this.locationList = locationList;
     }
 
     /**
@@ -59,14 +52,14 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        final LocationHomeModel locationHomeModel = locationHomeModels.get(position);
+        final Track track = locationList.get(position);
 
         // Set item views based on the data model
         TextView locationName = holder.locationName;
         TextView locationAddress = holder.locationAddress;
 
-        locationName.setText(locationHomeModel.getLocationName());
-        String[] shortAddress = locationHomeModel.getLocationAddress().split(",");
+        locationName.setText(track.getName());
+        String[] shortAddress = track.getAddress().split(",");
         locationAddress.setText(shortAddress[0]);
 
     }
@@ -76,7 +69,7 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
      */
     @Override
     public int getItemCount() {
-        return locationHomeModels.size();
+        return locationList.size();
     }
 
     /**
@@ -97,33 +90,6 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
-
-    private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
-        final DialogPlus dialog = DialogPlus.newDialog(context)
-                .setContentHolder(holder)
-                .setAdapter(adapter)
-                . setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
-
-                    }
-                })
-                .setOnDismissListener(new OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogPlus dialog) {
-
-                    }
-                })
-                .setOnCancelListener(new OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogPlus dialog) {
-
-                    }
-                })
-                .setCancelable(true)
-                .create();
-        dialog.show();
     }
 
 }

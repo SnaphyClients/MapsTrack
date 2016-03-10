@@ -5,19 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.Holder;
-import com.orhanobut.dialogplus.OnCancelListener;
-import com.orhanobut.dialogplus.OnDismissListener;
-import com.orhanobut.dialogplus.OnItemClickListener;
-import com.snaphy.mapstrack.MainActivity;
-import com.snaphy.mapstrack.Model.EventHomeModel;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,13 +21,9 @@ import butterknife.ButterKnife;
  */
 public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.ViewHolder>  {
 
-    ArrayList<EventHomeModel> eventHomeModels  = new ArrayList<EventHomeModel>();
-    Context context;
-    static MainActivity mainActivity;
-    public HomeEventAdapter(Context context, ArrayList<EventHomeModel> eventHomeModels, MainActivity mainActivity) {
-        this.eventHomeModels = eventHomeModels;
-        this.context = context;
-        this.mainActivity = mainActivity;
+    List<Track> eventList;
+    public HomeEventAdapter(List<Track> eventList) {
+        this.eventList = eventList;
     }
 
     /**
@@ -61,14 +50,15 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
      */
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final EventHomeModel eventHomeModel = eventHomeModels.get(position);
+        final Track track = eventList.get(position);
 
         // Set item views based on the data model
         TextView eventId = holder.eventId;
         TextView eventAddress = holder.eventAddress;
 
-        eventId.setText(eventHomeModel.getEventId());
-        eventAddress.setText(eventHomeModel.getEventAddress());
+        eventId.setText(track.getName());
+        String[] shortAddress = track.getAddress().split(",");
+        eventAddress.setText(shortAddress[0]);
 
     }
 
@@ -78,7 +68,7 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
      */
     @Override
     public int getItemCount() {
-        return eventHomeModels.size();
+        return eventList.size();
     }
 
     /**
@@ -99,32 +89,5 @@ public class HomeEventAdapter  extends RecyclerView.Adapter<HomeEventAdapter.Vie
             ButterKnife.bind(this, itemView);
         }
 
-    }
-
-    private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
-        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
-                .setContentHolder(holder)
-                .setAdapter(adapter)
-                . setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
-
-                    }
-                })
-                .setOnDismissListener(new OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogPlus dialog) {
-
-                    }
-                })
-                .setOnCancelListener(new OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogPlus dialog) {
-
-                    }
-                })
-                .setCancelable(true)
-                .create();
-        dialog.show();
     }
 }

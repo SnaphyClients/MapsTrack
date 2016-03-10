@@ -33,6 +33,12 @@ public final class Constants {
 
     public static String ERROR_MESSAGE = "Something went wrong!";
 
+    public static final String NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION = "NotifyEventDataInHomeFragmentFromTrackCollection";
+    public static final String NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION = "NotifyLocationDataInHomeFragmentFromTrackCollection";
+
+    public static final String REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT = "RequestLoadMoreEventFromHomeFragment";
+    public static final String REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT = "RequestLoadMoreLocationFromHomeFragment";
+
     public static final String SHOW_EVENT_INFO = "HomeFragment:onEventClick";
     public static final String SHOW_LOCATION_INFO = "HomeFragment:onLocationClick";
 

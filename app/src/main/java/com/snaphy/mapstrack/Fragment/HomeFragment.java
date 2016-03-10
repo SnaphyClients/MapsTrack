@@ -26,12 +26,14 @@ import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.RecyclerItemClickListener;
+import com.snaphy.mapstrack.Services.BackgroundService;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 
 import org.simple.eventbus.EventBus;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * It is a home fragment and it contains all the elements in the home page
@@ -70,6 +73,15 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
     ArrayList<String> contacts  = new ArrayList<String>();
     double latitude;
     double longitude;
+    LinearLayoutManager layoutManager1;
+    LinearLayoutManager layoutManager2;
+
+    /*Infinite Loading dataset*/
+    private int previousTotal = 0;
+    private boolean loading = true;
+    private int visibleThreshold = 3;
+    int firstVisibleItem, visibleItemCount, totalItemCount;
+    /*Infinite Loading data set*/
 
 
     public HomeFragment() {
@@ -95,21 +107,22 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-
+        TrackCollection.progressBar = (SmoothProgressBar) view.findViewById(R.id.fragment_home_progressBar);
+        mainActivity.stopProgressBar(TrackCollection.progressBar);
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Hobo.ttf");
         eventText.setTypeface(typeface);
         locationText.setTypeface(typeface);
 
-        final LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
-        final LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
+        layoutManager1 = new LinearLayoutManager(getActivity());
+        layoutManager2 = new LinearLayoutManager(getActivity());
         layoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerView1.setLayoutManager(layoutManager1);
         recyclerView2.setLayoutManager(layoutManager2);
 
-        homeEventAdapter = new HomeEventAdapter(mainActivity,eventHomeModelArrayList,mainActivity);
-        homeLocationAdapter = new HomeLocationAdapter(mainActivity,locationHomeModelArrayList);
+        homeEventAdapter = new HomeEventAdapter(TrackCollection.getEventList());
+        homeLocationAdapter = new HomeLocationAdapter(TrackCollection.getLocationList());
 
         recyclerView1.setAdapter(homeEventAdapter);
         recyclerView2.setAdapter(homeLocationAdapter);
@@ -145,144 +158,27 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
         initializeGooglePlacesApi();
         mGoogleApiClient.connect();
 
+        recyclerViewLoadMoreEventData();
+        recyclerViewLoadMoreLocationData();
+
         return view;
     }
 
-    /********************************************************* Event Subscribers******************************************/
-    /**
-     *  Event data is fetched from the server when first initialized
-     * @param eventHomeModel
-     */
-    @Subscriber(tag = EventHomeModel.onResetData)
-    private void onInitEvent(ArrayList<EventHomeModel> eventHomeModel) {
-        eventHomeModelArrayList.clear();
-        EventBus.getDefault().removeStickyEvent(eventHomeModel.getClass(), EventHomeModel.onResetData);
-        for(int i = 0; i<eventHomeModel.size(); i++) {
-            eventHomeModelArrayList.add(new EventHomeModel(eventHomeModel.get(i).getId(),eventHomeModel.get(i).getEventId(),
-                    eventHomeModel.get(i).getEventAddress(), eventHomeModel.get(i).getDescription(),
-                    eventHomeModel.get(i).getType(), eventHomeModel.get(i).getDate(),eventHomeModel.get(i).getContacts(),
-                    eventHomeModel.get(i).getImageURL(), eventHomeModel.get(i).isPrivate(), eventHomeModel.get(i).getLatLong()));
-        }
+    /********************************************************Subscribers for event and locations**************************/
 
+
+    @Subscriber (tag = Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
+    public void notifyEventList(boolean reset) {
         homeEventAdapter.notifyDataSetChanged();
     }
 
-
-    /**
-     *  Event data is removed on pressing delete button
-     * @param eventHomeModel
-     */
-    @Subscriber(tag = EventHomeModel.onRemoveData)
-    private void onRemoveEvent(EventHomeModel eventHomeModel) {
-
-        for(EventHomeModel element : eventHomeModelArrayList) {
-
-            if(element.getId() == eventHomeModel.getId()) {
-                int position = eventHomeModelArrayList.indexOf(element);
-                eventHomeModelArrayList.remove(position);
-                break;
-            }
-        }
-        homeEventAdapter.notifyDataSetChanged();
-    }
-
-    /**
-     * When data is edited or added this method is called
-     * @param eventHomeModel
-     */
-    @Subscriber(tag = EventHomeModel.onChangeData)
-    private void onChangeEvent(EventHomeModel eventHomeModel) {
-
-        if(eventHomeModel.getId() == null) {
-            eventHomeModelArrayList.add(new EventHomeModel(null,eventHomeModel.getEventId(),
-                    eventHomeModel.getEventAddress(), eventHomeModel.getDescription(), eventHomeModel.getType(),
-                    eventHomeModel.getDate(), eventHomeModel.getContacts(), eventHomeModel.getImageURL(),
-                    eventHomeModel.isPrivate(), eventHomeModel.getLatLong()));
-            homeEventAdapter.notifyDataSetChanged();
-        }
-
-        else {
-            //TODO Update data of server with Id
-            for(EventHomeModel element : eventHomeModelArrayList) {
-
-                if(element.getId() == eventHomeModel.getId()) {
-                    int position = eventHomeModelArrayList.indexOf(element);
-                    eventHomeModelArrayList.set(position, eventHomeModel);
-                }
-            }
-            homeEventAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /********************************************************* Event Subscribers******************************************/
-
-
-
-    /********************************************************* Location Subscribers******************************************/
-    /**
-     *  Location data is fetched from the server when first initialized
-     * @param locationHomeModel
-     */
-    @Subscriber(tag = LocationHomeModel.onResetData)
-    private void onInit(ArrayList<LocationHomeModel> locationHomeModel) {
-        locationHomeModelArrayList.clear();
-
-        for(int i = 0; i<locationHomeModel.size(); i++) {
-            locationHomeModelArrayList.add(new LocationHomeModel(locationHomeModel.get(i).getId(),locationHomeModel.get(i).getLocationName(),
-                    locationHomeModel.get(i).getLocationAddress(),
-                    locationHomeModel.get(i).getLocationId(),locationHomeModel.get(i).getContacts(),
-                    locationHomeModel.get(i).getLatLong()));
-        }
-
+    @Subscriber (tag = Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
+    public void notifyLocationList(boolean reset) {
         homeLocationAdapter.notifyDataSetChanged();
     }
 
+    /********************************************************Subscribers for event and locations**************************/
 
-    /**
-     *  Location data is removed on pressing delete button
-     * @param locationHomeModel
-     */
-    @Subscriber(tag = LocationHomeModel.onRemoveData)
-    private void onRemove(LocationHomeModel locationHomeModel) {
-
-        for(LocationHomeModel element : locationHomeModelArrayList) {
-
-            if(element.getId() == locationHomeModel.getId()) {
-                int position = locationHomeModelArrayList.indexOf(element);
-                locationHomeModelArrayList.remove(position);
-                break;
-            }
-        }
-        homeLocationAdapter.notifyDataSetChanged();
-    }
-
-    /**
-     * When data is edited or added this method is called
-     * @param locationHomeModel
-     */
-    @Subscriber(tag = LocationHomeModel.onChangeData)
-    private void onChange(LocationHomeModel locationHomeModel) {
-
-        if(locationHomeModel.getId() == null) {
-            locationHomeModelArrayList.add(new LocationHomeModel(null,locationHomeModel.getLocationName(),
-                    locationHomeModel.getLocationAddress(), locationHomeModel.getLocationId(),
-                    locationHomeModel.getContacts(), locationHomeModel.getLatLong()));
-            homeLocationAdapter.notifyDataSetChanged();
-        }
-
-        else {
-            for(LocationHomeModel element : locationHomeModelArrayList) {
-
-                if(element.getId() == locationHomeModel.getId()) {
-                    int position = locationHomeModelArrayList.indexOf(element);
-                    locationHomeModelArrayList.set(position, locationHomeModel);
-                }
-            }
-            homeLocationAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /********************************************************* Location Subscribers******************************************/
 
 
     /**
@@ -328,6 +224,66 @@ public class HomeFragment extends android.support.v4.app.Fragment implements
             }
         });
 
+    }
+
+    public void recyclerViewLoadMoreEventData() {
+        recyclerView1.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                visibleItemCount = recyclerView.getChildCount();
+                totalItemCount = layoutManager1.getItemCount();
+                firstVisibleItem = layoutManager1.findFirstVisibleItemPosition();
+
+                if (loading) {
+                    if (totalItemCount > previousTotal) {
+                        loading = false;
+                        previousTotal = totalItemCount;
+                    }
+                }
+                if (!loading && (totalItemCount - visibleItemCount)
+                        <= (firstVisibleItem + visibleThreshold)) {
+                    EventBus.getDefault().post( TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT);
+                    loading = true;
+                }
+            }
+        });
+    }
+
+    public void recyclerViewLoadMoreLocationData() {
+        recyclerView2.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                visibleItemCount = recyclerView.getChildCount();
+                totalItemCount = layoutManager2.getItemCount();
+                firstVisibleItem = layoutManager2.findFirstVisibleItemPosition();
+
+                if (loading) {
+                    if (totalItemCount > previousTotal) {
+                        loading = false;
+                        previousTotal = totalItemCount;
+                    }
+                }
+                if (!loading && (totalItemCount - visibleItemCount)
+                        <= (firstVisibleItem + visibleThreshold)) {
+                    EventBus.getDefault().post( TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT);
+                    loading = true;
+                }
+            }
+        });
     }
 
 

@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.snaphy.mapstrack.Collection.EventHomeCollection;
 import com.snaphy.mapstrack.Collection.LocationHomeCollection;
 import com.snaphy.mapstrack.Collection.ShareLocationCollection;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.strongloop.android.loopback.RestAdapter;
 
 import org.simple.eventbus.EventBus;
@@ -25,6 +26,12 @@ public class BackgroundService extends Service {
     EventHomeCollection eventHomeCollection;
     ShareLocationCollection shareLocationCollection;
     static RestAdapter restAdapter;
+
+    static public TrackCollection getTrackCollection() {
+        return trackCollection;
+    }
+
+    static TrackCollection trackCollection;
 
     public static String getAccessToken() {
         return accessToken;
@@ -84,10 +91,17 @@ public class BackgroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         EventBus.getDefault().registerSticky(this);
-        eventHomeCollection = new EventHomeCollection();
-        locationHomeCollection  = new LocationHomeCollection();
-        shareLocationCollection = new ShareLocationCollection();
+        //eventHomeCollection = new EventHomeCollection();
+        //locationHomeCollection  = new LocationHomeCollection();
+        //shareLocationCollection = new ShareLocationCollection();
+
+        proceedNextStep();
         return START_STICKY;
+    }
+
+
+    private void proceedNextStep(){
+        trackCollection = new TrackCollection(getLoopBackAdapter(), getApplicationContext());
     }
 
     /**
