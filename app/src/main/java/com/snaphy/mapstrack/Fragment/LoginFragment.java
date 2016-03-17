@@ -86,7 +86,6 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
                 .requestEmail()
                 .build();
         initializeGoogleApiClient();
-        mainActivity.googleSignOut();
         return view;
     }
 
@@ -101,7 +100,6 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Go
 
     public void initializeGoogleApiClient() {
         googleApiClient = new GoogleApiClient.Builder(mainActivity)
-                .enableAutoManage(mainActivity /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 

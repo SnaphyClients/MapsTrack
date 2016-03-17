@@ -12,6 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.snaphy.mapstrack.Constants;
@@ -69,6 +72,23 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    public void googleLogout() {
+        Auth.GoogleSignInApi.signOut(BackgroundService.getGoogleApiClient()).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        Log.v(Constants.TAG, status.toString());
+                    }
+                });
+        Auth.GoogleSignInApi.revokeAccess(BackgroundService.getGoogleApiClient()).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        Log.v(Constants.TAG, status.toString());
+                    }
+                });
+    }
+
     @OnClick(R.id.fragment_profile_button1) void logoutButton() {
         if(BackgroundService.getCustomerRepository() == null){
             CustomerRepository customerRepository = mainActivity.getLoopBackAdapter().createRepository(CustomerRepository.class);
@@ -80,6 +100,7 @@ public class ProfileFragment extends Fragment {
             public void onSuccess() {
                 //TODO CLOSE LOADING BAR
                 //Move to login fragment..
+                googleLogout();
                 mainActivity.moveToLogin();
             }
 

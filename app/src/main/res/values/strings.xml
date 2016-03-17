@@ -3,6 +3,7 @@
 
     <string name="hello_blank_fragment">Hello MapsTrack</string>
     <string name="search_hint">Search</string>
+    <string name="google_app_id">470322410851</string>
 
     <!--Profile Fragment-->
     <string name="fragment_profile_button1">Logout</string>

@@ -15,8 +15,6 @@ import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
-import org.simple.eventbus.EventBus;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +83,8 @@ public class FetchAddressIntentService extends IntentService {
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<String>();
             LatLng latlong = new LatLng(location.getLatitude(),location.getLongitude());
-            EventBus.getDefault().post(latlong, Constants.INITIALIZE_BACKGROUND_SERVICE);
+            BackgroundService.setCurrentLocation(latlong);
+            Log.v(Constants.TAG, location.getLatitude()+"  "+ location.getLongitude()+"");
             // Fetch the address lines using getAddressLine,
             // join them, and send them to the thread.
             for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {

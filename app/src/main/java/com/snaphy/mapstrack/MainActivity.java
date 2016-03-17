@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,7 +40,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
@@ -80,7 +80,6 @@ import com.strongloop.android.remoting.adapters.Adapter;
 
 import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subscriber;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -88,6 +87,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -109,11 +109,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
     //TODO 1. Make Contacts Selected if they are selected and show invite button
     //TODO 2. On Publish Event remove all fragment from back stack
-    //TODO 5. Delete Button in contacts in events and location
-    //TODO 4. Implement Search
-    //TODO 6. Clear all the fields in CreateEvent Fragment and CreateLocation
-
-    //TODO 3. Validation and Verify Number
 
 
     protected Location mLastLocation;
@@ -127,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     GoogleCloudMessaging gcm;
     Context context;
     RestAdapter restAdapter;
+    LocationManager mLocationManager;
     private static LocalInstallation installation;
     public static LocalInstallation getInstallation() {
         return installation;
@@ -137,15 +133,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startService(new Intent(getBaseContext(), BackgroundService.class));
         mainActivity = this;
         initializeGooglePlacesApi();
-        mGoogleApiClient.connect();
         //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
         //DONT DELETLE THIS LINE..WARNING
         getLoopBackAdapter();
 
-        EventBus.getDefault().registerSticky(this);
-        EventBus.getDefault().register(this);
         // TODO Stop service in activity on destory method if required
         context = getApplicationContext();
         final Handler handler = new Handler();
@@ -158,12 +152,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }, 100);
 
         //Now check for login...
-    }
-
-    @Subscriber ( tag = Constants.INITIALIZE_BACKGROUND_SERVICE )
-    public void initializeBackground(LatLng latLng) {
-        startService(new Intent(getBaseContext(), BackgroundService.class));
-        BackgroundService.setCurrentLocation(latLng);
+        mGoogleApiClient.connect();
         checkLogin();
     }
 
@@ -884,11 +873,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
     public void moveToHome(){
         //NOW move to home fragment..
-        if(BackgroundService.getCurrentLocation() != null) {
             replaceFragment(R.layout.fragment_main, null);
-        } else {
-            startIntentService();
-        }
 
     }
 
@@ -937,24 +922,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
 
     }
-
-
-    public void googleSignOut() {
-        if(BackgroundService.getGoogleApiClient() != null){
-            if(BackgroundService.getGoogleApiClient().isConnected()) {
-                Auth.GoogleSignInApi.signOut(BackgroundService.getGoogleApiClient()).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(Status status) {
-                                Log.v(Constants.TAG, "Logout");
-                            }
-                        });
-            }
-        }
-
-    }
-
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -1281,6 +1248,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
+        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+            startIntentService();
+        }
     }
 
     /**
@@ -1308,7 +1278,34 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             }
 
             startIntentService();
+        } else {
+            mLastLocation = getLastKnownLocation();
+            if(mLastLocation != null) {
+                startIntentService();
+            }
         }
+    }
+
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION);
+            int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
+            if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
+                Location l = mLocationManager.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
+                }
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l;
+                }
+            }
+
+        }
+        return bestLocation;
     }
 
     @Override

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Mapstrack.iml" filepath="$PROJECT_DIR$/Mapstrack.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/snaphyandroidsdk/snaphyandroidsdk.iml" filepath="$PROJECT_DIR$/snaphyandroidsdk/snaphyandroidsdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/snaphyandroidsdk/snaphyandroidsdk.iml" filepath="$PROJECT_DIR$/snaphyandroidsdk/snaphyandroidsdk.iml" />
     </modules>
   </component>
 </project>
