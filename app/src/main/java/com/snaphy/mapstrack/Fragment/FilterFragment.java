@@ -1,7 +1,6 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,7 +30,6 @@ public class FilterFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_filter_button1) Button sharedEventAndLocation;
     @Bind(R.id.fragment_filter_button2) Button myEventAndLocation;
     @Bind(R.id.fragment_filter_button3) Button nearbyEvents;
-    private enum choice {SharedEventsAndLocation, myEventAndLocation, nearbyEevnts};
 
     public FilterFragment() {
         // Required empty public constructor
@@ -53,7 +51,6 @@ public class FilterFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
         ButterKnife.bind(this, view);
-        sharedEventAndLocation.setTextColor(Color.CYAN);
         return view;
     }
 
