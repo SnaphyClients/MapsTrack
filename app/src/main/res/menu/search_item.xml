@@ -8,7 +8,7 @@
         android:orderInCategory="100"
         android:title=""
         app:showAsAction="always"
-        android:icon="@drawable/filter" />
+        android:icon="@drawable/filter_home" />
 
     <item
         android:id="@+id/action_search"
