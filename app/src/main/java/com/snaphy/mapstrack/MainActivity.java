@@ -31,6 +31,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+/*import com.google.android.gms.analytics.Tracker;*/
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -40,6 +41,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
+import com.snaphy.mapstrack.Database.MapsTrackDB;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     double latitude;
     double longitude;
     static MainActivity mainActivity;
+    /*Tracker tracker;*/
     /*Push Implementation*/
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     GoogleCloudMessaging gcm;
@@ -133,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+       /* MapsTrackDB application = (MapsTrackDB) getApplication();
+        tracker = application.getDefaultTracker();
+        tracker.setScreenName("MainActivity");*/
         startService(new Intent(getBaseContext(), BackgroundService.class));
         mainActivity = this;
         initializeGooglePlacesApi();

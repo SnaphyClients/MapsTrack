@@ -66,6 +66,9 @@
         </receiver>
 
         <service android:name=".Services.GcmIntentService" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="8d5c26d6401859d300cd890fa48939ab8c377cfd" />
     </application>
 
 </manifest>
