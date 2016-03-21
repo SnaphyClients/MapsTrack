@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ravi Gupta"
+        android:paddingTop= "15dp"
+        android:paddingBottom="9dp"
+        android:paddingLeft="20dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:id="@+id/layout_fragment_display_contact_textview0"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/layout_fragment_display_contact_textview0">
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/layout_display_contact_textview1"
-        android:paddingTop= "15dp"
+        android:text="9873046993"
         android:paddingBottom="15dp"
         android:paddingLeft="20dp"
-        android:textColor="@color/black"
+        android:textColor="#777"
         android:textSize="14sp"
         android:id="@+id/layout_fragment_display_contact_textview1"
         android:layout_centerVertical="true"
         android:layout_weight="3"/>
+
+    </LinearLayout>
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -26,6 +44,4 @@
         android:layout_centerInParent="true"
         android:id="@+id/layout_fragment_display_contact_imagebutton1" />
 
-
-
-</LinearLayout>
+</RelativeLayout>

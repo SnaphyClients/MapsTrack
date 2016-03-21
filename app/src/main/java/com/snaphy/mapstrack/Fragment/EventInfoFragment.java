@@ -238,6 +238,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button5) void addFriends() {
         mainActivity.replaceFragment(R.id.fragment_event_info_button5, null);
+        EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
     }
 
 

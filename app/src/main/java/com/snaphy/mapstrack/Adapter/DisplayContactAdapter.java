@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.snaphy.mapstrack.Helper.ContactMatcher;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
@@ -25,17 +26,19 @@ import java.util.Map;
 public class DisplayContactAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
-    List<ContactModel> sharedFriendList;
+    List<ContactModel> sharedFriendList = new ArrayList<>();
     Track track;
     MainActivity mainActivity;
+    DisplayContactAdapter that;
 
     public DisplayContactAdapter(MainActivity mainActivity, Track track) {
-        sharedFriendList.clear();
+        that = this;
+        this.track = track;
         this.mainActivity = mainActivity;
         layoutInflater = LayoutInflater.from(mainActivity);
+        AsyncTask asyncTask = new PopulateContact(track, sharedFriendList);
+        asyncTask.execute(new String[] {""});
 
-
-        this.track = track;
     }
 
     /**
@@ -45,16 +48,13 @@ public class DisplayContactAdapter extends BaseAdapter {
      */
     static class ViewHolder {
         TextView textview;
+        TextView name;
         ImageButton imageButton;
     }
 
     @Override
     public int getCount() {
-        if(sharedFriendList != null){
-            return sharedFriendList.size();
-        }else{
-            return 0;
-        }
+        return sharedFriendList.size();
     }
 
     @Override
@@ -77,6 +77,8 @@ public class DisplayContactAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.imageButton = (ImageButton) view.findViewById(R.id.layout_fragment_display_contact_imagebutton1);
             viewHolder.textview = (TextView) view.findViewById(R.id.layout_fragment_display_contact_textview1);
+            viewHolder.name = (TextView) view.findViewById(R.id.layout_fragment_display_contact_textview0);
+
             view.setTag(viewHolder);
         }
         else {
@@ -89,8 +91,8 @@ public class DisplayContactAdapter extends BaseAdapter {
         if(contactModel != null){
             //String number = (String)friendObj.get("number");
             if(contactModel.getContactNumber() != null){
-                if(!contactModel.getContactNumber().isEmpty()){
-                    viewHolder.textview.setText(contactModel.getContactNumber());
+                if(!String.valueOf(contactModel.getContactNumber()).isEmpty()){
+                    viewHolder.textview.setText(String.valueOf(contactModel.getContactNumber()));
                     viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -100,6 +102,12 @@ public class DisplayContactAdapter extends BaseAdapter {
                             notifyDataSetChanged();
                         }
                     });
+                }
+
+                //TODO SET NAME HERE FOR CONTACT...
+                if(contactModel.getContactName() != null){
+                    if(!contactModel.getContactName().isEmpty()){
+                        viewHolder.name.setText(String.valueOf(contactModel.getContactName()));                    }
                 }
             }
 
@@ -111,39 +119,40 @@ public class DisplayContactAdapter extends BaseAdapter {
 
 
 
-    private class PopulateContact extends AsyncTask<String, Void, List<ContactModel>> {
+    private class PopulateContact extends AsyncTask<String, Void, String> {
 
         public Track track;
+        public List<ContactModel> sharedFriendList;
 
-        public PopulateContact(Track track){
+        public PopulateContact(Track track, List<ContactModel> sharedFriendList){
             this.track = track;
+            this.sharedFriendList = sharedFriendList;
         }
 
         @Override
-        protected List<ContactModel> doInBackground(String... params) {
-            List<ContactModel> contactModels = new ArrayList();
+        protected String doInBackground(String... params) {
             List<Map<String, Object>> friendsList = track.getFriends();
             if(friendsList != null){
                 if(friendsList.size() != 0){
                     for(Map<String, Object> obj : friendsList){
                         if(obj.get("number") != null){
-                            String number = (String)obj.get("number");
+                            String number = String.valueOf(obj.get("number"));
                             if(!number.isEmpty()){
                                 ContactModel contactModel = new ContactModel();
                                 contactModel.setContactNumber(number);
-                                contactModels.add(contactModel);
+                                sharedFriendList.add(contactModel);
                             }
                         }
 
                     }
                 }
             }
-            return contactModels;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<ContactModel> result) {
-            sharedFriendList = result;
+        protected void onPostExecute(String result) {
+            ContactMatcher contactMatcher = new ContactMatcher(mainActivity, sharedFriendList, that);
             notifyDataSetChanged();
         }
 

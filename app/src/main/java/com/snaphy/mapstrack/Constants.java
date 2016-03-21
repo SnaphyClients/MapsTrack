@@ -85,4 +85,6 @@ public final class Constants {
     public static final String REQUEST_EDIT_PROFILE_FRAGMENT = "RequestEditProfileFragment";
     public static final String RESPONSE_EDIT_PROFILE_FRAGMENT = "ResponseEditProfileFragment";
 
+    public static final String DISPLAY_CONTACT = "displayContactInContactFragment";
+
 }

@@ -1100,25 +1100,25 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         AmazonImageRepository amazonImageRepository = getLoopBackAdapter().createRepository(AmazonImageRepository.class);
         Map<String, Object> hashMap = new HashMap<>();
         hashMap.put("type", "prefix");
-        hashMap.put("value",  prefix );
+        hashMap.put("value", prefix);
         amazonImageRepository.getUrl(container, file, hashMap, new Adapter.JsonObjectCallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                if(response != null){
-                    Map<String, Object> objectHashMap = (Map)JsonUtil.fromJson(response);
-                    String defaultUrl = (String)objectHashMap.get("defaultUrl");
-                    String signedUrl = (String)objectHashMap.get("signedUrl");
-                    if(!signedUrl.isEmpty()){
-                        try{
+                if (response != null) {
+                    Map<String, Object> objectHashMap = (Map) JsonUtil.fromJson(response);
+                    String defaultUrl = (String) objectHashMap.get("defaultUrl");
+                    String signedUrl = (String) objectHashMap.get("signedUrl");
+                    if (!signedUrl.isEmpty()) {
+                        try {
                             loadImage(signedUrl, imageView);
-                        }catch (Exception e){
-                            Log.e(Constants.TAG, e +"");
+                        } catch (Exception e) {
+                            Log.e(Constants.TAG, e + "");
                         }
-                    }else{
-                        try{
+                    } else {
+                        try {
                             loadImage(Constants.baseUrl + defaultUrl, imageView);
-                        }catch (Exception e){
-                            Log.e(Constants.TAG, e +"");
+                        } catch (Exception e) {
+                            Log.e(Constants.TAG, e + "");
                         }
                     }
                 }
@@ -1481,6 +1481,24 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         return result;
     }
 
+
+    public String formatNumber(String contactNumberDataString){
+        String pattern = "\\+\\d{12,12}";
+        String checkZero = "^0\\d+";
+        // Now create matcher object.
+        boolean match = contactNumberDataString.matches(pattern);
+        if (!match) {
+            boolean isZero = contactNumberDataString.matches(checkZero);
+            if(isZero){
+                String number = contactNumberDataString.substring(1);
+                number = "+91" + number;
+                contactNumberDataString = number;
+            }else{
+                contactNumberDataString = "+91" + contactNumberDataString;
+            }
+        }
+        return contactNumberDataString;
+    }
 
 
 

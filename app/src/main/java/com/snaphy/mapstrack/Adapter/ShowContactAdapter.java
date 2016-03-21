@@ -1,6 +1,8 @@
 package com.snaphy.mapstrack.Adapter;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +10,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,12 +24,14 @@ import butterknife.ButterKnife;
  */
 public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.ViewHolder> {
 
-    ArrayList<ContactModel> contactModels;
-    Context context;
+    Map<String, ContactModel> contactModels;
+    MainActivity mainActivity;
+    Cursor cursor;
 
-    public ShowContactAdapter(Context context, ArrayList<ContactModel> contactModels) {
+    public ShowContactAdapter(MainActivity mainActivity, Map<String, ContactModel>  contactModels, Cursor cursor) {
         this.contactModels = contactModels;
-        this.context = context;
+        this.cursor = cursor;
+        this.mainActivity = mainActivity;
     }
 
     /**
@@ -55,22 +60,36 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
      */
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final ContactModel contactModel = contactModels.get(position);
 
-        // Set item views based on the data model
-        TextView contactName = holder.contactName;
-        TextView contactNumber = holder.contactNumber;
-        CheckBox checkBox = holder.checkBox;
+        if(cursor.moveToPosition(position)){
 
-        contactName.setText(contactModel.getContactName());
-        contactNumber.setText(contactModel.getContactNumber());
-        checkBox.setClickable(false);
-        if(contactModel.isSelected()) {
-            checkBox.setChecked(true);
-        } else {
-            checkBox.setChecked(false);
+            int contactNameData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
+            int contactNumberData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            final String contactNameDataString = cursor.getString(contactNameData);
+            String contactNumberDataString = cursor.getString(contactNumberData);
+            if(contactNumberDataString != null){
+                // Set item views based on the cursor model
+                TextView contactName = holder.contactName;
+                TextView contactNumber = holder.contactNumber;
+                CheckBox checkBox = holder.checkBox;
+                contactName.setText(contactNameDataString);
+                contactNumber.setText(contactNumberDataString);
+                checkBox.setClickable(false);
+                String formattedNumber = mainActivity.formatNumber(contactNumberDataString);
+
+                //Now match it with formatted number..
+                ContactModel contactModel = contactModels.get(formattedNumber);
+                if(contactModel != null){
+                    if(contactModel.isSelected()){
+                        checkBox.setChecked(true);
+                    }else {
+                        checkBox.setChecked(false);
+                    }
+                }else {
+                    checkBox.setChecked(false);
+                }
+            }
         }
-
     }
 
     /**
@@ -78,7 +97,7 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
      */
     @Override
     public int getItemCount() {
-        return contactModels.size();
+        return cursor.getCount();
     }
 
     /**

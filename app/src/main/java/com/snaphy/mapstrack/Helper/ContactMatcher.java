@@ -10,15 +10,24 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.ContactModel;
+
+import java.util.List;
 
 /**
  * Created by Ravi-Gupta on 3/21/2016.
  */
 public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
     MainActivity mainActivity;
-    public ContactMatcher(MainActivity mainActivity){
+    List<ContactModel> contactModels;
+    DisplayContactAdapter displayContactAdapter;
+
+    public ContactMatcher(MainActivity mainActivity, List<ContactModel> contactModels, DisplayContactAdapter displayContactAdapter){
         this.mainActivity = mainActivity;
+        this.contactModels = contactModels;
+        this.displayContactAdapter = displayContactAdapter;
         mainActivity.getSupportLoaderManager().initLoader(0, null, this);
     }
 
@@ -84,28 +93,35 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
             {
                 int contactNameData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
                 int contactNumberData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
-/*
+                final String contactNameDataString = data.getString(contactNameData);
+                String contactNumberDataString = data.getString(contactNumberData);
 
-            final String contactNameDataString = data.getString(contactNameData);
-            final String contactNumberDataString = data.getString(contactNumberData);
-            //http://stackoverflow.com/questions/3813195/regular-expression-for-indian-mobile-numbers
-            //^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$
+                contactNumberDataString = mainActivity.formatNumber(contactNumberDataString);
 
-            ContactModel contactModel= new ContactModel();
-            contactModel.setContactName(contactNameDataString);
-            contactModel.setContactNumber(contactNumberDataString);
-            contactModel.setIsSelected(false);
-            contactModelArrayList.add(contactModel);
-            Log.v(Constants.TAG, contactModel.getContactName());
-*/
-
+                //Now start matching..
+                for(ContactModel contactModel: contactModels){
+                    if(String.valueOf(contactModel.getContactNumber()) != null){
+                        if(!String.valueOf(contactModel.getContactNumber()).isEmpty()){
+                            String friendNumber = contactModel.getContactNumber().trim();
+                            friendNumber = mainActivity.formatNumber(friendNumber);
+                            if(friendNumber.equals(contactNumberDataString.toString().trim())){
+                                if(contactNameDataString != null){
+                                    if(!contactNameDataString.isEmpty()){
+                                        contactModel.setContactName(contactNameDataString);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             return "Executed";
         }
 
         @Override
         protected void onPostExecute(String result) {
-
+            //Now notify the adapter..
+            displayContactAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -139,6 +155,7 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //Now process data in another thread..
         AsyncTask asyncTask = new FetchContact(data);
+        asyncTask.execute(new String[] {""});
     }
 
     @Override

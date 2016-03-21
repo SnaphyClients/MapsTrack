@@ -6,9 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
-import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
-import com.androidsdk.snaphy.snaphyandroidsdk.repository.EventTypeRepository;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Collection.EventHomeCollection;
@@ -17,13 +15,8 @@ import com.snaphy.mapstrack.Collection.LocationHomeCollection;
 import com.snaphy.mapstrack.Collection.ShareLocationCollection;
 import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.strongloop.android.loopback.RestAdapter;
-import com.strongloop.android.loopback.callbacks.ListCallback;
 
 import org.simple.eventbus.EventBus;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
