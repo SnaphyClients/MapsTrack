@@ -1,22 +1,18 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -27,12 +23,12 @@ import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
-import com.snaphy.mapstrack.Model.EventHomeModel;
-import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -40,7 +36,6 @@ import org.simple.eventbus.Subscriber;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,12 +61,15 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_info_textview5) TextView eventDescription;
     @Bind(R.id.fragment_event_info_textview6) TextView contact;
     @Bind(R.id.fragment_event_info_imageview1) ImageView imageView;
+    @Bind(R.id.fragment_event_info_button1) com.github.clans.fab.FloatingActionButton  editEventButton;
+    @Bind(R.id.fragment_event_info_button2) com.github.clans.fab.FloatingActionButton  deleteEventButton;
+    @Bind(R.id.fragment_event_info_button5) com.github.clans.fab.FloatingActionButton  addFriendsEventButton;
     ImageLoader imageLoader;
     LatLng latLng;
-
+    boolean isEventOwner = false;
     DateFormat dateFormat;
     MainActivity mainActivity;
-    EventHomeModel eventHomeModel;
+    Track track;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     static EventInfoFragment fragment;
 
@@ -106,87 +104,134 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_event_info, container, false);
         ButterKnife.bind(this, view);
         dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+
         return view;
     }
 
     @Subscriber(tag = Constants.SHOW_EVENT_INFO)
-    private void showEventInfo(EventHomeModel eventHomeModel) {
+    private void showEventInfo(Track track) {
         EventBus.getDefault().unregister(fragment);
-        this.eventHomeModel = eventHomeModel;
-        eventName.setText(eventHomeModel.getEventId());
-        setContactData(eventHomeModel.getContacts());
-        latLng = new LatLng(eventHomeModel.getLatLong().get("latitude"),eventHomeModel.getLatLong().get("longitude"));
-        Log.v(Constants.TAG, "LatLong File = " + eventHomeModel.getLatLong().get("latitude") + eventHomeModel.getLatLong().get("longitude") + "");
-
-        Iterator<String> valueIterator = eventHomeModel.getImageURL().values().iterator();
-        String uri = "";
-        while (valueIterator.hasNext()) {
-            uri = uri + valueIterator.next();
+        this.track = track;
+        if(!track.getName().isEmpty()) {
+            eventName.setText(track.getName());
+        }
+        //setContactData(track.getFriends());
+        if(track.getGeolocationLatitide() != 0 && track.getGeolocationLongitude() != 0){
+            latLng = new LatLng(track.getGeolocationLatitide(), track.getGeolocationLongitude());
         }
 
-        Log.v(Constants.TAG, "Image File = " + uri + "");
-        imageLoader.displayImage(uri, imageView);
 
+        if(track.getPicture() != null){
+            mainActivity.loadUnsignedUrl(track.getPicture(), imageView);
+        }
 
-        CharSequence eName = drawTextViewDesign("Event Name : ",this.eventHomeModel.getEventId());
-        eventName2.setText(eName);
+        if(track.getName() != null){
+            if(!this.track.getName().isEmpty()) {
+                CharSequence eName = mainActivity.drawTextViewDesign("Event Name : ", this.track.getName());
+                eventName2.setText(eName);
+            }
+        }
 
-        CharSequence eType = drawTextViewDesign("Event Type : ", this.eventHomeModel.getType());
-        eventType.setText(eType);
+        if(track.getType() != null){
+            if(!this.track.getType().isEmpty()) {
+
+                mainActivity.displayEventType(eventType, track);
+                //eventType.setText(eType);
+            }
+        }
+
 
         // TODO Event date has to make correct
         //dateFormat.format(this.eventHomeModel.getDate()).toString()
-        CharSequence eDate = drawTextViewDesign("Event Date : "," 26 June 2016");
-        eventDate.setText(eDate);
-
-        CharSequence eAddress = drawTextViewDesign("Event Address : ", this.eventHomeModel.getEventAddress());
-        eventAddress.setText(eAddress);
-
-        CharSequence eDescription = drawTextViewDesign("Event Description : ", this.eventHomeModel.getDescription());
-        eventDescription.setText(eDescription);
-
-        CharSequence eContact = drawTextViewDesign("Friends Invited : ", (String.valueOf(this.eventHomeModel.getContacts().size())));
-        contact.setText(eContact);
-
-    }
-
-    public CharSequence drawTextViewDesign(String constant, String data) {
-        SpannableString spannableString =  new SpannableString(constant);
-        SpannableString spannableString2 =  new SpannableString(data);
-        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(63, 81, 181)),0,constant.length(),0);
-        spannableString.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, constant.length(), 0);
-        spannableString.setSpan(new RelativeSizeSpan(1.1f), 0, constant.length(), 0);
-        CharSequence result = (TextUtils.concat(spannableString, " ", spannableString2));
-        return result;
-    }
-
-    /**
-     * Data in events has been initialize from here
-     */
-    public void setContactData(ArrayList<SelectContactModel> selectContactModelArrayList) {
-        displayContactModelArrayList.clear();
-        for(int i = 0; i<selectContactModelArrayList.size();i++) {
-            displayContactModelArrayList.add(new DisplayContactModel(selectContactModelArrayList.get(i).getContactName()));
+        if(track.getEventDate() != null){
+            if(!track.getEventDate().isEmpty()){
+                CharSequence eDate = mainActivity.drawTextViewDesign("Event Date : ", track.getEventDate());
+                eventDate.setText(eDate);
+            }
         }
+
+        if(track.getAddress() != null){
+            if(!track.getAddress().isEmpty()) {
+                CharSequence eAddress = mainActivity.drawTextViewDesign("Event Address : ", this.track.getAddress());
+                eventAddress.setText(eAddress);
+            }
+        }
+
+        if(track.getDescription() != null){
+            if(!track.getDescription().isEmpty()) {
+                CharSequence eDescription = mainActivity.drawTextViewDesign("Event Description : ", this.track.getDescription());
+                eventDescription.setText(eDescription);
+            }
+        }
+
+        if(track.getFriends() != null){
+            CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", (String.valueOf(track.getFriends().size())));
+            contact.setText(eContact);
+        }
+
+
+        if(BackgroundService.getCustomer() != null){
+            if(BackgroundService.getCustomer().getId() != null){
+                if(track.getCustomer() != null){
+                    String customerId = (String)BackgroundService.getCustomer().getId();
+                    String eventOwnerId = (String)track.getCustomer().getId();
+                    if(customerId.equals(eventOwnerId)){
+                        isEventOwner = true;
+                        showShareOption(true);
+                        ifUserNotCustomer(false);
+                    }else{
+                        showShareOption(true);
+                        ifUserNotCustomer(true);
+                    }
+                }else{
+                    showShareOption(false);
+                    ifUserNotCustomer(true);
+                    return;
+                }
+
+            }else{
+                showShareOption(false);
+                ifUserNotCustomer(true);
+            }
+        }else{
+            showShareOption(false);
+            ifUserNotCustomer(true);
+        }
+
+
     }
+
+
+
+
 
     @OnClick(R.id.fragment_event_info_image_button1) void backButton() {
         mainActivity.onBackPressed();
     }
 
-    @OnClick(R.id.fragment_event_info_button1) void editEvent() {
-
-        EventBus.getDefault().postSticky(this.eventHomeModel, Constants.SHOW_EVENT_EDIT);
+    @OnClick(R.id.fragment_event_info_button1)
+    void editEvent() {
+        EventBus.getDefault().postSticky(track, Constants.SHOW_EVENT_EDIT);
         mainActivity.replaceFragment(R.id.fragment_event_info_button1, null);
     }
 
 
     @OnClick(R.id.fragment_event_info_button2) void deleteEvent() {
-        EventBus.getDefault().post(this.eventHomeModel, EventHomeModel.onDelete);
-        mainActivity.onBackPressed();
+        if(isEventOwner){
+            //Now delete this event from server..
+            mainActivity.deleteTrack(track);
+            TrackCollection.eventList.remove(this.track);
+            EventBus.getDefault().post(false, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
+            Toast.makeText(mainActivity, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+            mainActivity.onBackPressed();
+        }else{
+            Toast.makeText(mainActivity, "You are not authorised to delete this event", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
-    @OnClick(R.id.fragment_event_info_button3) void openMap() {
+    @OnClick(R.id.fragment_event_info_button3)
+    void openMap() {
         mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
         EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);
     }
@@ -197,10 +242,14 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_event_info_button4) void openContacts() {
-        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
+        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track);
         Holder holder = new ListHolder();
         showOnlyContentDialog(holder, adapter);
     }
+
+
+
+
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
         final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
@@ -269,4 +318,24 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public void ifUserNotCustomer(boolean value) {
+        if(value){
+            editEventButton.setVisibility(View.GONE);
+            deleteEventButton.setVisibility(View.GONE);
+        }else {
+            editEventButton.setVisibility(View.VISIBLE);
+            deleteEventButton.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void showShareOption(boolean value) {
+        if(value){
+            addFriendsEventButton.setVisibility(View.VISIBLE);
+        }else{
+            addFriendsEventButton.setVisibility(View.GONE);
+        }
+    }
+
 }

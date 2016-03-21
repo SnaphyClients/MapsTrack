@@ -21,11 +21,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
-import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
-import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
@@ -170,9 +168,9 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_location_info_button5) void openContacts() {
-        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
+        /*DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
         Holder holder = new ListHolder();
-        showOnlyContentDialog(holder, adapter);
+        showOnlyContentDialog(holder, adapter);*/
     }
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {

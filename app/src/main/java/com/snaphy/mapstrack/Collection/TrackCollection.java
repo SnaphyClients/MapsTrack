@@ -121,6 +121,8 @@ public class TrackCollection {
             filter.put("skip",(int)filter.get("skip")+limit);
         }
 
+        filter.put("include", "customer");
+
         if(progressBar != null) {
             startProgressBar(progressBar);
             //SHOW LOADING BAR..
@@ -161,9 +163,10 @@ public class TrackCollection {
                 }
             }
         });
-
-
     }
+
+
+
 
     @Subscriber ( tag = Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT)
     public void requestMoreEvents(SmoothProgressBar progressBar){

@@ -1,29 +1,44 @@
 package com.snaphy.mapstrack;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.provider.ContactsContract;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.AmazonImageRepository;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.bumptech.glide.Glide;
@@ -31,17 +46,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-/*import com.google.android.gms.analytics.Tracker;*/
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
-import com.snaphy.mapstrack.Database.MapsTrackDB;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
@@ -65,6 +75,7 @@ import com.snaphy.mapstrack.Fragment.ShowContactFragment;
 import com.snaphy.mapstrack.Fragment.ShowMapFragment;
 import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
+import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.CustomContainer;
 import com.snaphy.mapstrack.Model.CustomContainerRepository;
 import com.snaphy.mapstrack.Model.CustomFileRepository;
@@ -79,6 +90,10 @@ import com.strongloop.android.loopback.callbacks.ObjectCallback;
 import com.strongloop.android.loopback.callbacks.VoidCallback;
 import com.strongloop.android.remoting.JsonUtil;
 import com.strongloop.android.remoting.adapters.Adapter;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 
 import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
@@ -87,12 +102,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
+/*import com.google.android.gms.analytics.Tracker;*/
 
 public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         MainFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
@@ -108,10 +126,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         OTPFragment.OnFragmentInteractionListener, FilterFragment.OnFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
-
-    //TODO 1. Make Contacts Selected if they are selected and show invite button
-    //TODO 2. On Publish Event remove all fragment from back stack
-
 
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
@@ -143,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         mainActivity = this;
         initializeGooglePlacesApi();
         //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
-        //DONT DELETLE THIS LINE..WARNING
+        //DONT DELETE THIS LINE..WARNING
         getLoopBackAdapter();
 
         // TODO Stop service in activity on destory method if required
@@ -1336,6 +1350,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
+
+
     /**
      * It is a class which is used to get result received from the service
      * The result is in many forms including
@@ -1386,6 +1402,84 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
     }
 
+
+
+
+
+    public void deleteTrack(Track track){
+        track.destroy(new VoidCallback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(Constants.TAG, t.toString());
+            }
+        });
+    }
+
+
+    public void displayEventType(final TextView textView, Track track){
+        if(track.getEventType() != null){
+            EventType type = track.getEventType();
+            addEventTypeToView(type,textView);
+        }else {
+            track.get__eventType(false, getLoopBackAdapter(), new ObjectCallback<EventType>() {
+                @Override
+                public void onSuccess(EventType object) {
+                    addEventTypeToView(object, textView);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Log.e(Constants.TAG, t.toString());
+                    textView.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+
+    private void addEventTypeToView(EventType type, TextView textView){
+        if(type.getName() != null){
+            if(!type.getName().isEmpty()){
+                CharSequence eType = drawTextViewDesign("Event Type : ", type.getName());
+                textView.setText(eType);
+            }else{
+                textView.setVisibility(View.GONE);
+            }
+        }else{
+            textView.setVisibility(View.GONE);
+        }
+    }
+
+
+    public void saveTrack(Track track){
+        track.save(new VoidCallback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(Constants.TAG, t.toString());
+            }
+        });
+    }
+
+
+    public CharSequence drawTextViewDesign(String constant, String data) {
+        SpannableString spannableString =  new SpannableString(constant);
+        SpannableString spannableString2 =  new SpannableString(data);
+        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(63, 81, 181)),0,constant.length(),0);
+        spannableString.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, constant.length(), 0);
+        spannableString.setSpan(new RelativeSizeSpan(1.1f), 0, constant.length(), 0);
+        CharSequence result = (TextUtils.concat(spannableString, " ", spannableString2));
+        return result;
+    }
 
 
 

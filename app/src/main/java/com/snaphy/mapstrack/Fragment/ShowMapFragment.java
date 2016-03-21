@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -70,7 +71,6 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     String serverKey = "AIzaSyBMKfG1V911wOn3sx3cvhx01OsDqKzOmrs";
     LatLng position;
     LatLng destination;
-    LatLng origin;
     LatLngBounds latLngBounds;
     GoogleMap googleMap;
 
@@ -104,7 +104,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     private void setDestination(LatLng latLng) {
         EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.SEND_MAP_COORDINATES_EVENT);
         destination = latLng;
-        Log.v(Constants.TAG, "Destination = "+ destination);
+        Log.v(Constants.TAG, "Destination = " + destination);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
     }
@@ -113,7 +113,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     private void setLocationDestination(LatLng latLng) {
         EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.SEND_MAP_COORDINATES_LOCATION);
         destination = latLng;
-        Log.v(Constants.TAG, "Destination = "+ destination);
+        Log.v(Constants.TAG, "Destination = " + destination);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
     }
@@ -126,26 +126,6 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         mapFragment.getMapAsync(this);
     }
 
-
-    @Subscriber(tag = Constants.SEND_EVENT_LATLONG)
-    private void setLatLong(LatLng latLong) {
-        EventBus.getDefault().removeStickyEvent(latLong.getClass(), Constants.SEND_EVENT_LATLONG);
-        origin = new LatLng(latLong.latitude, latLong.longitude);
-        Log.v(Constants.TAG, "Origin = " + origin);
-    }
-
-    @Subscriber(tag = Constants.SEND_LOCATION_LATLONG)
-    private void setLocationLatLong(LatLng latLong) {
-        EventBus.getDefault().removeStickyEvent(latLong.getClass(), Constants.SEND_LOCATION_LATLONG);
-        origin = new LatLng(latLong.latitude, latLong.longitude);
-        Log.v(Constants.TAG, "Origin = "+origin);
-    }
-
-    @Subscriber(tag = Constants.SEND_DEFAULT_LATLONG)
-    private void setDefaultLatLong(LatLng latLong) {
-        origin = new LatLng(latLong.latitude, latLong.longitude);
-        Log.v(Constants.TAG, "Origin = "+origin);
-    }
 
     @OnClick(R.id.fragment_map_imagebutton1) void backButton() {
         mainActivity.onBackPressed();
@@ -192,10 +172,10 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         googleMap.isTrafficEnabled();
         googleMap.setTrafficEnabled(true);
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
-        if(origin != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 15));
+        if(BackgroundService.getCurrentLocation() != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(BackgroundService.getCurrentLocation(), 15));
         } else {
-            Snackbar.make(getView(),"Cannot locate you at this moment, Please try again", Snackbar.LENGTH_INDEFINITE).show();
+            Snackbar.make(getView(),"Cannot locate you at this moment, Please try again", Snackbar.LENGTH_SHORT).show();
         }
 
     }

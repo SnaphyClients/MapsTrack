@@ -1,17 +1,22 @@
 package com.snaphy.mapstrack.Adapter;
 
-import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.snaphy.mapstrack.Model.DisplayContactModel;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.snaphy.mapstrack.MainActivity;
+import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Ravi-Gupta on 12/6/2015.
@@ -20,11 +25,17 @@ import java.util.ArrayList;
 public class DisplayContactAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
-    ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
+    List<ContactModel> sharedFriendList;
+    Track track;
+    MainActivity mainActivity;
 
-    public DisplayContactAdapter(Context context, ArrayList<DisplayContactModel> displayContactModelArrayList) {
-        layoutInflater = LayoutInflater.from(context);
-        this.displayContactModelArrayList = displayContactModelArrayList;
+    public DisplayContactAdapter(MainActivity mainActivity, Track track) {
+        sharedFriendList.clear();
+        this.mainActivity = mainActivity;
+        layoutInflater = LayoutInflater.from(mainActivity);
+
+
+        this.track = track;
     }
 
     /**
@@ -39,7 +50,11 @@ public class DisplayContactAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return displayContactModelArrayList.size();
+        if(sharedFriendList != null){
+            return sharedFriendList.size();
+        }else{
+            return 0;
+        }
     }
 
     @Override
@@ -68,15 +83,102 @@ public class DisplayContactAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
 
         }
-        viewHolder.textview.setText(displayContactModelArrayList.get(position).getContactName());
-        viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayContactModelArrayList.remove(position);
-                notifyDataSetChanged();
+
+        //Map<String, Object> friendObj = friendsList.get(position);
+        final ContactModel contactModel = sharedFriendList.get(position);
+        if(contactModel != null){
+            //String number = (String)friendObj.get("number");
+            if(contactModel.getContactNumber() != null){
+                if(!contactModel.getContactNumber().isEmpty()){
+                    viewHolder.textview.setText(contactModel.getContactNumber());
+                    viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteFriend(position, contactModel.getContactNumber());
+                            //friendsList.remove(position);
+                            Toast.makeText(mainActivity, "Friend removed from list", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                        }
+                    });
+                }
             }
-        });
+
+        }
+
 
         return view;
+    }
+
+
+
+    private class PopulateContact extends AsyncTask<String, Void, List<ContactModel>> {
+
+        public Track track;
+
+        public PopulateContact(Track track){
+            this.track = track;
+        }
+
+        @Override
+        protected List<ContactModel> doInBackground(String... params) {
+            List<ContactModel> contactModels = new ArrayList();
+            List<Map<String, Object>> friendsList = track.getFriends();
+            if(friendsList != null){
+                if(friendsList.size() != 0){
+                    for(Map<String, Object> obj : friendsList){
+                        if(obj.get("number") != null){
+                            String number = (String)obj.get("number");
+                            if(!number.isEmpty()){
+                                ContactModel contactModel = new ContactModel();
+                                contactModel.setContactNumber(number);
+                                contactModels.add(contactModel);
+                            }
+                        }
+
+                    }
+                }
+            }
+            return contactModels;
+        }
+
+        @Override
+        protected void onPostExecute(List<ContactModel> result) {
+            sharedFriendList = result;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
+    }
+
+
+
+    public void deleteFriend(int position, String number){
+        if(track != null){
+            if(track.getFriends() != null){
+                if(track.getFriends().size() != 0){
+                    if(track.getFriends().size() > position){
+                        //TODO CHECK FOR CHANCES OF ERROR .. WRONG CONTACT REMOVAL..
+                        sharedFriendList.remove(position);
+                        track.getFriends().remove(position);
+                        //Now save data..
+                        mainActivity.saveTrack(track);
+                    } else {
+                        Toast.makeText(mainActivity,"Unable to remove contact", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(mainActivity,"Unable to remove contact", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(mainActivity,"Unable to remove contact", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(mainActivity,"Unable to remove contact", Toast.LENGTH_SHORT).show();
+        }
     }
 }

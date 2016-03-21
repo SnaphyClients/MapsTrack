@@ -30,7 +30,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
-import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
@@ -232,9 +231,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_event_imagebutton2) void openContactDialog() {
-        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
+        /*DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
         Holder holder = new ListHolder();
-        showOnlyContentDialog(holder, adapter);
+        showOnlyContentDialog(holder, adapter);*/
     }
 
 

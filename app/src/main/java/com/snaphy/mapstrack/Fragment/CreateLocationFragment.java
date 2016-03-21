@@ -14,11 +14,9 @@ import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
-import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
-import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
@@ -92,9 +90,9 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_location_imagebutton2) void openContactDialog() {
-        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
+        /*DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
         Holder holder = new ListHolder();
-        showOnlyContentDialog(holder, adapter);
+        showOnlyContentDialog(holder, adapter);*/
     }
 
     /**

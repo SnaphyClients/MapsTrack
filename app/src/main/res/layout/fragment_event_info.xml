@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:layout_gravity="bottom|center"
-                android:text="@string/fragment_event_info_textview1"
+                android:text=""
                 android:textSize="13sp"
                 android:id="@+id/fragment_event_info_textview1"
                 android:layout_marginBottom="15dp"/>
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:layout_gravity="bottom|center"
-                android:text="@string/fragment_event_info_textview2"
+                android:text=""
                 android:textSize="13sp"
                 android:layout_below="@+id/view1"
                 android:id="@+id/fragment_event_info_textview2"
@@ -71,7 +71,7 @@
                 android:background="@android:color/transparent"
                 android:layout_gravity="bottom|center"
                 android:layout_below="@+id/fragment_event_info_textview2"
-                android:text="@string/fragment_event_info_textview3"
+                android:text=""
                 android:textSize="13sp"
                 android:id="@+id/fragment_event_info_textview3"
                 android:layout_marginTop="15dp"
@@ -90,7 +90,7 @@
                 android:background="@android:color/transparent"
                 android:layout_gravity="bottom|center"
                 android:layout_below="@+id/fragment_event_info_textview3"
-                android:text="@string/fragment_event_info_textview4"
+                android:text=""
                 android:textSize="13sp"
                 android:id="@+id/fragment_event_info_textview4"
                 android:layout_marginTop="15dp"
@@ -109,7 +109,7 @@
                 android:background="@android:color/transparent"
                 android:layout_gravity="bottom|center"
                 android:layout_below="@+id/fragment_event_info_textview4"
-                android:text="@string/fragment_event_info_textview6"
+                android:text=""
                 android:textSize="13sp"
                 android:id="@+id/fragment_event_info_textview6"
                 android:layout_marginTop="15dp"
@@ -140,7 +140,7 @@
                 android:background="@android:color/transparent"
                 android:layout_gravity="bottom|center"
                 android:layout_below="@+id/fragment_event_info_textview6"
-                android:text="@string/fragment_event_info_textview5"
+                android:text=""
                 android:textSize="13sp"
                 android:id="@+id/fragment_event_info_textview5"
                 android:layout_marginTop="15dp"
@@ -213,7 +213,7 @@
                         android:textColor="@color/white"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:text="@string/fragment_event_info_textview0" />
+                        android:text="" />
 
                 </android.support.v7.widget.Toolbar>
 

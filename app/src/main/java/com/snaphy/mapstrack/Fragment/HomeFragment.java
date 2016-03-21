@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
 import com.snaphy.mapstrack.Collection.TrackCollection;
@@ -113,9 +114,11 @@ public class HomeFragment extends android.support.v4.app.Fragment{
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        EventHomeModel eventHomeModel = eventHomeModelArrayList.get(position);
-                        mainActivity.replaceFragment(R.layout.fragment_event_info, null);
-                        EventBus.getDefault().post(eventHomeModel, Constants.SHOW_EVENT_INFO);
+                        if(TrackCollection.eventList != null){
+                            Track track = TrackCollection.eventList.get(position);
+                            mainActivity.replaceFragment(R.layout.fragment_event_info, null);
+                            EventBus.getDefault().post(track, Constants.SHOW_EVENT_INFO);
+                        }
                     }
                 })
         );
