@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +65,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_info_button1) com.github.clans.fab.FloatingActionButton  editEventButton;
     @Bind(R.id.fragment_event_info_button2) com.github.clans.fab.FloatingActionButton  deleteEventButton;
     @Bind(R.id.fragment_event_info_button5) com.github.clans.fab.FloatingActionButton  addFriendsEventButton;
+    @Bind(R.id.fragment_event_info_button4) Button moreButton;
     ImageLoader imageLoader;
     LatLng latLng;
     boolean isEventOwner = false;
@@ -84,6 +86,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         return fragment;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -95,6 +98,12 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(fragment);
     }
 
     @Override
@@ -110,7 +119,6 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.SHOW_EVENT_INFO)
     private void showEventInfo(Track track) {
-        EventBus.getDefault().unregister(fragment);
         this.track = track;
         if(!track.getName().isEmpty()) {
             eventName.setText(track.getName());
@@ -145,7 +153,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         //dateFormat.format(this.eventHomeModel.getDate()).toString()
         if(track.getEventDate() != null){
             if(!track.getEventDate().isEmpty()){
-                CharSequence eDate = mainActivity.drawTextViewDesign("Event Date : ", track.getEventDate());
+                CharSequence eDate = mainActivity.drawTextViewDesign("Event Date : ", mainActivity.parseDate(track.getEventDate()));
                 eventDate.setText(eDate);
             }
         }
@@ -211,8 +219,8 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button1)
     void editEvent() {
-        EventBus.getDefault().postSticky(track, Constants.SHOW_EVENT_EDIT);
         mainActivity.replaceFragment(R.id.fragment_event_info_button1, null);
+        EventBus.getDefault().post(track, Constants.SHOW_EVENT_EDIT);
     }
 
 
@@ -243,10 +251,20 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_event_info_button4) void openContacts() {
-        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track);
-        Holder holder = new ListHolder();
-        showOnlyContentDialog(holder, adapter);
+        if(track.getFriends().size() == 0) {
+            Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
+        } else {
+            DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track, R.id.fragment_event_info_button4);
+            Holder holder = new ListHolder();
+            showOnlyContentDialog(holder, adapter);
+        }
     }
+
+    @Subscriber ( tag = Constants.UPDATE_CONTACT_NUMBER )
+    public void updateContactNumber(Track track) {
+        showEventInfo(track);
+    }
+
 
 
 

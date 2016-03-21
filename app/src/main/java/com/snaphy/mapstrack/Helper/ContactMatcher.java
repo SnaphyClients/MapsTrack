@@ -9,8 +9,10 @@ import android.provider.ContactsContract;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 
@@ -23,6 +25,7 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
     MainActivity mainActivity;
     List<ContactModel> contactModels;
     DisplayContactAdapter displayContactAdapter;
+    Cursor globalCursor;
 
     public ContactMatcher(MainActivity mainActivity, List<ContactModel> contactModels, DisplayContactAdapter displayContactAdapter){
         this.mainActivity = mainActivity;
@@ -89,31 +92,39 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
 
         @Override
         protected String doInBackground(String... params) {
-            while (data.moveToNext())
-            {
-                int contactNameData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
-                int contactNumberData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                final String contactNameDataString = data.getString(contactNameData);
-                String contactNumberDataString = data.getString(contactNumberData);
+            try {
+                while (data.moveToNext()) {
+                    int contactNameData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
+                    int contactNumberData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                    final String contactNameDataString = data.getString(contactNameData);
+                    String contactNumberDataString = data.getString(contactNumberData);
 
-                contactNumberDataString = mainActivity.formatNumber(contactNumberDataString);
+                    contactNumberDataString = mainActivity.formatNumber(contactNumberDataString);
 
-                //Now start matching..
-                for(ContactModel contactModel: contactModels){
-                    if(String.valueOf(contactModel.getContactNumber()) != null){
-                        if(!String.valueOf(contactModel.getContactNumber()).isEmpty()){
-                            String friendNumber = contactModel.getContactNumber().trim();
-                            friendNumber = mainActivity.formatNumber(friendNumber);
-                            if(friendNumber.equals(contactNumberDataString.toString().trim())){
-                                if(contactNameDataString != null){
-                                    if(!contactNameDataString.isEmpty()){
-                                        contactModel.setContactName(contactNameDataString);
+                    //Now start matching..
+                    for (ContactModel contactModel : contactModels) {
+                        if (String.valueOf(contactModel.getContactNumber()) != null) {
+                            if (!String.valueOf(contactModel.getContactNumber()).isEmpty()) {
+                                String friendNumber = contactModel.getContactNumber().trim();
+                                friendNumber = mainActivity.formatNumber(friendNumber);
+                                if (friendNumber.equals(contactNumberDataString.toString().trim())) {
+                                    if (contactNameDataString != null) {
+                                        if (!contactNameDataString.isEmpty()) {
+                                            contactModel.setContactName(contactNameDataString);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            } catch (Exception e) {
+                Log.v(Constants.TAG, e.toString());
+            }
+            finally {
+               /* data.close();
+                data = null;*/
+                data.moveToFirst();
             }
             return "Executed";
         }
@@ -154,7 +165,8 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //Now process data in another thread..
-        AsyncTask asyncTask = new FetchContact(data);
+        globalCursor = data;
+        AsyncTask asyncTask = new FetchContact(globalCursor);
         asyncTask.execute(new String[] {""});
     }
 

@@ -110,7 +110,7 @@ public class BackgroundService extends Service {
         //shareLocationCollection = new ShareLocationCollection();
 
         proceedNextStep();
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
 

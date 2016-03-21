@@ -39,6 +39,9 @@ import org.simple.eventbus.Subscriber;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -57,6 +60,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     MainActivity mainActivity;
     GoogleMap globalGoogleMap;
     PlacesAutocompleteTextView placesAutocompleteTextView;
+    LatLng selectedLatLng;
 
     public LatitudeLongitudeFragment() {
         // Required empty public constructor
@@ -79,12 +83,18 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_latitude_longitude, container, false);
+        ButterKnife.bind(this, view);
         placesAutocompleteTextView = (PlacesAutocompleteTextView) view.findViewById(R.id.fragment_lat_long_place_autocomplete1);
         gps=new GPSTracker(mainActivity);
         supportMapFragment = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.fragment_latitude_longitude_map));
         supportMapFragment.getMapAsync(this);
         setPlaces();
         return view;
+    }
+
+    @OnClick ( R.id.fragment_lat_long_button1) void setMyLocation() {
+        //DATA is in selected latlng
+        mainActivity.onBackPressed();
     }
 
     @Subscriber(tag = Constants.SEND_ADDRESS_EVENT)
@@ -113,6 +123,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
                 double latitude = add.getLatitude();
                 LatLng latLng = new LatLng(latitude, longitude);
                 marker.setPosition(latLng);
+                selectedLatLng = latLng;
                 globalGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
                 globalGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14));
 
@@ -150,8 +161,8 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        double curlat=gps.getLatitude();
-        double curlon=gps.getLongitude();
+        double curlat = gps.getLatitude();
+        double curlon = gps.getLongitude();
         globalGoogleMap = googleMap;
         LatLng currentpos=new LatLng(curlat, curlon);
         int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -163,6 +174,8 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         googleMap.setOnMyLocationChangeListener(this);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.isTrafficEnabled();
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         googleMap.setTrafficEnabled(true);
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(curlat, curlon), 14));
@@ -185,6 +198,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
                 // TODO Auto-generated method stub
                 LatLng markerLocation = marker.getPosition();
                 Toast.makeText(mainActivity, markerLocation.toString(), Toast.LENGTH_LONG).show();
+                selectedLatLng = markerLocation;
                 Log.d("Marker", "finished");
             }
 

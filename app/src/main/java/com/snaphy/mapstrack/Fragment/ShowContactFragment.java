@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.Adapter.ShowContactAdapter;
@@ -29,7 +30,9 @@ import com.snaphy.mapstrack.RecyclerItemClickListener;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -54,7 +57,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     ShowContactAdapter showContactAdapter;
     TemporaryContactDatabase temporaryContactDatabase;
     Cursor globalCursor;
-
+    Track track;
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
             {
@@ -133,13 +136,17 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                             ContactModel contactModel = contactModelMap.get(formatNumber);
 
                             if(contactModel != null){
-                                contactModel.setIsSelected(!contactModel.isSelected());
+                                //Remove the model..
+                                contactModelMap.remove(formatNumber);
                             }else{
                                 contactModel = new ContactModel();
                                 contactModel.setContactNumber(formatNumber);
                                 contactModel.setContactName(contactNameDataString);
                                 contactModel.setIsSelected(true);
+                                //Now add it to contact model map..
+                                contactModelMap.put(formatNumber, contactModel);
                             }
+
                             showContactAdapter.notifyDataSetChanged();
                         }
                     }
@@ -156,12 +163,13 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @Subscriber( tag = Constants.DISPLAY_CONTACT )
     public void showSelectedContacts(Track track) {
+        this.track = track;
         EventBus.getDefault().removeStickyEvent(track.getClass(), Constants.DISPLAY_CONTACT);
         if(track.getFriends()!= null){
             if(track.getFriends().size() != 0){
                 for(Map<String, Object> numberObj : track.getFriends()){
                     if(numberObj.get("number") != null){
-                        String formattedNumber = mainActivity.formatNumber((String) numberObj.get("number"));
+                        String formattedNumber = mainActivity.formatNumber(String.valueOf(numberObj.get("number")));
                         ContactModel contactModel = new ContactModel();
                         contactModel.setContactNumber(formattedNumber);
                         contactModel.setIsSelected(true);
@@ -176,7 +184,6 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         getLoaderManager().initLoader(0, null, this);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -188,11 +195,24 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     }
 
     @OnClick(R.id.fragment_show_contact_button1) void contactSelected() {
-        mainActivity.onBackPressed();
+        if(track != null){
+            if(track.getType().equals("event")){
+                updateFriendsList(track);
+                EventBus.getDefault().post(track, Constants.UPDATE_CONTACT_NUMBER);
+            }else {
+                //TODO SEND LOCATION..
+            }
+        }else{
+            //EventBus.getDefault().post(contactModelArrayList, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);
+        }
+
         //EventBus.getDefault().post(contactModelArrayList, Constants.SEND_SELECTED_CONTACT_TO_CREATE_EVENT_FRAGMENT);
         //EventBus.getDefault().post(contactModelArrayList, Constants.SEND_SELECTED_CONTACT_TO_CREATE_LOCATION_FRAGMENT);
-        //EventBus.getDefault().post(contactModelArrayList, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);
+
     }
+
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -239,12 +259,39 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        //showContactAdapter.changeCursor(null);
+        loader = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
+    @Override
+    public void onDestroy() {
+        super.onResume();
+        if(globalCursor != null) {
+            globalCursor.close();
+            globalCursor = null;
+        }
+    }
+
+    public interface OnFragmentInteractionListener{
         void onFragmentInteraction(Uri uri);
+    }
+
+
+    private void updateFriendsList(Track track){
+        List<Map<String, Object>>  friendList = new ArrayList<>();
+        for(String key: contactModelMap.keySet()){
+            Map<String, Object> number = new HashMap<>();
+            number.put("number", key);
+            friendList.add(number);
+        }
+
+        //Now update friend contact list..
+        track.setFriends(friendList);
+        //Now  save to server..
+        mainActivity.saveTrack(track);
+        Toast.makeText(mainActivity, "Friends list updated!", Toast.LENGTH_SHORT).show();
+        //Now go back..
+        mainActivity.onBackPressed();
     }
 
 }

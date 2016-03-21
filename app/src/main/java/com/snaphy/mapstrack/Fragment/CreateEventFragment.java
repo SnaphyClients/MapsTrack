@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,16 +24,20 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.activeandroid.query.Select;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
-import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Adapter.SpinnerAdapter;
+import com.snaphy.mapstrack.Collection.EventTypeCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
@@ -43,6 +47,7 @@ import com.snaphy.mapstrack.Model.EventHomeModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
+import com.strongloop.android.loopback.callbacks.ListCallback;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -54,7 +59,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -100,6 +104,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     DateFormat dateFormat;
     Date date;
     boolean isPrivate;
+    static CreateEventFragment fragment;
+    Track track;
+    List<EventType> eventTypeList;
 
 
     public CreateEventFragment() {
@@ -107,7 +114,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     public static CreateEventFragment newInstance() {
-        CreateEventFragment fragment = new CreateEventFragment();
+        fragment = new CreateEventFragment();
+        EventBus.getDefault().register(fragment);
         return fragment;
     }
 
@@ -116,8 +124,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
-        EventBus.getDefault().registerSticky(this);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -175,16 +181,16 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
 
-    @Subscriber(tag = Constants.SEND_ADDRESS_EVENT)
+   /* @Subscriber(tag = Constants.SEND_ADDRESS_EVENT)
     private void setAddress(String address) {
        // placesAutocompleteTextView.setText(address);
-    }
-
+    }*/
+/*
     @Subscriber(tag = Constants.SEND_EVENT_LATLONG)
     private void setLatLong(LatLng latLong) {
         latLongHashMap.put("latitude", latLong.latitude);
         latLongHashMap.put("longitude", latLong.longitude);
-    }
+    }*/
 
     @Subscriber(tag = Constants.CREATE_EVENT_FROM_LOCATION)
     private void createEventFromLocation(LocationHomeModel locationHomeModel) {
@@ -199,41 +205,62 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
-    private void onEdit(EventHomeModel eventHomeModel) {
-        EventBus.getDefault().removeStickyEvent(eventHomeModel.getClass(), Constants.SHOW_EVENT_EDIT);
-        //TODO Update data will be called when create event fragment is called from event info
-        eventName.setText(eventHomeModel.getEventId());
-        eventDescription.setText(eventHomeModel.getDescription());
-        eventLocation.setText(eventHomeModel.getEventAddress());
-        dateEdittext.setText(eventHomeModel.getDate().toString());
+    private void onEdit(Track track) {
 
-        if(eventHomeModel.isPrivate()) {
-            privateRadioButton.setChecked(true);
-        } else {
-            publicRadioButton.setChecked(true);
+        if(track != null){
+            this.track = track;
+            if(track.getName() != null) {
+                eventName.setText(track.getName());
+            }
+
+            if(track.getDescription() != null) {
+                eventDescription.setText(track.getDescription());
+            }
+
+            if(track.getAddress() != null) {
+                eventLocation.setText(track.getAddress());
+            }
+
+            if(track.getEventDate() != null) {
+                dateEdittext.setText(mainActivity.parseDate(track.getEventDate()));
+            }
+
+            if(track.getIsPublic() != null) {
+                if(track.getIsPublic().equals("public")){
+                    publicRadioButton.setChecked(true);
+                } else {
+                    privateRadioButton.setChecked(true);
+                }
+            }
+
+            if(track.getEventType() != null) {
+                // SET EVENT TYPE
+                materialSpinner.setText(track.getEventType().toString());
+            }
+
+            if(track.getPicture() != null){
+                mainActivity.loadUnsignedUrl(track.getPicture(), imageView);
+            }
+
+            if(track.getFriends() != null) {
+
+            }
         }
 
-        Iterator<String> valueIterator = eventHomeModel.getImageURL().values().iterator();
-        String uri = "";
-        while (valueIterator.hasNext()) {
-            uri = uri + valueIterator.next();
-        }
-        Log.v(Constants.TAG, "Image File = " + uri + "");
-        imageLoader.displayImage(uri, imageView);
 
-        displayContactModelArrayList.clear();
+        /*displayContactModelArrayList.clear();
         for(int i = 0; i<eventHomeModel.getContacts().size();i++) {
             displayContactModelArrayList.add(new DisplayContactModel(eventHomeModel.getContacts().get(i).getContactName()));
-        }
+        }*/
     }
 
     /**
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_event_imagebutton2) void openContactDialog() {
-        /*DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
+        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track, R.id.fragment_create_event_imagebutton2);
         Holder holder = new ListHolder();
-        showOnlyContentDialog(holder, adapter);*/
+        showOnlyContentDialog(holder, adapter);
     }
 
 
@@ -278,13 +305,38 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * Set the data in the spinner
      */
     public void setSpinner() {
-        String[] ITEMS = {"Marriage", "Birthday", "Meeting", "Party", "Get Togeather", "Baby Shower"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_dropdown_item_1line, ITEMS);
+        EventTypeCollection.getEventTypeList(new ListCallback<EventType>() {
+            @Override
+            public void onSuccess(List<EventType> objects) {
+                if (objects != null) {
+                    if (objects.size() != 0) {
+                        eventTypeList = objects;
+                        setAdapter();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.v(Constants.TAG, t.toString());
+            }
+        });
+    }
+
+    private void setAdapter() {
+        SpinnerAdapter adapter = new SpinnerAdapter(mainActivity, android.R.layout.simple_dropdown_item_1line, eventTypeList);
         //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         materialSpinner.setFocusable(true);
         materialSpinner.setFocusableInTouchMode(true);
         materialSpinner.setThreshold(1);
         materialSpinner.setAdapter(adapter);
+
+        materialSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                materialSpinner.setText(((EventType) parent.getItemAtPosition(position)).getName().toString());
+            }
+        });
     }
 
 
@@ -454,6 +506,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(fragment);
     }
 
 

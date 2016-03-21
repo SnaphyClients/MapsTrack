@@ -1,6 +1,8 @@
 package com.snaphy.mapstrack.Adapter;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Helper.ContactMatcher;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
+
+import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +35,11 @@ public class DisplayContactAdapter extends BaseAdapter {
     Track track;
     MainActivity mainActivity;
     DisplayContactAdapter that;
+    int resId;
 
-    public DisplayContactAdapter(MainActivity mainActivity, Track track) {
+    public DisplayContactAdapter(MainActivity mainActivity, Track track, int id) {
         that = this;
+        resId = id;
         this.track = track;
         this.mainActivity = mainActivity;
         layoutInflater = LayoutInflater.from(mainActivity);
@@ -96,15 +103,12 @@ public class DisplayContactAdapter extends BaseAdapter {
                     viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            deleteFriend(position, contactModel.getContactNumber());
-                            //friendsList.remove(position);
-                            Toast.makeText(mainActivity, "Friend removed from list", Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
+                            showDialog(position, contactModel.getContactNumber());
                         }
                     });
                 }
 
-                //TODO SET NAME HERE FOR CONTACT...
+
                 if(contactModel.getContactName() != null){
                     if(!contactModel.getContactName().isEmpty()){
                         viewHolder.name.setText(String.valueOf(contactModel.getContactName()));                    }
@@ -115,6 +119,28 @@ public class DisplayContactAdapter extends BaseAdapter {
 
 
         return view;
+    }
+
+    public void showDialog(final int position, final String number) {
+        new AlertDialog.Builder(mainActivity)
+                .setMessage("Are you sure you want to delete this contact?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        deleteFriend(position, number);
+                        //friendsList.remove(position);
+                        Toast.makeText(mainActivity, "Friend removed from list", Toast.LENGTH_SHORT).show();
+                        notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
 
@@ -175,6 +201,9 @@ public class DisplayContactAdapter extends BaseAdapter {
                         //TODO CHECK FOR CHANCES OF ERROR .. WRONG CONTACT REMOVAL..
                         sharedFriendList.remove(position);
                         track.getFriends().remove(position);
+                        if(resId == R.id.fragment_event_info_button4) {
+                            EventBus.getDefault().post(track, Constants.UPDATE_CONTACT_NUMBER);
+                        }
                         //Now save data..
                         mainActivity.saveTrack(track);
                     } else {

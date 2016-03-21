@@ -6,7 +6,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ravi Gupta"
+        android:text=""
         android:paddingTop= "15dp"
         android:paddingBottom="9dp"
         android:paddingLeft="20dp"
@@ -18,13 +18,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:id="@+id/linear_layout"
         android:layout_below="@+id/layout_fragment_display_contact_textview0">
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="9873046993"
+        android:text=""
         android:paddingBottom="15dp"
         android:paddingLeft="20dp"
         android:textColor="#777"
@@ -43,5 +44,11 @@
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:id="@+id/layout_fragment_display_contact_imagebutton1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/background"
+        android:layout_below="@+id/linear_layout"/>
 
 </RelativeLayout>

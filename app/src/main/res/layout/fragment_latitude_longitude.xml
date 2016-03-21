@@ -20,9 +20,9 @@
         android:orientation="horizontal"
         android:layout_below="@+id/toolbar"
         android:weightSum="7"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp">
 
 
         <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
@@ -36,9 +36,17 @@
             android:textColor="#777"
             android:hint="Search Location"
             android:layout_weight="4"
-            android:layout_marginTop="50dp"
             app:pacv_googleMapsApiKey="AIzaSyDOkFISQfDfooJwIxYhbYEoOOvcMn8Hoqk" />
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/googleRed"
+        android:layout_alignParentBottom="true"
+        android:text="Save Location"
+        android:textColor="@color/white"
+        android:id="@+id/fragment_lat_long_button1"/>
 
 </RelativeLayout>

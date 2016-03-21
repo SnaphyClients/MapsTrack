@@ -1,12 +1,10 @@
 package com.snaphy.mapstrack;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -15,16 +13,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.provider.ContactsContract;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -41,6 +34,7 @@ import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.AmazonImageRepository;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -75,7 +69,6 @@ import com.snaphy.mapstrack.Fragment.ShowContactFragment;
 import com.snaphy.mapstrack.Fragment.ShowMapFragment;
 import com.snaphy.mapstrack.Fragment.TermsFragment;
 import com.snaphy.mapstrack.Interface.OnFragmentChange;
-import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.CustomContainer;
 import com.snaphy.mapstrack.Model.CustomContainerRepository;
 import com.snaphy.mapstrack.Model.CustomFileRepository;
@@ -90,10 +83,6 @@ import com.strongloop.android.loopback.callbacks.ObjectCallback;
 import com.strongloop.android.loopback.callbacks.VoidCallback;
 import com.strongloop.android.remoting.JsonUtil;
 import com.strongloop.android.remoting.adapters.Adapter;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
 
 import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
@@ -102,11 +91,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -1457,17 +1449,32 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public void saveTrack(Track track){
-        track.save(new VoidCallback() {
-            @Override
-            public void onSuccess() {
+        if(track.getId() != null){
+            TrackRepository saveTrack = getLoopBackAdapter().createRepository(TrackRepository.class);
+            saveTrack.updateAttributes((String) track.getId(), track.convertMap(), new ObjectCallback<Track>() {
+                @Override
+                public void onSuccess(Track object) {
 
-            }
+                }
 
-            @Override
-            public void onError(Throwable t) {
-                Log.e(Constants.TAG, t.toString());
-            }
-        });
+                @Override
+                public void onError(Throwable t) {
+                    Log.e(Constants.TAG, t.toString());
+                }
+            });
+        }else{
+            track.save(new VoidCallback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Log.e(Constants.TAG, t.toString());
+                }
+            });
+        }
     }
 
 
@@ -1491,13 +1498,36 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             boolean isZero = contactNumberDataString.matches(checkZero);
             if(isZero){
                 String number = contactNumberDataString.substring(1);
-                number = "+91" + number;
-                contactNumberDataString = number;
+                if(number.length() > 9){
+                    number = "+91" + number;
+                    contactNumberDataString = number;
+                }
             }else{
-                contactNumberDataString = "+91" + contactNumberDataString;
+                if(contactNumberDataString.length() > 9){
+                    contactNumberDataString = "+91" + contactNumberDataString;
+                }
             }
         }
         return contactNumberDataString;
+    }
+
+    public String parseDate(String date){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+        format.setTimeZone(TimeZone.getTimeZone("IST"));
+        java.util.Date date_ = null;
+        try {
+            date_ = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //Now parsing time..
+
+
+        String orderDay = date_.toString().substring(8, 10);
+        String orderMonth = date_.toString().substring(4, 7);
+        String orderYear = date_.toString().substring(24, 28);
+        String actualDate = orderDay + " " + orderMonth.toUpperCase() + " " + orderYear;
+        return actualDate;
     }
 
 

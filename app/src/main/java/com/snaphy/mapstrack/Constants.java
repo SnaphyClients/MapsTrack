@@ -87,4 +87,6 @@ public final class Constants {
 
     public static final String DISPLAY_CONTACT = "displayContactInContactFragment";
 
+    public static final String UPDATE_CONTACT_NUMBER = "updateContactNumber";
+
 }
