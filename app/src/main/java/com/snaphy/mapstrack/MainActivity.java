@@ -1449,9 +1449,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public void saveTrack(Track track){
+        Map<String,Object> trackObj = (Map<String,Object>)track.convertMap();
+
         if(track.getId() != null){
+            trackObj.put("id", track.getId());
             TrackRepository saveTrack = getLoopBackAdapter().createRepository(TrackRepository.class);
-            saveTrack.updateAttributes((String) track.getId(), track.convertMap(), new ObjectCallback<Track>() {
+            saveTrack.updateAttributes((String) track.getId(), trackObj, new ObjectCallback<Track>() {
                 @Override
                 public void onSuccess(Track object) {
 
@@ -1475,6 +1478,25 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 }
             });
         }
+    }
+
+
+    public void saveTrack(Map<String, Object> trackObj){
+        TrackRepository saveTrack = getLoopBackAdapter().createRepository(TrackRepository.class);
+        if(trackObj.get("id") == null){
+            trackObj.remove("id");
+        }
+        saveTrack.upsert(trackObj, new ObjectCallback<Track>() {
+            @Override
+            public void onSuccess(Track object) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(Constants.TAG, t.toString());
+            }
+        });
     }
 
 

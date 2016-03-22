@@ -22,11 +22,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
-import com.activeandroid.query.Select;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
+import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
@@ -43,23 +45,25 @@ import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
-import com.snaphy.mapstrack.Model.EventHomeModel;
+import com.snaphy.mapstrack.Model.ImageModel;
 import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 import com.strongloop.android.loopback.callbacks.ListCallback;
+import com.strongloop.android.loopback.callbacks.ObjectCallback;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
 import java.io.File;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -80,6 +84,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     public static String TAG = "CreateEventFragment";
     RecyclerView recyclerView;
     ImageLoader imageLoader;
+    EventType selectedEventType;
+    File editedImageFile;
+    ImageModel imageModel;
+    LatLng currentLatLng;
+    boolean isPublishEventClicked = true;
+    boolean saveInProgress = false;
+
 
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
@@ -107,6 +118,18 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     static CreateEventFragment fragment;
     Track track;
     List<EventType> eventTypeList;
+
+    /* Temp Variables */
+    String tempEventName;
+    EventType tempEventType;
+    String tempDescription;
+    String tempAddress;
+    String tempDate;
+    LatLng tempLocation;
+    /* Temp Variables */
+
+
+
 
 
     public CreateEventFragment() {
@@ -162,12 +185,25 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     mainActivity.onBackPressed();
-                    clearFields();
+                    //clearFields();
                     return true;
                 }
                 return false;
             }
         });
+        checkCreateOrEditedMode();
+    }
+
+
+
+    private void checkCreateOrEditedMode(){
+        if(track == null){
+            //Then in this case create a new track object..its in create mode..
+            TrackRepository trackRepository = mainActivity.getLoopBackAdapter().createRepository(TrackRepository.class);
+            Map<String, Object> objectMap = new HashMap<>();
+            this.track = trackRepository.createObject(objectMap);
+            this.track.setType("event");
+        }
     }
 
     public void clearFields() {
@@ -175,8 +211,31 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         eventDescription.setText("");
         dateEdittext.setText("");
         publicRadioButton.setChecked(true);
-        //TODO Spinner check item
-        //TODO Clear Temporary database here
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(!eventName.getText().toString().isEmpty()) {
+            tempEventName = eventName.getText().toString();
+        }
+
+        if(!eventLocation.getText().toString().isEmpty()) {
+            tempAddress = eventLocation.getText().toString();
+        }
+
+        if(!eventDescription.getText().toString().isEmpty()) {
+            tempDescription = eventDescription.getText().toString();
+        }
+
+        if(!dateEdittext.getText().toString().isEmpty()) {
+            tempDate = dateEdittext.getText().toString();
+        }
+
+        if(currentLatLng != null) {
+            tempLocation = currentLatLng;
+        }
 
     }
 
@@ -222,7 +281,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             }
 
             if(track.getEventDate() != null) {
-                dateEdittext.setText(mainActivity.parseDate(track.getEventDate()));
+                try{
+                    dateEdittext.setText(mainActivity.parseDate(track.getEventDate()));
+                }
+                catch (Exception e){
+                    dateEdittext.setText(track.getEventDate());
+                }
             }
 
             if(track.getIsPublic() != null) {
@@ -234,8 +298,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             }
 
             if(track.getEventType() != null) {
+                selectedEventType = track.getEventType();
                 // SET EVENT TYPE
-                materialSpinner.setText(track.getEventType().toString());
+                materialSpinner.setText(track.getEventType().getName().toString());
             }
 
             if(track.getPicture() != null){
@@ -245,22 +310,31 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             if(track.getFriends() != null) {
 
             }
+
+            if(track.getGeolocationLatitide() != 0){
+                if(track.getGeolocationLongitude() != 0) {
+                    currentLatLng = new LatLng(track.getGeolocationLatitide(), track.getGeolocationLongitude());
+                }
+            }
         }
-
-
-        /*displayContactModelArrayList.clear();
-        for(int i = 0; i<eventHomeModel.getContacts().size();i++) {
-            displayContactModelArrayList.add(new DisplayContactModel(eventHomeModel.getContacts().get(i).getContactName()));
-        }*/
     }
 
     /**
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_event_imagebutton2) void openContactDialog() {
-        DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track, R.id.fragment_create_event_imagebutton2);
-        Holder holder = new ListHolder();
-        showOnlyContentDialog(holder, adapter);
+        if(track.getFriends() != null){
+            if(track.getFriends().size() == 0) {
+                Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
+            } else {
+                DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track, R.id.fragment_create_event_imagebutton2);
+                Holder holder = new ListHolder();
+                showOnlyContentDialog(holder, adapter);
+            }
+        }else{
+            Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
@@ -301,6 +375,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         dialog.show();
     }
 
+
+
     /**
      * Set the data in the spinner
      */
@@ -334,6 +410,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         materialSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedEventType = (EventType) parent.getItemAtPosition(position);
                 materialSpinner.setText(((EventType) parent.getItemAtPosition(position)).getName().toString());
             }
         });
@@ -423,13 +500,23 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             @Override
             public void onImagePicked(File imageFile, EasyImage.ImageSource source) {
                 //Handle the image
-
+                editedImageFile = imageFile;
                 final String uri = Uri.fromFile(imageFile).toString();
                 final String decoded = Uri.decode(uri);
                 Log.v(Constants.TAG, "Image File = " + uri + "");
                 imageLoader.displayImage(decoded, imageView);
-                imageURL.put("name", "");
-                imageURL.put("container", uri);
+                //Now upload image..
+                mainActivity.uploadWithCallback(Constants.GRUBERR_CONTAINER, editedImageFile, new ObjectCallback<ImageModel>() {
+                    @Override
+                    public void onSuccess(ImageModel object) {
+                        imageModel = object;
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.e(Constants.TAG, t.toString());
+                    }
+                });
             }
 
         });
@@ -437,6 +524,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_create_event_button4) void selectContact() {
         mainActivity.replaceFragment(R.layout.layout_select_contact, null);
+        EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
     }
 
     @OnClick (R.id.fragment_create_event_button5) void openMap() {
@@ -444,50 +532,61 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_create_event_button2) void publishEvent() {
+        validateData(new ObjectCallback<Track>() {
+            @Override
+            public void onSuccess(Track object) {
+                saveInProgress = true;
+                if (saveInProgress) {
+                    //Now create the event first ..
+                    Map<String, Object> trackObj = (Map<String, Object>) track.convertMap();
+                    if (BackgroundService.getCustomer() != null) {
+                        //Now add customer ..
+                        trackObj.put("customerId", BackgroundService.getCustomer().getId());
+                    }
 
-        //TODO If user is editing event and then pressing publish then it will check its id
-        //if the id is not null means it is edited and then clear all back stack upto home fragment
-        //FragmentManager.popBackStack(String name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
-        if(temporaryContactDatabases !=  null) {
-            for (int i = 0; i < temporaryContactDatabases.size(); i++) {
-                selectContactModelArrayList.add(new SelectContactModel(null,temporaryContactDatabases.get(i).name,
-                        temporaryContactDatabases.get(i).number));
+                    //Add event type..
+                    if (selectedEventType != null) {
+                        trackObj.put("eventTypeId", selectedEventType.getId());
+                    }
+
+                    if (track.getId() != null) {
+                        Toast.makeText(mainActivity, "Event updated successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mainActivity, "Event created successfully", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (track.getId() != null) {
+                        trackObj.put("id", track.getId());
+                    }
+
+                    track.addRelation(BackgroundService.getCustomer());
+                    track.addRelation(selectedEventType);
+
+                    //Now save the event..
+                    mainActivity.saveTrack(trackObj);
+                    EventBus.getDefault().post(track, Constants.SHOW_EVENT_INFO);
+                    //On back pressed..
+                    mainActivity.onBackPressed();
+                    saveInProgress = false;
+                }
             }
-        }
 
-        int getCheckedButtonId = radioGroup.getCheckedRadioButtonId();
-        if( getCheckedButtonId == R.id.fragment_create_event_radio_button1) {
-            isPrivate = false;
-        }
-        else {
-            isPrivate = true;
-        }
-
-        try {
-            date = dateFormat.parse(dateEdittext.getText().toString());
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        EventHomeModel eventHomeModel =  new EventHomeModel(null,eventName.getText().toString(),
-                eventLocation.getText().toString(), eventDescription.getText().toString(),
-                materialSpinner.getText().toString(), date
-                , selectContactModelArrayList,imageURL,isPrivate,latLongHashMap);
-
-            EventBus.getDefault().post(eventHomeModel, EventHomeModel.onSave);
-
-        TemporaryContactDatabase.deleteAll();
-        clearFields();
-        mainActivity.onBackPressed();
+            @Override
+            public void onError(Throwable t) {
+                saveInProgress = false;
+            }
+        });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Subscriber ( tag = Constants.SET_LATITUDE_LONGITUDE)
+    public void setLatLong(LatLng latLong) {
+        currentLatLng = latLong;
     }
 
     @Override
@@ -511,7 +610,114 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        clearFields();
         EventBus.getDefault().unregister(fragment);
+    }
+
+
+
+    private void validateData(ObjectCallback<Track> callback){
+        Exception t = new Exception();
+        if(editedImageFile != null){
+            if(imageModel == null){
+                String message = "Please! image is getting uploaded";
+                Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
+                callback.onError(t);
+                return;
+            }else{
+                track.setPicture(imageModel.getHashMap());
+            }
+        }
+
+
+        String event = eventName.getText().toString();
+        String eventDesc = eventDescription.getText().toString();
+        String addr = eventLocation.getText().toString();
+        String date = dateEdittext.getText().toString();
+        String isPublic;
+        int getCheckedButtonId = radioGroup.getCheckedRadioButtonId();
+        if( getCheckedButtonId == R.id.fragment_create_event_radio_button1) {
+            isPublic = "public";
+        }
+        else {
+            isPublic = "private";
+        }
+
+        track.setIsPublic(isPublic);
+
+        if (event != null) {
+            if(event.isEmpty()){
+                Toast.makeText(mainActivity, "Event name is required", Toast.LENGTH_SHORT).show();
+                callback.onError(t);
+                return;
+            }else{
+                track.setName(event);
+            }
+        }else{
+            Toast.makeText(mainActivity, "Event name is required", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }
+
+        if (eventDesc != null) {
+            if(eventDesc.isEmpty()){
+                //DO nothing..
+                /*Toast.makeText(mainActivity, "Event description is required", Toast.LENGTH_SHORT).show();
+                return;*/
+            }else{
+                track.setDescription(eventDesc);
+            }
+        }else{
+            //do nothing..
+           /* Toast.makeText(mainActivity, "Event description is required", Toast.LENGTH_SHORT).show();
+            return;*/
+        }
+
+        if (addr != null) {
+            if(addr.isEmpty()){
+                Toast.makeText(mainActivity, "Address is required", Toast.LENGTH_SHORT).show();
+                callback.onError(t);
+                return;
+            }else{
+                track.setAddress(addr);
+            }
+        }else{
+            Toast.makeText(mainActivity, "Address is required", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }
+
+
+        if (date != null) {
+            if(date.isEmpty()){
+                Toast.makeText(mainActivity, "Date is required", Toast.LENGTH_SHORT).show();
+                callback.onError(t);
+                return;
+            }else{
+                track.setEventDate(date);
+            }
+        }else{
+            Toast.makeText(mainActivity, "Date is required", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }
+
+        if (selectedEventType == null) {
+            Toast.makeText(mainActivity, "Event type is required", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }
+
+
+        if(currentLatLng == null){
+            Toast.makeText(mainActivity, "You must set your location.", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }else{
+            track.setGeolocation(currentLatLng.latitude, currentLatLng.longitude);
+        }
+
+        callback.onSuccess(track);
     }
 
 

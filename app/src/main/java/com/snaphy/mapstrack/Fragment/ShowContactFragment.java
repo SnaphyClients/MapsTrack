@@ -287,8 +287,10 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
         //Now update friend contact list..
         track.setFriends(friendList);
-        //Now  save to server..
-        mainActivity.saveTrack(track);
+        if(track.getId() != null){
+            //Now  save to server..
+            mainActivity.saveTrack(track);
+        }
         Toast.makeText(mainActivity, "Friends list updated!", Toast.LENGTH_SHORT).show();
         //Now go back..
         mainActivity.onBackPressed();

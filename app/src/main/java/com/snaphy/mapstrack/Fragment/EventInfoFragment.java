@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,19 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(fragment);
+        this.getView().setFocusableInTouchMode(true);
+        this.getView().requestFocus();
+        this.getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    EventBus.getDefault().post(false, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
+                    mainActivity.onBackPressed();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -148,12 +162,15 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
             }
         }
 
-
-        // TODO Event date has to make correct
         //dateFormat.format(this.eventHomeModel.getDate()).toString()
         if(track.getEventDate() != null){
             if(!track.getEventDate().isEmpty()){
-                CharSequence eDate = mainActivity.drawTextViewDesign("Event Date : ", mainActivity.parseDate(track.getEventDate()));
+                CharSequence eDate;
+                try {
+                    eDate = mainActivity.drawTextViewDesign("Event Date : ", mainActivity.parseDate(track.getEventDate()));
+                } catch (Exception e) {
+                    eDate = mainActivity.drawTextViewDesign("Event Date : ", track.getEventDate());
+                }
                 eventDate.setText(eDate);
             }
         }
@@ -205,8 +222,6 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
             showShareOption(false);
             ifUserNotCustomer(true);
         }
-
-
     }
 
 
@@ -214,6 +229,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_event_info_image_button1) void backButton() {
+        EventBus.getDefault().post(false, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
         mainActivity.onBackPressed();
     }
 

@@ -32,6 +32,7 @@ import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.GPSTracker;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -88,12 +89,16 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         gps=new GPSTracker(mainActivity);
         supportMapFragment = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.fragment_latitude_longitude_map));
         supportMapFragment.getMapAsync(this);
+        selectedLatLng = BackgroundService.getCurrentLocation();
         setPlaces();
         return view;
     }
 
     @OnClick ( R.id.fragment_lat_long_button1) void setMyLocation() {
         //DATA is in selected latlng
+        if(selectedLatLng != null) {
+            EventBus.getDefault().post(selectedLatLng, Constants.SET_LATITUDE_LONGITUDE);
+        }
         mainActivity.onBackPressed();
     }
 
