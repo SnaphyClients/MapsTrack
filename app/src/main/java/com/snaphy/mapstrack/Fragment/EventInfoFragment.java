@@ -192,6 +192,9 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         if(track.getFriends() != null){
             CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", (String.valueOf(track.getFriends().size())));
             contact.setText(eContact);
+        } else {
+            CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", "0");
+            contact.setText(eContact);
         }
 
 

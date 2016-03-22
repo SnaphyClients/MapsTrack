@@ -12,7 +12,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.snaphy.mapstrack.Model.SearchSuggestions;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.R;
 
 import java.util.ArrayList;
@@ -23,22 +23,22 @@ import java.util.List;
  */
 public class CustomizeSearchAdapter extends BaseAdapter implements Filterable {
 
-    private ArrayList<SearchSuggestions> data;
-    private List<SearchSuggestions> suggestions;
+    private List<Track> data;
+    private List<Track> trackList;
     private Drawable suggestionIcon;
     private LayoutInflater inflater;
     private boolean ellipsize;
 
-    public CustomizeSearchAdapter(Context context, List<SearchSuggestions> suggestions) {
+    public CustomizeSearchAdapter(Context context, List<Track> trackList) {
         inflater = LayoutInflater.from(context);
         data = new ArrayList<>();
-        this.suggestions = suggestions;
+        this.trackList = trackList;
     }
 
-    public CustomizeSearchAdapter(Context context, List<SearchSuggestions> suggestions, Drawable suggestionIcon, boolean ellipsize) {
+    public CustomizeSearchAdapter(Context context,  List<Track> trackList, Drawable suggestionIcon, boolean ellipsize) {
         inflater = LayoutInflater.from(context);
         data = new ArrayList<>();
-        this.suggestions = suggestions;
+        this.trackList = trackList;
         this.suggestionIcon = suggestionIcon;
         this.ellipsize = ellipsize;
     }
@@ -51,18 +51,18 @@ public class CustomizeSearchAdapter extends BaseAdapter implements Filterable {
                 FilterResults filterResults = new FilterResults();
                 if (!TextUtils.isEmpty(constraint)) {
 
-                    // Retrieve the autocomplete results.
+                    /*// Retrieve the autocomplete results.
                     List<SearchSuggestions> searchData = new ArrayList<>();
 
                     for (SearchSuggestions searchSuggestions : suggestions) {
                         if (searchSuggestions.getSuggestion().toLowerCase().startsWith(constraint.toString().toLowerCase())) {
                             searchData.add(new SearchSuggestions( searchSuggestions.isEvent() ,searchSuggestions.getSuggestion()));
                         }
-                    }
+                    }*/
 
                     // Assign the data to the FilterResults
-                    filterResults.values = searchData;
-                    filterResults.count = searchData.size();
+                    filterResults.values = trackList;
+                    filterResults.count = trackList.size();
                 }
                 return filterResults;
             }
@@ -70,7 +70,7 @@ public class CustomizeSearchAdapter extends BaseAdapter implements Filterable {
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 if (results.values != null) {
-                    data = (ArrayList<SearchSuggestions>) results.values;
+                    data = (List<Track>) results.values;
                     notifyDataSetChanged();
                 }
             }
@@ -84,7 +84,7 @@ public class CustomizeSearchAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public SearchSuggestions getItem(int position) {
+    public Track getItem(int position) {
         return data.get(position);
     }
 
@@ -106,10 +106,10 @@ public class CustomizeSearchAdapter extends BaseAdapter implements Filterable {
             viewHolder = (SuggestionsViewHolder) convertView.getTag();
         }
 
-        SearchSuggestions currentListData =  getItem(position);
+        Track track =  getItem(position);
 
-        viewHolder.textView.setText(currentListData.getSuggestion());
-        if(currentListData.isEvent()){
+        viewHolder.textView.setText(track.getName());
+        if(track.getType().equals("event")){
             viewHolder.isEvent.setText("Event");
         } else {
             viewHolder.isEvent.setText("Location");

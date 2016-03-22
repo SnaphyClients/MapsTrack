@@ -18,16 +18,22 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.snaphy.mapstrack.Adapter.CustomizeSearchAdapter;
 import com.snaphy.mapstrack.Adapter.HomeTabLayoutAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
-import com.snaphy.mapstrack.Model.SearchSuggestions;
 import com.snaphy.mapstrack.R;
+import com.strongloop.android.loopback.callbacks.ListCallback;
+
+import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,7 +52,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     String sugg[] = {"Birthday", "Party", "Marriage"};
     MainActivity mainActivity;
     CustomizeSearchAdapter customizeSearchAdapter;
-    List<SearchSuggestions> searchSuggestionsList = new ArrayList<>();
+    List<Track> trackList = new ArrayList<>();
 
     public MainFragment() {
         // Required empty public constructor
@@ -73,19 +79,40 @@ public class MainFragment extends android.support.v4.app.Fragment {
         setHasOptionsMenu(true);
         viewPager.setAdapter(new HomeTabLayoutAdapter(mainActivity.getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
-        setData();
         searchSetting();
         setIconInTabLayout();
         tabLayoutListener();
         return view;
     }
 
-    public  void setData() {
-        searchSuggestionsList.add(new SearchSuggestions(true, "Marriage"));
-        searchSuggestionsList.add(new SearchSuggestions(false, "Event"));
-        searchSuggestionsList.add(new SearchSuggestions(true, "Party"));
-        searchSuggestionsList.add(new SearchSuggestions(true, "Function"));
 
+
+
+    private void showSuggestion(String text){
+        TrackRepository trackRepository = mainActivity.getLoopBackAdapter().createRepository(TrackRepository.class);
+        Map<String, Object> filter = new HashMap<>();
+        Map<String, Object> where = new HashMap<>();
+        Map<String, Object> like = new HashMap<>();
+        like.put("like", text);
+        where.put("name", like);
+        where.put("isPublic", "public");
+        filter.put("where", where);
+        trackRepository.find(filter, new ListCallback<Track>() {
+            @Override
+            public void onSuccess(List<Track> objects) {
+                trackList.clear();
+                if (objects != null) {
+                    trackList.addAll(objects);
+                    customizeSearchAdapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(Constants.TAG, t.toString());
+            }
+        });
     }
 
     /**
@@ -98,16 +125,23 @@ public class MainFragment extends android.support.v4.app.Fragment {
     public void searchSetting() {
         searchView.setVoiceSearch(false);
         searchView.setCursorDrawable(R.drawable.color_cursor_white);
-        customizeSearchAdapter = new CustomizeSearchAdapter(getActivity(), searchSuggestionsList);
+        customizeSearchAdapter = new CustomizeSearchAdapter(getActivity(), trackList);
         //searchView.setSuggestions(sugg);
         searchView.setAdapter(customizeSearchAdapter);
         searchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SearchSuggestions query = (SearchSuggestions)parent.getItemAtPosition(position);
-                Snackbar.make(getView(), query.getSuggestion(), Snackbar.LENGTH_SHORT).show();
-                Log.v(Constants.TAG, query.getSuggestion());
-                searchView.closeSearch();
+                Track query = (Track)parent.getItemAtPosition(position);
+               if(query != null){
+                   if(query.getType().equals("event")){
+                       mainActivity.replaceFragment(R.layout.fragment_event_info, null);
+                       EventBus.getDefault().post(query, Constants.SHOW_EVENT_INFO);
+                   }else{
+                       mainActivity.replaceFragment(R.layout.fragment_location_info, null);
+                       EventBus.getDefault().post(query, Constants.SHOW_LOCATION_INFO);
+                   }
+               }
+               searchView.closeSearch();
             }
         });
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -123,8 +157,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Do some magic
-                Snackbar.make(getView(), newText, Snackbar.LENGTH_SHORT).show();
+                //Snackbar.make(getView(), newText, Snackbar.LENGTH_SHORT).show();
                 //Log.v(Constants.TAG, newText);
+                if(!newText.isEmpty()){
+                    newText = newText.trim();
+                    if(!newText.isEmpty()){
+                        showSuggestion(newText);
+                    }
+                }
+
                 return false;
             }
         });
