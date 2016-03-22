@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -43,6 +45,7 @@ public class ProfileFragment extends Fragment {
     @Bind(R.id.fragment_profile_picture) de.hdodenhof.circleimageview.CircleImageView profilePicture;
     ImageLoader imageLoader;
     MainActivity mainActivity;
+    GoogleApiClient googleApiClient;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -73,20 +76,33 @@ public class ProfileFragment extends Fragment {
     }
 
     public void googleLogout() {
-        Auth.GoogleSignInApi.signOut(BackgroundService.getGoogleApiClient()).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        Log.v(Constants.TAG, status.toString());
-                    }
-                });
-        Auth.GoogleSignInApi.revokeAccess(BackgroundService.getGoogleApiClient()).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        Log.v(Constants.TAG, status.toString());
-                    }
-                });
+        if(BackgroundService.getGoogleApiClient() != null) {
+            if (BackgroundService.getGoogleApiClient().isConnected()) {
+                Auth.GoogleSignInApi.signOut(BackgroundService.getGoogleApiClient()).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                Log.v(Constants.TAG, status.toString());
+                            }
+                        });
+            }
+        } else {
+            /*gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(Constants.CLIENT_ID)
+                    .build();*/
+            googleApiClient = new GoogleApiClient.Builder(mainActivity)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API)
+                    .build();
+            if (googleApiClient.isConnected()) {
+                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                Log.v(Constants.TAG, status.toString());
+                            }
+                        });
+            }
+        }
     }
 
     @OnClick(R.id.fragment_profile_button1) void logoutButton() {
@@ -101,6 +117,7 @@ public class ProfileFragment extends Fragment {
                 //TODO CLOSE LOADING BAR
                 //Move to login fragment..
                 googleLogout();
+                mainActivity.stopService(new Intent(mainActivity, BackgroundService.class));
                 mainActivity.moveToLogin();
             }
 

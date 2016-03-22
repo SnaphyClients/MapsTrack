@@ -76,6 +76,7 @@ import com.snaphy.mapstrack.Model.CustomFileRepository;
 import com.snaphy.mapstrack.Model.ImageModel;
 import com.snaphy.mapstrack.Services.BackgroundService;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
+import com.snaphy.mapstrack.Services.MyRestAdapter;
 import com.strongloop.android.loopback.AccessToken;
 import com.strongloop.android.loopback.AccessTokenRepository;
 import com.strongloop.android.loopback.LocalInstallation;
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     GoogleCloudMessaging gcm;
     Context context;
-    RestAdapter restAdapter;
+    MyRestAdapter restAdapter;
     MainActivity that;
     LocationManager mLocationManager;
     private static LocalInstallation installation;
@@ -149,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         tracker.setScreenName("MainActivity");*/
         mainActivity = this;
         that = this;
-        initializeGooglePlacesApi();
         //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
         //DONT DELETE THIS LINE..WARNING
         getLoopBackAdapter();
@@ -165,8 +165,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             }
         }, 100);
 
-        //Now check for login...
-        mGoogleApiClient.connect();
         checkLogin();
     }
 
@@ -237,11 +235,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     public void moveToLogin(){
         replaceFragment(R.layout.fragment_login, null);
     }
-
-
-
-
-
 
     @Override
     public void onResume() {
@@ -749,7 +742,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
      */
     public void updateRegistration(String userId) {
         gcm = GoogleCloudMessaging.getInstance(this);
-        final RestAdapter adapter = getLoopBackAdapter();
+        final MyRestAdapter adapter = getLoopBackAdapter();
         // 2. Create LocalInstallation instance
         final LocalInstallation installation =  new LocalInstallation(context, adapter);
 
@@ -873,10 +866,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
 
-    public RestAdapter getLoopBackAdapter() {
+    public MyRestAdapter getLoopBackAdapter() {
         if (restAdapter == null) {
 
-            restAdapter = new RestAdapter(
+            restAdapter = new MyRestAdapter(
                     getApplicationContext(),
                     Constants.apiUrl);
             BackgroundService.setLoopBackAdapter(restAdapter);
@@ -886,8 +879,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public void moveToHome(){
+        initializeGooglePlacesApi();
+        //Now check for login...
+        mGoogleApiClient.connect();
         //NOW move to home fragment..
-            replaceFragment(R.layout.fragment_main, null);
+        replaceFragment(R.layout.fragment_main, null);
 
     }
 
@@ -1573,6 +1569,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("status", "allow");
             }
         }
+        TrackCollection.setFilterColor(Constants.SHARED_EVENTS);
     }
 
 
@@ -1592,8 +1589,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("geolocation", near);
                 //Now only allow status of allowed event to view..
                 where.put("status", "allow");
+                where.put("isPublic", "public");
             }
         }
+        TrackCollection.setFilterColor(Constants.NEAR_BY);
     }
 
 
@@ -1607,6 +1606,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("customerId", BackgroundService.getCustomer().getId());
             }
         }
+        TrackCollection.setFilterColor(Constants.MY_EVENTS);
     }
 
 

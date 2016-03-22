@@ -8,6 +8,8 @@ import android.widget.Toast;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.snaphy.mapstrack.Constants;
+import com.snaphy.mapstrack.Services.BackgroundService;
+import com.snaphy.mapstrack.Services.MyRestAdapter;
 import com.strongloop.android.loopback.RestAdapter;
 import com.strongloop.android.loopback.callbacks.ListCallback;
 
@@ -26,9 +28,13 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  */
 public class TrackCollection {
 
-    RestAdapter restAdapter;
+    MyRestAdapter restAdapter;
 
     private int limit = 10;
+
+    public static Map<String, Boolean> getTrackCurrentFilterSelect() {
+        return trackCurrentFilterSelect;
+    }
 
     public static Map<String, Boolean>  trackCurrentFilterSelect = new HashMap<>();
 
@@ -64,7 +70,7 @@ public class TrackCollection {
 
     Context context;
 
-    public TrackCollection(RestAdapter restAdapter, Context context){
+    public TrackCollection(MyRestAdapter restAdapter, Context context){
         EventBus.getDefault().register(this);
         this.restAdapter = restAdapter;
         resetFilter("event");
@@ -72,6 +78,9 @@ public class TrackCollection {
         this.context = context;
         initialize("event",true, progressBar);
         initialize("location",true, progressBar);
+        trackCurrentFilterSelect.put(Constants.MY_EVENTS, false);
+        trackCurrentFilterSelect.put(Constants.NEAR_BY, false);
+        trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, false);
     }
 
     public void resetFilter(String type){
@@ -95,6 +104,15 @@ public class TrackCollection {
             filter = eventFilter;
         }else {
             filter = locationFilter;
+            //For location arrange filter desc added date..
+            //{ order: 'propertyName <ASC|DESC>' }
+            filter.put("order", "added DESC");
+            if(BackgroundService.getCustomer() != null){
+                filter.put("customerId", BackgroundService.getCustomer().getId());
+                if(BackgroundService.getCustomer().getPhoneNumber() != null){
+                    filter.put("friends.number", BackgroundService.getCustomer().getPhoneNumber());
+                }
+            }
         }
 
         Map<String, Object> where;
@@ -180,7 +198,7 @@ public class TrackCollection {
 
     @Subscriber ( tag = Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT)
     public void requestMoreEvents(SmoothProgressBar progressBar){
-        initialize("event",false, progressBar);
+        initialize("event", false, progressBar);
     }
 
     @Subscriber ( tag = Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT)
@@ -210,7 +228,24 @@ public class TrackCollection {
     }
 
 
+    public static void setFilterColor(String filterType){
+        trackCurrentFilterSelect.put(Constants.MY_EVENTS, false);
+        trackCurrentFilterSelect.put(Constants.NEAR_BY, false);
+        trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, false);
 
+        if (filterType.equals(Constants.MY_EVENTS)) {
+            trackCurrentFilterSelect.put(Constants.MY_EVENTS, true);
+        }
+
+        if (filterType.equals(Constants.NEAR_BY)) {
+            trackCurrentFilterSelect.put(Constants.NEAR_BY, true);
+        }
+
+        if (filterType.equals(Constants.SHARED_EVENTS)) {
+            trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, true);
+        }
+
+    }
 
 
 

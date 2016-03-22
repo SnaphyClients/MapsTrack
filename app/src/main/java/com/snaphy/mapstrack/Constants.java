@@ -93,4 +93,10 @@ public final class Constants {
     public static final String RESET_EVENTS_FROM_FILTER_FRAGMENT = "resetEventsFromFilterFragment";
     public static final String UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER = "updateDataInHomeFragmentFromFilter";
 
+
+    public static final String NEAR_BY = "nearby";
+    public static final String SHARED_EVENTS = "shared";
+    public static final String MY_EVENTS = "myevents";
+
+
 }

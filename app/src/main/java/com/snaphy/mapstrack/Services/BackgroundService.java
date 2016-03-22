@@ -14,7 +14,6 @@ import com.snaphy.mapstrack.Collection.EventTypeCollection;
 import com.snaphy.mapstrack.Collection.LocationHomeCollection;
 import com.snaphy.mapstrack.Collection.ShareLocationCollection;
 import com.snaphy.mapstrack.Collection.TrackCollection;
-import com.strongloop.android.loopback.RestAdapter;
 
 import org.simple.eventbus.EventBus;
 
@@ -28,7 +27,7 @@ public class BackgroundService extends Service {
     EventHomeCollection eventHomeCollection;
     ShareLocationCollection shareLocationCollection;
     EventTypeCollection eventTypeCollection;
-    static RestAdapter restAdapter;
+    static MyRestAdapter restAdapter;
 
 
     public static LatLng getCurrentLocation() {
@@ -139,12 +138,12 @@ public class BackgroundService extends Service {
 
 
 
-    public static RestAdapter getLoopBackAdapter() {
+    public static MyRestAdapter getLoopBackAdapter() {
         return restAdapter;
     }
 
 
-    public static void setLoopBackAdapter(RestAdapter adapter){
+    public static void setLoopBackAdapter(MyRestAdapter adapter){
         restAdapter = adapter;
     }
 }
