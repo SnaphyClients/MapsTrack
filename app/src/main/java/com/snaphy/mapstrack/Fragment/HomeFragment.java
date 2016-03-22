@@ -127,9 +127,9 @@ public class HomeFragment extends android.support.v4.app.Fragment{
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        LocationHomeModel locationHomeModel = locationHomeModelArrayList.get(position);
+                        Track track = TrackCollection.locationList.get(position);
                         mainActivity.replaceFragment(R.layout.fragment_location_info, null);
-                        EventBus.getDefault().postSticky(locationHomeModel, Constants.SHOW_LOCATION_INFO);
+                        EventBus.getDefault().post(track, Constants.SHOW_LOCATION_INFO);
                     }
                 })
         );

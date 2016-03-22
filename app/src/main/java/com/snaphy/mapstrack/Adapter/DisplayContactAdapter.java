@@ -204,6 +204,10 @@ public class DisplayContactAdapter extends BaseAdapter {
                         if(resId == R.id.fragment_event_info_button4) {
                             EventBus.getDefault().post(track, Constants.UPDATE_CONTACT_NUMBER);
                         }
+
+                        if(resId == R.id.fragment_location_info_button5) {
+                            EventBus.getDefault().post(track, Constants.UPDATE_CONTACT_NUMBER_IN_LOCATION);
+                        }
                         //Now save data..
                         mainActivity.saveTrack(track);
                     } else {

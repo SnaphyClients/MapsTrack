@@ -10,7 +10,6 @@ import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Services.BackgroundService;
 import com.snaphy.mapstrack.Services.MyRestAdapter;
-import com.strongloop.android.loopback.RestAdapter;
 import com.strongloop.android.loopback.callbacks.ListCallback;
 
 import org.simple.eventbus.EventBus;

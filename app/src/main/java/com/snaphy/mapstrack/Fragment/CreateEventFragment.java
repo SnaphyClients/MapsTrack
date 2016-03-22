@@ -88,7 +88,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     File editedImageFile;
     ImageModel imageModel;
     LatLng currentLatLng;
-    boolean isPublishEventClicked = true;
     boolean saveInProgress = false;
 
 

@@ -200,7 +200,8 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                 updateFriendsList(track);
                 EventBus.getDefault().post(track, Constants.UPDATE_CONTACT_NUMBER);
             }else {
-                //TODO SEND LOCATION..
+                updateFriendsList(track);
+                EventBus.getDefault().post(track, Constants.UPDATE_CONTACT_NUMBER_IN_LOCATION);
             }
         }else{
             //EventBus.getDefault().post(contactModelArrayList, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);

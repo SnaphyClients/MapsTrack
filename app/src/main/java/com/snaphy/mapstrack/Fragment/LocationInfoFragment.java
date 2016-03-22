@@ -9,32 +9,35 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
+import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
-import com.snaphy.mapstrack.Model.DisplayContactModel;
-import com.snaphy.mapstrack.Model.LocationHomeModel;
-import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,23 +55,27 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "LocationInfoFragment";
-    @Bind(R.id.fragment_location_info_textview0) TextView locationName;
-    @Bind(R.id.fragment_location_info_textview1) TextView locationName2;
+    @Bind(R.id.fragment_location_info_textview0) TextView locationNameId;
     @Bind(R.id.fragment_location_info_textview2) TextView locationId;
     @Bind(R.id.fragment_location_info_textview3) TextView locationAddress;
     @Bind(R.id.fragment_location_info_textview4) TextView contacts;
+    @Bind(R.id.fragment_location_info_button1) com.github.clans.fab.FloatingActionButton editLocation;
+    @Bind(R.id.fragment_location_info_button3) com.github.clans.fab.FloatingActionButton deleteLocation;
+    @Bind(R.id.fragment_location_info_button6) com.github.clans.fab.FloatingActionButton addFriends;
     ImageLoader imageLoader;
     LatLng latLng;
     MainActivity mainActivity;
-    LocationHomeModel locationHomeModel;
-    ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
+    static LocationInfoFragment fragment;
+    boolean isLocationOwner = false;
+    Track track;
 
     public LocationInfoFragment() {
         // Required empty public constructor
     }
 
     public static LocationInfoFragment newInstance() {
-        LocationInfoFragment fragment = new LocationInfoFragment();
+        fragment = new LocationInfoFragment();
+        EventBus.getDefault().register(fragment);
         return fragment;
     }
 
@@ -77,8 +84,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
-        EventBus.getDefault().registerSticky(this);
-        EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -91,28 +97,55 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @Subscriber(tag = Constants.SHOW_LOCATION_INFO)
-    private void showLocationInfo(LocationHomeModel locationHomeModel) {
+    private void showLocationInfo(Track track) {
+        if(track != null) {
+            this.track = track;
+            if(track.getLocationId() != null) {
+                if(!track.getLocationId().isEmpty()) {
+                    locationNameId.setText(track.getLocationId().toString());
+                    CharSequence lName = drawTextViewDesign("Location Name : ",track.getLocationId().toString());
+                    locationId.setText(lName);
+                }
+            }
 
-        this.locationHomeModel = locationHomeModel;
-        locationName.setText(locationHomeModel.getLocationName());
-        setContactData(locationHomeModel.getContacts());
-        latLng = new LatLng(locationHomeModel.getLatLong().get("latitude"),locationHomeModel.getLatLong().get("longitude"));
-        Log.v(Constants.TAG, "LatLong File = " + locationHomeModel.getLatLong().get("latitude") + locationHomeModel.getLatLong().get("longitude") + "");
+            if(track.getAddress() != null) {
+                if(!track.getAddress().isEmpty()) {
+                    CharSequence lAddress = drawTextViewDesign("Location Address : ", mainActivity.changeToUpperCase(track.getAddress().toString()));
+                    locationAddress.setText(lAddress);
+                }
+            }
 
+            if(track.getGeolocationLatitide() != 0) {
+                if(track.getGeolocationLongitude() != 0) {
+                    latLng = new LatLng(track.getGeolocationLatitide(), track.getGeolocationLongitude());
+                }
+            }
 
-        CharSequence lName = drawTextViewDesign("Location Name : ",this.locationHomeModel.getLocationName());
-        locationName2.setText(lName);
+            if(track.getFriends() != null){
+                CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", (String.valueOf(track.getFriends().size())));
+                contacts.setText(eContact);
+            } else {
+                CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", "0");
+                contacts.setText(eContact);
+            }
 
-        CharSequence lId = drawTextViewDesign("Location Id : ", this.locationHomeModel.getLocationId());
-        locationId.setText(lId);
+            if(track.getIsPublic().equals("public")) {
+                disableFriendList(true);
+            } else {
+                disableFriendList(false);
+            }
 
-        CharSequence lAddress = drawTextViewDesign("Location Address : ", this.locationHomeModel.getLocationAddress());
-        locationAddress.setText(lAddress);
-
-        CharSequence lContact = drawTextViewDesign("Friends Invited : ", (String.valueOf(this.locationHomeModel.getContacts().size())));
-        contacts.setText(lContact);
-
+            //Now hide options..
+            showOption(track);
+        }
     }
+
+    @Subscriber ( tag = Constants.UPDATE_CONTACT_NUMBER_IN_LOCATION )
+    public void updateContactNumber(Track track) {
+        showLocationInfo(track);
+    }
+
+
 
     public CharSequence drawTextViewDesign(String constant, String data) {
         SpannableString spannableString =  new SpannableString(constant);
@@ -125,32 +158,64 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
 
-    /**
-     * Data in location has been initialize from here
-     */
-    public void setContactData(ArrayList<SelectContactModel> selectContactModelArrayList) {
-        displayContactModelArrayList.clear();
-        for(int i = 0; i<selectContactModelArrayList.size();i++) {
-            displayContactModelArrayList.add(new DisplayContactModel(selectContactModelArrayList.get(i).getContactName()));
+    public void showOption(Track track){
+        if(BackgroundService.getCustomer() != null){
+            String ownerId = (String)BackgroundService.getCustomer().getId();
+            if(track.getCustomer() != null){
+                String creatorId = (String)track.getCustomer().getId();
+                if(creatorId.equals(ownerId)){
+                    isLocationOwner = true;
+                    deleteLocation.setVisibility(View.VISIBLE);
+                    editLocation.setVisibility(View.VISIBLE);
+                }else{
+                    isLocationOwner = false;
+                    deleteLocation.setVisibility(View.GONE);
+                    editLocation.setVisibility(View.GONE);
+                }
+            }else {
+                isLocationOwner = false;
+                deleteLocation.setVisibility(View.GONE);
+                editLocation.setVisibility(View.GONE);
+            }
+        }else{
+            isLocationOwner = false;
+            deleteLocation.setVisibility(View.GONE);
+            editLocation.setVisibility(View.GONE);
         }
     }
-
 
     @OnClick(R.id.fragment_location_info_image_button1) void backButton() {
         mainActivity.onBackPressed();
     }
 
     @OnClick(R.id.fragment_location_info_button1) void editLocation() {
-
-        EventBus.getDefault().postSticky(this.locationHomeModel, Constants.SHOW_LOCATION_EDIT);
         mainActivity.replaceFragment(R.id.fragment_location_info_button1, null);
+        EventBus.getDefault().post(track, Constants.SHOW_LOCATION_EDIT);
+
+    }
+
+
+    public void disableFriendList(boolean disable){
+        if(disable){
+            addFriends.setVisibility(View.GONE);
+        }else{
+            addFriends.setVisibility(View.VISIBLE);
+        }
     }
 
 
     @OnClick(R.id.fragment_location_info_button3) void deleteLocation() {
+        if(isLocationOwner){
+            //Now delete this event from server..
+            mainActivity.deleteTrack(track);
+            TrackCollection.locationList.remove(this.track);
+            EventBus.getDefault().post(false, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
+            Toast.makeText(mainActivity, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+            mainActivity.onBackPressed();
+        }else {
+            Toast.makeText(mainActivity, "You are not authorised to delete this location", Toast.LENGTH_SHORT).show();
+        }
 
-        EventBus.getDefault().post(this.locationHomeModel, LocationHomeModel.onDelete);
-        mainActivity.onBackPressed();
     }
 
     @OnClick(R.id.fragment_location_info_button2) void openMap() {
@@ -159,18 +224,32 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_location_info_button4) void createEventFromLocation() {
-        mainActivity.replaceFragment(R.id.fragment_location_info_button4, null);
-        EventBus.getDefault().postSticky(this.locationHomeModel, Constants.CREATE_EVENT_FROM_LOCATION);    }
+        if(track != null){
+            TrackRepository trackRepository = mainActivity.getLoopBackAdapter().createRepository(TrackRepository.class);
+            Map<String, Object> objectMap = (Map<String, Object>)track.convertMap();
+            objectMap.remove("name");
+            objectMap.remove("locationId");
+            objectMap.put("type", "event");
+            Track locationToEvent = trackRepository.createObject(objectMap);
+            mainActivity.replaceFragment(R.id.fragment_location_info_button4, null);
+            EventBus.getDefault().post(locationToEvent, Constants.SHOW_EVENT_EDIT);
+        }
+    }
 
     @OnClick(R.id.fragment_location_info_button6) void addFriends() {
-        mainActivity.replaceFragment(R.id.fragment_location_info_button6,null);
+        mainActivity.replaceFragment(R.id.fragment_location_info_button6, null);
+        EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
     }
 
 
     @OnClick(R.id.fragment_location_info_button5) void openContacts() {
-        /*DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
-        Holder holder = new ListHolder();
-        showOnlyContentDialog(holder, adapter);*/
+        if(track.getFriends().size() == 0) {
+            Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
+        } else {
+            DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track, R.id.fragment_location_info_button5);
+            Holder holder = new ListHolder();
+            showOnlyContentDialog(holder, adapter);
+        }
     }
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {

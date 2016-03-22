@@ -13,7 +13,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
-import com.snaphy.mapstrack.Model.Message;
 import com.snaphy.mapstrack.R;
 
 import java.util.regex.Matcher;
@@ -41,7 +40,6 @@ public class GcmIntentService extends IntentService  {
     public GcmIntentService() {
         super("GcmIntentService");
     }
-    public static final String TAG = "drugcorner";
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -64,20 +62,18 @@ public class GcmIntentService extends IntentService  {
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 String message = (String)extras.getString("message");
-                Log.i(TAG, "Message is: " + message);
+                Log.i(Constants.TAG, "Message is: " + message);
                 Gson gson = new Gson();
-                final Message data = gson.fromJson(message, Message.class);
-                if (data.getStatus() == "5001") {
+
+                if (message == "5001") {
 
                     //New order has arrived..
                     //Send push message..
-                    sendNotification(data.getMessage() , Constants.TAG);
-                    String orderId = data.getOrderId();
+                    sendNotification(message , Constants.TAG);
 
                 }
                 else{
-                    sendNotification(data.getMessage() , Constants.TAG);
-                    String orderId = data.getOrderId();
+                    sendNotification(message , Constants.TAG);
                 }
             }
         }

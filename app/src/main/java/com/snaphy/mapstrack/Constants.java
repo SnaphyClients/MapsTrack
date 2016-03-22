@@ -88,6 +88,7 @@ public final class Constants {
     public static final String DISPLAY_CONTACT = "displayContactInContactFragment";
 
     public static final String UPDATE_CONTACT_NUMBER = "updateContactNumber";
+    public static final String UPDATE_CONTACT_NUMBER_IN_LOCATION = "updateContactNumberInLocation";
     public static final String SET_LATITUDE_LONGITUDE = "setLatitudeLongitude";
 
     public static final String RESET_EVENTS_FROM_FILTER_FRAGMENT = "resetEventsFromFilterFragment";

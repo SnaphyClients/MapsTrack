@@ -1609,6 +1609,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         TrackCollection.setFilterColor(Constants.MY_EVENTS);
     }
 
+    public String changeToUpperCase(String source) {
+        String cap = source.substring(0, 1).toUpperCase() + source.substring(1);
+        return cap;
+    }
+
 
 
 }

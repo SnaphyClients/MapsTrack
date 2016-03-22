@@ -9,29 +9,42 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
-import com.activeandroid.query.Select;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.google.android.gms.maps.model.LatLng;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
+import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
-import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
+import com.strongloop.android.loopback.callbacks.ObjectCallback;
+import com.strongloop.android.remoting.JsonUtil;
+import com.strongloop.android.remoting.adapters.Adapter;
 
+import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,32 +58,40 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateLocationFragment";
     HashMap<String,Double> latLongHashMap = new HashMap<String, Double>();
+    LatLng currentLatLng;
 
     @Bind(R.id.fragment_create_location_imagebutton1) ImageButton backButton;
-    @Bind(R.id.fragment_create_location_edittext1) EditText locationName;
     @Bind(R.id.fragment_create_location_edittext2) EditText locationId;
     @Bind(R.id.fragment_create_location_edittext3) EditText locationAddress;
+
+    @Bind(R.id.fragment_create_location_radio_button1) RadioButton publicRadioButton;
+    @Bind(R.id.fragment_create_location_radio_button2) RadioButton privateRadioButton;
+    @Bind(R.id.fragment_create_location_radio_group) RadioGroup radioGroup;
+    @Bind(R.id.fragment_create_location_imagebutton2) com.github.clans.fab.FloatingActionButton showSelectedFriends;
+    @Bind(R.id.fragment_create_location_button1) com.github.clans.fab.FloatingActionButton addFriends;
 
     MainActivity mainActivity;
 
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
     List<TemporaryContactDatabase> temporaryContactDatabases;
+    static CreateLocationFragment fragment;
+    Track track;
+    boolean saveInProgress = false;
 
     public CreateLocationFragment() {
         // Required empty public constructor
     }
 
     public static CreateLocationFragment newInstance() {
-        CreateLocationFragment fragment = new CreateLocationFragment();
+        fragment = new CreateLocationFragment();
+        EventBus.getDefault().register(fragment);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().registerSticky(this);
-        EventBus.getDefault().register(this);
 
     }
 
@@ -80,8 +101,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_location, container, false);
         ButterKnife.bind(this, view);
-
         backButtonClickListener();
+        setOnRedioCheckedListener();
         return view;
     }
 
@@ -90,9 +111,18 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_location_imagebutton2) void openContactDialog() {
-        /*DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity,displayContactModelArrayList);
-        Holder holder = new ListHolder();
-        showOnlyContentDialog(holder, adapter);*/
+        if(track.getFriends() != null){
+            if(track.getFriends().size() == 0) {
+                Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
+            } else {
+                DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track, R.id.fragment_create_location_imagebutton2);
+                Holder holder = new ListHolder();
+                showOnlyContentDialog(holder, adapter);
+            }
+        }else{
+            Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     /**
@@ -128,16 +158,11 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         dialog.show();
     }
 
-    @Subscriber(tag = Constants.SEND_ADDRESS_LOCATION)
-    private void setAddress(String address) {
-       // placesAutocompleteTextView.setText(address);
-    }
-
-    @Subscriber(tag = Constants.SEND_LOCATION_LATLONG)
+   /* @Subscriber(tag = Constants.SEND_LOCATION_LATLONG)
     private void setLatLong(LatLng latLong) {
         latLongHashMap.put("latitude",latLong.latitude);
         latLongHashMap.put("longitude", latLong.longitude);
-    }
+    }*/
 
     @Subscriber ( tag = Constants.SEND_SELECTED_CONTACT_TO_CREATE_LOCATION_FRAGMENT)
     public void saveSelectedContacts(ArrayList<ContactModel> contactModelArrayList) {
@@ -148,17 +173,86 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         }
     }
 
+    public void setOnRedioCheckedListener() {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                if(checkedId == R.id.fragment_create_location_radio_button1) {
+                    // It is public
+                    disableFriendList(true);
+                } else {
+                    // It is private
+                    disableFriendList(false);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(isPublic()){
+            disableFriendList(true);
+        }else{
+            disableFriendList(false);
+        }
+        checkCreateOrEditedMode();
+    }
+
+    private void checkCreateOrEditedMode(){
+        if(track == null){
+            //Then in this case create a new track object..its in create mode..
+            TrackRepository trackRepository = mainActivity.getLoopBackAdapter().createRepository(TrackRepository.class);
+            Map<String, Object> objectMap = new HashMap<>();
+            this.track = trackRepository.createObject(objectMap);
+            this.track.setType("event");
+        }
+    }
+
     @Subscriber(tag = Constants.SHOW_LOCATION_EDIT)
-    private void onEdit(LocationHomeModel locationHomeModel) {
+    private void onEdit(Track track) {
 
-        //TODO Update data will be called when create event fragment is called from event info
-        locationName.setText(locationHomeModel.getLocationName());
-        locationId.setText(locationHomeModel.getLocationId());
-        locationAddress.setText(locationHomeModel.getLocationAddress());
+        if(track != null) {
+            this.track = track;
+            if(track.getLocationId() != null){
+                locationId.setEnabled(false);
+                locationId.setText(track.getLocationId().toString());
+            }
 
-        displayContactModelArrayList.clear();
-        for(int i = 0; i<locationHomeModel.getContacts().size();i++) {
-            displayContactModelArrayList.add(new DisplayContactModel(locationHomeModel.getContacts().get(i).getContactName()));
+            if(track.getAddress() != null) {
+                locationAddress.setText(track.getAddress().toString());
+            }
+
+            if(track.getGeolocationLatitide() != 0) {
+                if(track.getGeolocationLongitude() != 0) {
+                    currentLatLng = new LatLng(track.getGeolocationLatitide(), track.getGeolocationLongitude());
+                }
+            }
+
+            if(track.getIsPublic() != null) {
+                if(track.getIsPublic().equals("public")){
+                    disableFriendList(true);
+                    publicRadioButton.setChecked(true);
+                } else {
+                    disableFriendList(false);
+                    privateRadioButton.setChecked(true);
+                }
+            }
+        }
+
+    }
+
+
+
+    public void disableFriendList(boolean disable){
+        if(disable){
+            showSelectedFriends.setVisibility(View.GONE);
+            addFriends.setVisibility(View.GONE);
+        }else{
+            showSelectedFriends.setVisibility(View.VISIBLE);
+            addFriends.setVisibility(View.VISIBLE);
         }
     }
 
@@ -174,11 +268,17 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         });
     }
 
+    @Subscriber ( tag = Constants.SET_LATITUDE_LONGITUDE)
+    public void setLatLong(LatLng latLong) {
+        currentLatLng = latLong;
+    }
+
     /**
      * Contact are selected from list of avialable contact in phone contact
      */
     @OnClick(R.id.fragment_create_location_button1) void selectContact() {
         mainActivity.replaceFragment(R.id.fragment_create_location_button1, null);
+        EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
     }
 
     @OnClick(R.id.fragment_create_location_button5) void setLocation() {
@@ -190,35 +290,64 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      */
     @OnClick(R.id.fragment_create_location_button2) void publishLocation() {
 
-        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
-        for (int i = 0; i<temporaryContactDatabases.size(); i++) {
-            selectContactModelArrayList.add(new SelectContactModel(null,temporaryContactDatabases.get(i).name,
-                    temporaryContactDatabases.get(i).number));
-        }
+        validateData(new ObjectCallback<Track>() {
+            @Override
+            public void onSuccess(Track object) {
+                saveInProgress = true;
+                if (saveInProgress) {
+                    //Now create the event first ..
+                    Map<String, Object> trackObj = (Map<String, Object>) track.convertMap();
+                    if (BackgroundService.getCustomer() != null) {
+                        //Now add customer ..
+                        trackObj.put("customerId", BackgroundService.getCustomer().getId());
+                    }
 
-        LocationHomeModel locationHomeModel =  new LocationHomeModel(null,locationName.getText().toString(),
-                locationAddress.getText().toString(),
-                locationId.getText().toString(), selectContactModelArrayList, latLongHashMap);
 
-        EventBus.getDefault().post(locationHomeModel, LocationHomeModel.onSave);
-        TemporaryContactDatabase.deleteAll();
-        //TODO check its occurance
-        setLocationDataInAdapter();
-        mainActivity.onBackPressed();
+                    if (track.getId() != null) {
+                        Toast.makeText(mainActivity, "Location updated successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mainActivity, "Location created successfully", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (track.getId() != null) {
+                        trackObj.put("id", track.getId());
+                    }
+
+                    //Now save the event..
+                    mainActivity.saveTrack(trackObj);
+                    track.addRelation(BackgroundService.getCustomer());
+                    EventBus.getDefault().post(track, Constants.SHOW_LOCATION_INFO);
+                    //On back pressed..
+                    mainActivity.onBackPressed();
+                    saveInProgress = false;
+                }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                saveInProgress = false;
+            }
+        });
 
     }
 
 
-    /**
-     * Data in events has been initialize from here
-     */
-    public void setLocationDataInAdapter() {
-
-        temporaryContactDatabases = new Select().from(TemporaryContactDatabase.class).execute();
-        for(int i = 0; i<temporaryContactDatabases.size();i++) {
-            displayContactModelArrayList.add(new DisplayContactModel(temporaryContactDatabases.get(i).name));
+    private boolean isPublic(){
+        int getCheckedButtonId = radioGroup.getCheckedRadioButtonId();
+        if( getCheckedButtonId == R.id.fragment_create_location_radio_button1) {
+            return true;
         }
+        else {
+            return false;
+        }
+    }
 
+
+    public boolean checkForSpaces(String s) {
+        Pattern pattern = Pattern.compile("\\s");
+        Matcher matcher = pattern.matcher(s);
+        boolean found = matcher.find();
+        return found;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -259,5 +388,117 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void validateData(final ObjectCallback<Track> callback){
+        Exception t = new Exception();
+
+
+        String location = locationId.getText().toString();
+        String locationAdd = locationAddress.getText().toString();
+        String isPublic;
+        int getCheckedButtonId = radioGroup.getCheckedRadioButtonId();
+        if( getCheckedButtonId == R.id.fragment_create_location_radio_button1) {
+            isPublic = "public";
+        }
+        else {
+            isPublic = "private";
+        }
+
+        track.setIsPublic(isPublic);
+
+        if (location != null) {
+            if(location.isEmpty()){
+                Toast.makeText(mainActivity, "Location Id is required", Toast.LENGTH_SHORT).show();
+                callback.onError(t);
+                return;
+            }else{
+                if(checkForSpaces(location.toString())) {
+                    Toast.makeText(mainActivity, "Location Id could not have white spaces", Toast.LENGTH_SHORT).show();
+                } else {
+                    //LocationID cannot be editable..
+                    if(track.getId() == null){
+                        track.setLocationId(location);
+                    }
+
+                }
+
+            }
+        }else{
+            Toast.makeText(mainActivity, "Location Id is required", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }
+
+
+        if (locationAdd != null) {
+            if(locationAdd.isEmpty()){
+                Toast.makeText(mainActivity, "Address is required", Toast.LENGTH_SHORT).show();
+                callback.onError(t);
+                return;
+            }else{
+                track.setAddress(locationAddress.getText().toString());
+            }
+        }else{
+            Toast.makeText(mainActivity, "Address is required", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }
+
+        if(currentLatLng == null){
+            Toast.makeText(mainActivity, "You must set your location.", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }else{
+            track.setGeolocation(currentLatLng.latitude, currentLatLng.longitude);
+        }
+
+
+        track.setType("location");
+        track.setStatus("allow");
+
+
+
+        //Also set the..
+        if(track.getId() == null){
+            TrackRepository trackRepository = mainActivity.getLoopBackAdapter().createRepository(TrackRepository.class);
+            Map<String, Object> where = new HashMap<>();
+            where.put("locationId", location);
+            trackRepository.count(where, new Adapter.JsonObjectCallback() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    if(response != null){
+                        Map<String, Object> countObj  = JsonUtil.fromJson(response);
+                        if(countObj.get("count") != null){
+                            int count = (Integer)countObj.get("count");
+                            if(count == 0){
+                                callback.onSuccess(track);
+                            }else {
+                                Toast.makeText(mainActivity, "Location Id is already present. Please enter another one.", Toast.LENGTH_SHORT).show();
+                                Exception t = new Exception();
+                                callback.onError(t);
+                            }
+                        }else{
+                            callback.onSuccess(track);
+                        }
+                    }else{
+                        callback.onSuccess(track);
+                    }
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                    callback.onError(t);
+                }
+            });
+        }else{
+            callback.onSuccess(track);
+        }
+
+
+
+
     }
 }

@@ -149,7 +149,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
         if(track.getName() != null){
             if(!this.track.getName().isEmpty()) {
-                CharSequence eName = mainActivity.drawTextViewDesign("Event Name : ", this.track.getName());
+                CharSequence eName = mainActivity.drawTextViewDesign("Event Name : ", mainActivity.changeToUpperCase(this.track.getName()));
                 eventName2.setText(eName);
             }
         }
@@ -177,14 +177,14 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
         if(track.getAddress() != null){
             if(!track.getAddress().isEmpty()) {
-                CharSequence eAddress = mainActivity.drawTextViewDesign("Event Address : ", this.track.getAddress());
+                CharSequence eAddress = mainActivity.drawTextViewDesign("Event Address : ", mainActivity.changeToUpperCase(this.track.getAddress()));
                 eventAddress.setText(eAddress);
             }
         }
 
         if(track.getDescription() != null){
             if(!track.getDescription().isEmpty()) {
-                CharSequence eDescription = mainActivity.drawTextViewDesign("Event Description : ", this.track.getDescription());
+                CharSequence eDescription = mainActivity.drawTextViewDesign("Event Description : ", mainActivity.changeToUpperCase(this.track.getDescription()));
                 eventDescription.setText(eDescription);
             }
         }
