@@ -30,6 +30,7 @@ public class TrackCollection {
 
     private int limit = 10;
 
+    public static Map<String, Boolean>  trackCurrentFilterSelect = new HashMap<>();
 
     public static SmoothProgressBar progressBar;
 
@@ -111,17 +112,18 @@ public class TrackCollection {
 
         if(reset) {
             resetFilter(type);
-            if(type.equals("event")) {
+            /*if(type.equals("event")) {
                 eventList.clear();
             } else {
                 locationList.clear();
-            }
+            }*/
         } else {
             //Do Pagination
             filter.put("skip",(int)filter.get("skip")+limit);
         }
 
         filter.put("include", "customer");
+
 
         if(progressBar != null) {
             startProgressBar(progressBar);
@@ -138,7 +140,15 @@ public class TrackCollection {
                 }
 
                 if (objects != null) {
+                    if(reset) {
+                        if(type.equals("event")) {
+                            eventList.clear();
+                        } else {
+                            locationList.clear();
+                        }
+                    }
                     if (objects.size() != 0) {
+
                         if (type.equals("event")) {
                             //setEventList(objects);
                             getEventList().addAll(objects);
@@ -173,6 +183,11 @@ public class TrackCollection {
         initialize("event",false, progressBar);
     }
 
+    @Subscriber ( tag = Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT)
+    public void initEvents(SmoothProgressBar progressBar){
+        initialize("event",true, progressBar);
+    }
+
     @Subscriber ( tag = Constants.REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT)
     public void requestMoreLocation(SmoothProgressBar progressBar) {
         initialize("location", false, progressBar);
@@ -193,6 +208,9 @@ public class TrackCollection {
         }
         //OR Use Progress Dialog
     }
+
+
+
 
 
 

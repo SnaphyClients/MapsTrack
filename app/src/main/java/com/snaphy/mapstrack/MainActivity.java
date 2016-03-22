@@ -46,6 +46,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     GoogleCloudMessaging gcm;
     Context context;
     RestAdapter restAdapter;
+    MainActivity that;
     LocationManager mLocationManager;
     private static LocalInstallation installation;
     public static LocalInstallation getInstallation() {
@@ -145,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
        /* MapsTrackDB application = (MapsTrackDB) getApplication();
         tracker = application.getDefaultTracker();
         tracker.setScreenName("MainActivity");*/
-        startService(new Intent(getBaseContext(), BackgroundService.class));
         mainActivity = this;
+        that = this;
         initializeGooglePlacesApi();
         //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
         //DONT DELETE THIS LINE..WARNING
@@ -1377,11 +1379,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     @Override
                     public void run() {
                         if (mAddressOutput != null) {
-                            EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_EVENT);
-                            EventBus.getDefault().postSticky(mAddressOutput, Constants.SEND_ADDRESS_LOCATION);
-                            Log.v(Constants.TAG, "MainActivity = " + mAddressOutput);
-                            Log.v(Constants.TAG,"MainActivity = "+ BackgroundService.getCurrentLocation().latitude);
-                            Log.v(Constants.TAG,"MainActivity = "+ BackgroundService.getCurrentLocation().longitude);
+                            BackgroundService.setAddress(mAddressOutput);
+
                         }
                     }
                 });
@@ -1390,7 +1389,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 Log.v(Constants.TAG,"Try again");
                 //startIntentService();
             }
-
+            mainActivity.startService();
         }
     }
 
@@ -1550,6 +1549,64 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         String orderYear = date_.toString().substring(24, 28);
         String actualDate = orderDay + " " + orderMonth.toUpperCase() + " " + orderYear;
         return actualDate;
+    }
+
+
+
+    private void startService(){
+        //Now set filter for showing only nearby events at start..
+        setNearByEventFilter();
+        startService(new Intent(getBaseContext(), BackgroundService.class));
+    }
+
+
+    public void setOnlySharedEventsFilter(){
+        Map<String, Object> where = new HashMap<>();
+        if(BackgroundService.getCustomer() != null){
+            //First clear the where of track collection..
+            if(TrackCollection.getEventFilter() != null){
+                TrackCollection.getEventFilter().put("where", where);
+                if(BackgroundService.getCustomer().getPhoneNumber() != null){
+                    where.put("friends.number", BackgroundService.getCustomer().getPhoneNumber());
+                }
+                //Now only allow status of allowed event to view..
+                where.put("status", "allow");
+            }
+        }
+    }
+
+
+    public void setNearByEventFilter(){
+        Map<String, Object> where = new HashMap<>();
+        //Add nearby
+        if(BackgroundService.getCurrentLocation() != null){
+            /*
+            * where: {
+                location: {near: '153.536,-28'}
+            }*/
+            //First clear the where of track collection..
+            if(TrackCollection.getEventFilter() != null){
+                TrackCollection.getEventFilter().put("where", where);
+                Map<String, String> near = new HashMap<>();
+                near.put("near", "" + BackgroundService.getCurrentLocation().latitude+","+ BackgroundService.getCurrentLocation().longitude);
+                where.put("geolocation", near);
+                //Now only allow status of allowed event to view..
+                where.put("status", "allow");
+            }
+        }
+    }
+
+
+    public void showMyEventFilter(){
+        Map<String, Object> where = new HashMap<>();
+        //Add nearby
+        if(BackgroundService.getCustomer() != null){
+            //First clear the where of track collection..
+            if(TrackCollection.getEventFilter() != null){
+                TrackCollection.getEventFilter().put("where", where);
+                where.put("customerId", BackgroundService.getCustomer().getId());
+            }
+        }
     }
 
 

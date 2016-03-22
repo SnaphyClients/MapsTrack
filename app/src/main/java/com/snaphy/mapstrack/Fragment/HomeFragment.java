@@ -208,11 +208,16 @@ public class HomeFragment extends android.support.v4.app.Fragment{
                 }
                 if (!loading && (totalItemCount - visibleItemCount)
                         <= (firstVisibleItem + visibleThreshold)) {
-                    EventBus.getDefault().post( TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT);
+                    EventBus.getDefault().post(TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT);
                     loading = true;
                 }
             }
         });
+    }
+
+    @Subscriber ( tag = Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER)
+    public void setFilterData(String emptyString) {
+        EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
     }
 
     public void recyclerViewLoadMoreLocationData() {

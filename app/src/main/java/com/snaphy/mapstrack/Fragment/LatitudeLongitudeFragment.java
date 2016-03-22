@@ -35,7 +35,6 @@ import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.BackgroundService;
 
 import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subscriber;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,6 +89,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         supportMapFragment = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.fragment_latitude_longitude_map));
         supportMapFragment.getMapAsync(this);
         selectedLatLng = BackgroundService.getCurrentLocation();
+        setAddress();
         setPlaces();
         return view;
     }
@@ -102,9 +102,10 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         mainActivity.onBackPressed();
     }
 
-    @Subscriber(tag = Constants.SEND_ADDRESS_EVENT)
-    private void setAddress(String address) {
-         placesAutocompleteTextView.setText(address);
+    private void setAddress() {
+        if(BackgroundService.getAddress() != null) {
+            placesAutocompleteTextView.setText(BackgroundService.getAddress());
+        }
     }
 
     public void setPlaces() {

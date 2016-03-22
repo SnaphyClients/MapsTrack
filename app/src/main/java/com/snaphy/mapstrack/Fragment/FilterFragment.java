@@ -9,11 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.snaphy.mapstrack.Constants;
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+
+import org.simple.eventbus.EventBus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +35,8 @@ public class FilterFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_filter_button1) Button sharedEventAndLocation;
     @Bind(R.id.fragment_filter_button2) Button myEventAndLocation;
     @Bind(R.id.fragment_filter_button3) Button nearbyEvents;
+    SmoothProgressBar smoothProgressBar;
+    MainActivity mainActivity;
 
     public FilterFragment() {
         // Required empty public constructor
@@ -55,14 +62,21 @@ public class FilterFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_filter_button1) void sharedEventAndLocation() {
+        //TODO CHANCES OF ERROR CHECK LATER..
+        mainActivity.setOnlySharedEventsFilter();
+        EventBus.getDefault().post("", Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER);
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.fragment_filter_button2) void myEventAndLocation() {
+        mainActivity.showMyEventFilter();
+        EventBus.getDefault().post("", Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER);
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.fragment_filter_button3) void nearbyEvents() {
+        mainActivity.setNearByEventFilter();
+        EventBus.getDefault().post("", Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER);
         getActivity().onBackPressed();
     }
 
@@ -77,9 +91,13 @@ public class FilterFragment extends android.support.v4.app.Fragment {
         }
     }
 
+
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

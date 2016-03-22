@@ -41,6 +41,16 @@ public class BackgroundService extends Service {
 
     private static LatLng currentLocation;
 
+    public static String getAddress() {
+        return address;
+    }
+
+    public static void setAddress(String address) {
+        BackgroundService.address = address;
+    }
+
+    private static String address;
+
     static public TrackCollection getTrackCollection() {
         return trackCollection;
     }
