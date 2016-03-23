@@ -3,7 +3,6 @@ package com.snaphy.mapstrack.Fragment;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
@@ -148,8 +146,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //Do some magic
-                Snackbar.make(getView(), query, Snackbar.LENGTH_SHORT).show();
-                Toast.makeText(mainActivity, query, Toast.LENGTH_SHORT).show();
                 Log.v(Constants.TAG, query);
                 return false;
             }

@@ -1,5 +1,6 @@
 package com.snaphy.mapstrack.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -59,6 +60,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_otp_verification_button2)
     Button resendCode;
     @Bind(R.id.fragment_otp_verification_progressBar) SmoothProgressBar progressBar;
+    ProgressDialog progress;
 
 
     public OTPFragment() {
@@ -132,6 +134,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
             customerRepository.loginWithCode(BackgroundService.getAccessToken(), code, mobileNumber.getText().toString(), new Adapter.JsonObjectCallback() {
                 @Override
                 public void onSuccess(JSONObject response) {
+                    progress.dismiss();
                     if (response != null) {
                         Log.i(Constants.TAG, "Google = " + response.toString());
                         mainActivity.addUser(response);
@@ -145,6 +148,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
                 @Override
                 public void onError(Throwable t) {
+                    progress.dismiss();
                     Toast.makeText(mainActivity, "Invalid code", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -153,8 +157,9 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
     @OnClick (R.id.fragment_otp_verification_button3) void requestOTP() {
         if(isPhoneValidate(mobileNumber.getText().toString())) {
-            //TODO SEND OTP METHOD CALLED
             requestOtpServer(mobileNumber.getText().toString());
+            progress = new ProgressDialog(mainActivity);
+            mainActivity.setProgress(progress);
 
         } else {
             Snackbar.make(rootview, "Enter Valid Mobile Number", Snackbar.LENGTH_SHORT).show();
@@ -174,6 +179,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
                 @Override
                 public void onError(Throwable t) {
+                    progress.dismiss();
                     Snackbar.make(rootview, "Enter Valid Mobile Number", Snackbar.LENGTH_SHORT).show();
                     //TODO ADD RETRY BUTTON.. CALL THIS SAME METHOD..
                 }

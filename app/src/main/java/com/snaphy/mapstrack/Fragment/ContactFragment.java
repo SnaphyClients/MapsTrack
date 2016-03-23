@@ -74,9 +74,12 @@ public class ContactFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick (R.id.fragment_contact_button2) void emailButton()  {
-        Intent intent = new Intent (Intent.ACTION_VIEW , Uri.parse("mailto:" + Constants.APP_MAIL));
-        intent.setType("text/plain");
-        startActivity(intent);
+
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+        sendIntent.setType("plain/text");
+        sendIntent.setData(Uri.parse("mailto:" + Constants.APP_MAIL));
+        sendIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");
+        startActivity(sendIntent);
     }
 
     private void pressBackButton() {
@@ -89,8 +92,6 @@ public class ContactFragment extends android.support.v4.app.Fragment {
         });
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

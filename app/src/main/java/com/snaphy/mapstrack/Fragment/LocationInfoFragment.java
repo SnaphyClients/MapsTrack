@@ -243,12 +243,16 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_location_info_button5) void openContacts() {
-        if(track.getFriends().size() == 0) {
-            Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
+        if(track.getFriends() != null) {
+            if (track.getFriends().size() == 0) {
+                Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
+            } else {
+                DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track, R.id.fragment_location_info_button5);
+                Holder holder = new ListHolder();
+                showOnlyContentDialog(holder, adapter);
+            }
         } else {
-            DisplayContactAdapter adapter = new DisplayContactAdapter(mainActivity, track, R.id.fragment_location_info_button5);
-            Holder holder = new ListHolder();
-            showOnlyContentDialog(holder, adapter);
+            Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -1,8 +1,13 @@
 package com.snaphy.mapstrack;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,11 +16,16 @@ import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -74,13 +84,13 @@ import com.snaphy.mapstrack.Model.CustomContainer;
 import com.snaphy.mapstrack.Model.CustomContainerRepository;
 import com.snaphy.mapstrack.Model.CustomFileRepository;
 import com.snaphy.mapstrack.Model.ImageModel;
+import com.snaphy.mapstrack.Services.AlarmReceiver;
 import com.snaphy.mapstrack.Services.BackgroundService;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 import com.snaphy.mapstrack.Services.MyRestAdapter;
 import com.strongloop.android.loopback.AccessToken;
 import com.strongloop.android.loopback.AccessTokenRepository;
 import com.strongloop.android.loopback.LocalInstallation;
-import com.strongloop.android.loopback.RestAdapter;
 import com.strongloop.android.loopback.callbacks.ObjectCallback;
 import com.strongloop.android.loopback.callbacks.VoidCallback;
 import com.strongloop.android.remoting.JsonUtil;
@@ -134,8 +144,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     Context context;
     MyRestAdapter restAdapter;
     MainActivity that;
+    public static final int LOCATION_ALERT = 103;
     LocationManager mLocationManager;
     private static LocalInstallation installation;
+    private PendingIntent pendingIntent;
+    View parentLayout;
     public static LocalInstallation getInstallation() {
         return installation;
     }
@@ -145,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        parentLayout = findViewById(R.id.container);
        /* MapsTrackDB application = (MapsTrackDB) getApplication();
         tracker = application.getDefaultTracker();
         tracker.setScreenName("MainActivity");*/
@@ -154,7 +168,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         //DONT DELETE THIS LINE..WARNING
         getLoopBackAdapter();
 
-        // TODO Stop service in activity on destory method if required
+        /* Retrieve a PendingIntent that will perform a broadcast */
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        start();
+
+
         context = getApplicationContext();
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -164,8 +183,58 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 checkPlayServices();
             }
         }, 100);
+        if(isNetworkAvailable() == false) {
+            Snackbar.make(parentLayout, "Internet not connected", Snackbar.LENGTH_INDEFINITE).show();
+        } else {
+            if (isLocationEnabled(this)) {
+                checkLogin();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Seems Like location service is off,   Enable it?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String action = "com.google.android.gms.location.settings.GOOGLE_LOCATION_SETTINGS";
+                                Intent settings = new Intent(action);
+                                startActivityForResult(settings, LOCATION_ALERT);
+                            }
+                        }).setNegativeButton("NO THANKS", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onBackPressed();
+                    }
+                }).create().show();
+            }
+        }
+    }
 
-        checkLogin();
+    public void start() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Constants.SET_LOCATION_UPDATE_TIMEOUT, pendingIntent);
+        Log.v(Constants.TAG, "Alarm Set From Activity");
+    }
+
+
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        }else{
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+
+
     }
 
 
@@ -176,6 +245,24 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         progress.setCanceledOnTouchOutside(false);
         progress.show();
     }
+
+    private boolean isNetworkAvailable() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
 
 
     public void checkLogin(){
@@ -254,115 +341,119 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
      */
     @Override
     public void replaceFragment(int id, Object object) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        switch (id) {
-            case R.layout.fragment_main:
-                loadMainFragment(fragmentTransaction);
-                break;
+        if(isNetworkAvailable() == false) {
+            Toast.makeText(this, "Internet not available", Toast.LENGTH_SHORT).show();
+        } else {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            switch (id) {
+                case R.layout.fragment_main:
+                    loadMainFragment(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_aboutus :
-                openAboutUsPage(fragmentTransaction);
-                break;
+                case R.layout.fragment_aboutus:
+                    openAboutUsPage(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_faq:
-                openFaqPage(fragmentTransaction);
-                break;
+                case R.layout.fragment_faq:
+                    openFaqPage(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_contact:
-                openContactPage(fragmentTransaction);
-                break;
+                case R.layout.fragment_contact:
+                    openContactPage(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_terms:
-                openTermsPage(fragmentTransaction);
-                break;
+                case R.layout.fragment_terms:
+                    openTermsPage(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_create_event :
-                createEvent(fragmentTransaction);
-                break;
+                case R.layout.fragment_create_event:
+                    createEvent(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_create_location:
-                createLocation(fragmentTransaction);
-                break;
+                case R.layout.fragment_create_location:
+                    createLocation(fragmentTransaction);
+                    break;
 
-            case R.layout.layout_select_contact:
-                selectContact(fragmentTransaction);
-                break;
+                case R.layout.layout_select_contact:
+                    selectContact(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_map:
-                openMap(fragmentTransaction);
-                break;
+                case R.layout.fragment_map:
+                    openMap(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_login:
-                isLogin(fragmentTransaction);
-                break;
+                case R.layout.fragment_login:
+                    isLogin(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_event_info:
-                openEventInfo(fragmentTransaction);
-                break;
+                case R.layout.fragment_event_info:
+                    openEventInfo(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_location_info:
-                openLocationInfo(fragmentTransaction);
-                break;
+                case R.layout.fragment_location_info:
+                    openLocationInfo(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_event_info_button3:
-                openMapFromEventInfo(fragmentTransaction);
-                break;
+                case R.id.fragment_event_info_button3:
+                    openMapFromEventInfo(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_event_info_button1:
-                openEditFromEventInfo(fragmentTransaction);
-                break;
+                case R.id.fragment_event_info_button1:
+                    openEditFromEventInfo(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_location_info_button1:
-                openEditFromLocationInfo(fragmentTransaction);
-                break;
+                case R.id.fragment_location_info_button1:
+                    openEditFromLocationInfo(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_location_info_button2:
-                openMapFromLocationInfo(fragmentTransaction);
-                break;
+                case R.id.fragment_location_info_button2:
+                    openMapFromLocationInfo(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_location_info_button4:
-                createEventFromLocation(fragmentTransaction);
-                break;
+                case R.id.fragment_location_info_button4:
+                    createEventFromLocation(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_create_location_button1:
-                selectContactForLocation(fragmentTransaction);
-                break;
+                case R.id.fragment_create_location_button1:
+                    selectContactForLocation(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_location_share_by_user_floating_button1:
-                selectContactForShareLocation(fragmentTransaction);
-                break;
+                case R.id.fragment_location_share_by_user_floating_button1:
+                    selectContactForShareLocation(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_create_event_button5:
-                openLatitudeLongitudeSelectionMap(fragmentTransaction);
-                break;
+                case R.id.fragment_create_event_button5:
+                    openLatitudeLongitudeSelectionMap(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_create_location_button5:
-                openLatitudeLongitudeSelectionMapFromLocation(fragmentTransaction);
-                break;
+                case R.id.fragment_create_location_button5:
+                    openLatitudeLongitudeSelectionMapFromLocation(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_edit_profile:
-                openEditProfile(fragmentTransaction);
-                break;
+                case R.layout.fragment_edit_profile:
+                    openEditProfile(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_edit_profile_edittext3:
-                openOTPFromEditProfile(fragmentTransaction);
-                break;
+                case R.id.fragment_edit_profile_edittext3:
+                    openOTPFromEditProfile(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_ot:
-                openVerifyOTP(fragmentTransaction);
-                break;
+                case R.layout.fragment_ot:
+                    openVerifyOTP(fragmentTransaction);
+                    break;
 
-            case R.layout.fragment_filter:
-                openFilterFragment(fragmentTransaction);
-                break;
+                case R.layout.fragment_filter:
+                    openFilterFragment(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_location_info_button6:
-                openAddFriendsFromLocationInfo(fragmentTransaction);
-                break;
+                case R.id.fragment_location_info_button6:
+                    openAddFriendsFromLocationInfo(fragmentTransaction);
+                    break;
 
-            case R.id.fragment_event_info_button5:
-                openAddFriendsFromEventInfo(fragmentTransaction);
-                break;
+                case R.id.fragment_event_info_button5:
+                    openAddFriendsFromEventInfo(fragmentTransaction);
+                    break;
+            }
         }
     }
 
@@ -928,7 +1019,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             //Register for push service..
             registerInstallation(user);
         }else{
-            Toast.makeText(this, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+            Log.v(Constants.TAG, "Error in add Customer Method");
+            //Toast.makeText(this, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -1237,7 +1329,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             @Override
             public void onError(Throwable t) {
                 Log.e(Constants.TAG, t.toString());
-                Toast.makeText(that, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                Log.v(Constants.TAG, "Error in update Customer Method");
+                //Toast.makeText(that, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1340,6 +1433,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == LOCATION_ALERT) {
+            if(isNetworkAvailable() == false) {
+                Snackbar.make(parentLayout, "Internet not connected", Snackbar.LENGTH_INDEFINITE).show();
+            } else {
+                checkLogin();
+            }
+
+        }
+
+    }
 
 
     /**
@@ -1348,6 +1454,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
      * Error for no address found,time out etc...
      * Or Address, if correct address is found
      */
+    @SuppressLint("ParcelCreator")
     public static class AddressResultReceiver extends ResultReceiver {
 
         public AddressResultReceiver(Handler handler) {

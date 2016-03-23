@@ -70,7 +70,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
 
         //locationShareAdapterContacts = new LocationShareAdapterContacts(mainActivity, shareLocationModelArrayList,Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT);
         recyclerView.setAdapter(locationShareAdapterContacts);
-        locationShareAdapterContacts.notifyDataSetChanged();
+        /*locationShareAdapterContacts.notifyDataSetChanged();*/
         return view;
     }
 
@@ -85,7 +85,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
                     shareLocationModelArrayList.get(i).getContactNumber(), shareLocationModelArrayList.get(i).getLatLong()));
         }
 
-        locationShareAdapterContacts.notifyDataSetChanged();
+        /*locationShareAdapterContacts.notifyDataSetChanged();*/
     }
 
     /**
@@ -101,7 +101,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
                 break;
             }
         }
-        locationShareAdapterContacts.notifyDataSetChanged();
+        /*locationShareAdapterContacts.notifyDataSetChanged();*/
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -65,6 +65,22 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".Services.AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".Services.DeviceBootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.snaphy.mapstrack.Services.LocationUpdaterService" />
+
+
         <service android:name=".Services.GcmIntentService" />
         <meta-data
             android:name="io.fabric.ApiKey"
