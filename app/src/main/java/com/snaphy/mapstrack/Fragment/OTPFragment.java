@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -160,6 +161,11 @@ public class OTPFragment extends android.support.v4.app.Fragment {
             requestOtpServer(mobileNumber.getText().toString());
             progress = new ProgressDialog(mainActivity);
             mainActivity.setProgress(progress);
+            View view1 = mainActivity.getCurrentFocus();
+            if (view1 != null) {
+                InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+            }
 
         } else {
             Snackbar.make(rootview, "Enter Valid Mobile Number", Snackbar.LENGTH_SHORT).show();

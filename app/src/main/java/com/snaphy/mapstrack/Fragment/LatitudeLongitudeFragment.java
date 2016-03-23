@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -203,7 +202,6 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
             public void onMarkerDragEnd(Marker arg0) {
                 // TODO Auto-generated method stub
                 LatLng markerLocation = marker.getPosition();
-                Toast.makeText(mainActivity, markerLocation.toString(), Toast.LENGTH_LONG).show();
                 selectedLatLng = markerLocation;
                 Log.d("Marker", "finished");
             }

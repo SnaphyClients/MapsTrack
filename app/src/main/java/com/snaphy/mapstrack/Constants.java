@@ -28,7 +28,7 @@ public final class Constants {
     public static String LOOPBACK_APP_ID = "mapstrack-snaphy-push-application";
 
     public static final String APP_MAIL = "info@mapstrack.com";
-    public static final String APP_PHONE = "tel:+91-9873046993";
+    public static final String APP_PHONE = "tel:+91-9999566751";
     public static String APP_PLAY_STORE = "com.drugcorner.slider";
     public static String APP_SHARE_TEXT = "Finding event made easy \n\n";
     public static final String GRUBERR_CONTAINER = "gruberr-recipes";
