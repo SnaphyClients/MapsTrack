@@ -84,12 +84,12 @@
         "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\layout\\abc_screen_toolbar.xml"
     },
     {
-        "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\select_dialog_item_material.xml",
-        "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\layout\\select_dialog_item_material.xml"
-    },
-    {
         "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\notification_media_cancel_action.xml",
         "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\layout\\notification_media_cancel_action.xml"
+    },
+    {
+        "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\select_dialog_item_material.xml",
+        "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\layout\\select_dialog_item_material.xml"
     },
     {
         "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_action_bar_up_container.xml",

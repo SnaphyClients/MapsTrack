@@ -761,6 +761,7 @@ public class Customer extends com.strongloop.android.loopback.User {
                         
                         
                         
+                        
                     
 
                 
@@ -1224,6 +1225,7 @@ public class Customer extends com.strongloop.android.loopback.User {
                                     } //method def ends here.
                                  
                             
+                        
                         
                         
                         
@@ -1846,6 +1848,7 @@ public class Customer extends com.strongloop.android.loopback.User {
                             
                          
                             
+                        
                         
                         
                         

@@ -4,21 +4,28 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
-import com.snaphy.mapstrack.Model.ShareLocationModel;
+import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
+import com.strongloop.android.remoting.adapters.Adapter;
 
+import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,13 +35,13 @@ import butterknife.ButterKnife;
  */
 public class LocationShareAdapterContacts  extends RecyclerView.Adapter<LocationShareAdapterContacts.ViewHolder>  {
 
-    ArrayList<ShareLocationModel> shareLocationModelArrayList  = new ArrayList<ShareLocationModel>();
     Context context;
     static MainActivity mainActivity;
     String TAG;
     LatLng latLng;
-    public LocationShareAdapterContacts(MainActivity mainActivity, ArrayList<ShareLocationModel> selectContactModels, String TAG) {
-        this.shareLocationModelArrayList = selectContactModels;
+    List<ContactModel> sharedLocation;
+    public LocationShareAdapterContacts(MainActivity mainActivity, List<ContactModel> sharedLocation, String TAG) {
+        this.sharedLocation = sharedLocation;
         this.mainActivity = mainActivity;
         this.TAG = TAG;
         EventBus.getDefault().registerSticky(this);
@@ -65,47 +72,81 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
      */
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final ShareLocationModel shareLocationModel = shareLocationModelArrayList.get(position);
+        final ContactModel user = sharedLocation.get(position);
 
         // Set item views based on the data model
-        TextView contactName = holder.contactName;
+        TextView contactNumber = holder.contactNumber;
         ImageButton deleteContact = holder.deleteContact;
+        TextView contactName = holder.contactName;
+        LinearLayout linearLayout = holder.linearLayout;
+        if(user.getCustomer() != null){
+            if(user.getContactName() != null){
+                contactName.setText(user.getContactName().toString());
+            }
 
-        contactName.setText(shareLocationModel.getContactName());
+            if(user.getContactNumber() != null) {
+                contactNumber.setText(user.getContactNumber().toString());
+            }
+        }
 
-        holder.deleteContact.setOnClickListener(new View.OnClickListener() {
+
+        deleteContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog(shareLocationModel);
+                showDialog(user);
             }
         });
 
-        holder.contactName.setOnClickListener(new View.OnClickListener() {
+        linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
                     // Nothing can be done here
                 } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
-                    latLng = new LatLng(shareLocationModel.getLatLong().get("latitude"),shareLocationModel.getLatLong().get("longitude"));
-                    mainActivity.replaceFragment(R.layout.fragment_map, null);
-                    EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
+                    if(user.getCustomer().getLastUpdatedLocation() != null){
+                        latLng = new LatLng(user.getCustomer().getLastUpdatedLocationLatitide(), user.getCustomer().getLastUpdatedLocationLatitide());
+                        mainActivity.replaceFragment(R.layout.fragment_map, null);
+                        EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
+                    }
+
                 }
             }
         });
 
     }
 
-    private void showDialog(final ShareLocationModel shareLocationModel) {
+    private void showDialog(final ContactModel user) {
         new AlertDialog.Builder(mainActivity)
                 .setTitle("Delete Contact?")
                 .setMessage("Are you sure you want to delete this contact?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
+                        if(BackgroundService.getCustomer() != null){
+                            List<String> fk = new ArrayList<String>();
+                            fk.add((String)user.getCustomer().getId());
+                            BackgroundService.getCustomerRepository().__disconnect__location_shared((String) BackgroundService.getCustomer().getId(), fk, new Adapter.JsonObjectCallback() {
+                                @Override
+                                public void onSuccess(JSONObject response) {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable t) {
+                                    Log.e(Constants.TAG, t.toString());
+                                }
+                            });
+                            //Now remove from list..
+                            sharedLocation.remove(user);
+                            Toast.makeText(mainActivity, "User removed!", Toast.LENGTH_SHORT).show();
+                            //TODO CALL GET NOTIFY SET CHANGE TO FRAGMENT...
+
+
+                        }
+                        /*if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
                             EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER);
                         } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
                             EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER_FRIENDS);
-                        }
+                        }*/
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -123,7 +164,7 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
      */
     @Override
     public int getItemCount() {
-        return shareLocationModelArrayList.size();
+        return sharedLocation.size();
     }
 
     /**
@@ -132,8 +173,10 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        @Bind(R.id.layout_fragment_display_contact_textview1) TextView contactName;
+        @Bind(R.id.layout_fragment_display_contact_textview1) TextView contactNumber;
         @Bind(R.id.layout_fragment_display_contact_imagebutton1) ImageButton deleteContact;
+        @Bind(R.id.layout_fragment_display_contact_textview0) TextView contactName;
+        @Bind(R.id.layout_display_contact_linear_layout1) LinearLayout linearLayout;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview

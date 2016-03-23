@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Adapter.LocationShareAdapterContacts;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
@@ -25,12 +26,20 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
     MainActivity mainActivity;
     List<ContactModel> contactModels;
     DisplayContactAdapter displayContactAdapter;
+    LocationShareAdapterContacts locationShareAdapterContacts;
     Cursor globalCursor;
 
     public ContactMatcher(MainActivity mainActivity, List<ContactModel> contactModels, DisplayContactAdapter displayContactAdapter){
         this.mainActivity = mainActivity;
         this.contactModels = contactModels;
         this.displayContactAdapter = displayContactAdapter;
+        mainActivity.getSupportLoaderManager().initLoader(0, null, this);
+    }
+
+    public ContactMatcher(MainActivity mainActivity, List<ContactModel> contactModels, LocationShareAdapterContacts locationShareAdapterContacts){
+        this.mainActivity = mainActivity;
+        this.contactModels = contactModels;
+        this.locationShareAdapterContacts = locationShareAdapterContacts;
         mainActivity.getSupportLoaderManager().initLoader(0, null, this);
     }
 
@@ -131,8 +140,13 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
 
         @Override
         protected void onPostExecute(String result) {
-            //Now notify the adapter..
-            displayContactAdapter.notifyDataSetChanged();
+            if(displayContactAdapter != null){
+                //Now notify the adapter..
+                displayContactAdapter.notifyDataSetChanged();
+            }else{
+                locationShareAdapterContacts.notifyDataSetChanged();
+            }
+
         }
 
         @Override

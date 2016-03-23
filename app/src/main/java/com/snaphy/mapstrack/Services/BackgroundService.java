@@ -114,10 +114,6 @@ public class BackgroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         EventBus.getDefault().registerSticky(this);
-        //eventHomeCollection = new EventHomeCollection();
-        //locationHomeCollection  = new LocationHomeCollection();
-        //shareLocationCollection = new ShareLocationCollection();
-
         proceedNextStep();
         return START_NOT_STICKY;
     }

@@ -1,5 +1,7 @@
 package com.snaphy.mapstrack.Model;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
+
 /**
  * Created by Ravi-Gupta on 3/3/2016.
  */
@@ -29,7 +31,17 @@ public class ContactModel {
         this.isSelected = isSelected;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+
     private String contactNumber;
     private String contactName;
     private boolean isSelected;
+    private Customer customer;
 }

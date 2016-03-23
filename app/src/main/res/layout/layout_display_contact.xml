@@ -1,54 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:paddingTop= "15dp"
-        android:paddingBottom="9dp"
-        android:paddingLeft="20dp"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:id="@+id/layout_fragment_display_contact_textview0"/>
+        android:orientation="horizontal"
+        android:id="@+id/parent_linear_layout"
+        android:weightSum="9">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/linear_layout"
-        android:layout_below="@+id/layout_fragment_display_contact_textview0">
+        android:orientation="vertical"
+        android:layout_weight="8"
+        android:id="@+id/layout_display_contact_linear_layout1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ravi Gupta"
+            android:paddingTop= "15dp"
+            android:paddingBottom="9dp"
+            android:paddingLeft="20dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:id="@+id/layout_fragment_display_contact_textview0"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/linear_layout"
+            android:layout_below="@+id/layout_fragment_display_contact_textview0">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:paddingBottom="15dp"
-        android:paddingLeft="20dp"
-        android:textColor="#777"
-        android:textSize="14sp"
-        android:id="@+id/layout_fragment_display_contact_textview1"
-        android:layout_centerVertical="true"
-        android:layout_weight="3"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+91 9873046993"
+            android:paddingBottom="15dp"
+            android:paddingLeft="20dp"
+            android:textColor="#777"
+            android:textSize="14sp"
+            android:id="@+id/layout_fragment_display_contact_textview1"
+            android:layout_centerVertical="true"
+            android:layout_weight="3"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <ImageButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:src="@mipmap/delete_purple"
         android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:id="@+id/layout_fragment_display_contact_imagebutton1" />
 
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/background"
-        android:layout_below="@+id/linear_layout"/>
+        android:layout_below="@+id/parent_linear_layout"/>
 
 </RelativeLayout>

@@ -479,6 +479,14 @@ public class CustomerRepository extends com.strongloop.android.loopback.UserRepo
             
 
                 
+                    contract.addItem(new RestContractItem("/" + getNameForRestUrl() + "/search", "POST"), "Customer.search");
+                
+
+            
+        
+            
+
+                
                     contract.addItem(new RestContractItem("/" + getNameForRestUrl() + "/loginWithGoogle", "POST"), "Customer.loginWithGoogle");
                 
 
@@ -2698,6 +2706,57 @@ public class CustomerRepository extends com.strongloop.android.loopback.UserRepo
                 
 
             }//Method loginWithCode definition ends here..
+
+            
+
+        
+    
+        
+            //Method search definition
+            public void search(  Map<String,  ? extends Object> filter, final ListCallback<Customer> callback){
+
+                //Definging hashMap for data conversion
+                Map<String, Object> hashMapObject = new HashMap<>();
+                //Now add the arguments...
+                
+                        hashMapObject.put("filter", filter);
+                
+
+                
+
+
+                
+
+                
+                    invokeStaticMethod("search", hashMapObject, new Adapter.JsonArrayCallback() {
+                        @Override
+                        public void onError(Throwable t) {
+                            callback.onError(t);
+                        }
+
+                        @Override
+                        public void onSuccess(JSONArray response) {
+                            
+                                if(response != null){
+                                    //Now converting jsonObject to list
+                                    List<Map<String, Object>> result = (List) JsonUtil.fromJson(response);
+                                    List<Customer> customerList = new ArrayList<Customer>();
+                                    CustomerRepository customerRepo = getRestAdapter().createRepository(CustomerRepository.class);
+
+                                    for (Map<String, Object> obj : result) {
+                                        Customer customer = customerRepo.createObject(obj);
+                                        customerList.add(customer);
+                                    }
+                                    callback.onSuccess(customerList);
+                                }else{
+                                    callback.onSuccess(null);
+                                }
+                            
+                        }
+                    });
+                
+
+            }//Method search definition ends here..
 
             
 

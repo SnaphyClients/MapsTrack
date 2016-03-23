@@ -68,7 +68,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        locationShareAdapterContacts = new LocationShareAdapterContacts(mainActivity, shareLocationModelArrayList,Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT);
+        //locationShareAdapterContacts = new LocationShareAdapterContacts(mainActivity, shareLocationModelArrayList,Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT);
         recyclerView.setAdapter(locationShareAdapterContacts);
         locationShareAdapterContacts.notifyDataSetChanged();
         return view;
