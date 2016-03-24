@@ -120,6 +120,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
     @Subscriber(tag = Constants.OPEN_MAP_FROM_LOCATION)
     private void setFriendsDestination(LatLng latLng) {
+        EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.SEND_MAP_COORDINATES_LOCATION);
         destination = latLng;
         Log.v(Constants.TAG, "Destination = "+ destination);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
