@@ -102,5 +102,7 @@ public final class Constants {
 
     public static final String DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT = "displayContactFromSharedUserFragment";
 
+    public static final String UPDATE_SHARED_FRIENDS_BY_USER_LIST = "UpdateSharedFriendsByUserList";
+
 
 }

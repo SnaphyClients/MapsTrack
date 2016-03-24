@@ -13,19 +13,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.LastUpdatedLocation;
 import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.BackgroundService;
-import com.strongloop.android.remoting.adapters.Adapter;
+import com.strongloop.android.loopback.callbacks.VoidCallback;
 
-import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -79,7 +79,7 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
         ImageButton deleteContact = holder.deleteContact;
         TextView contactName = holder.contactName;
         LinearLayout linearLayout = holder.linearLayout;
-        if(user.getCustomer() != null){
+        if(user != null){
             if(user.getContactName() != null){
                 contactName.setText(user.getContactName().toString());
             }
@@ -103,12 +103,16 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
                 if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
                     // Nothing can be done here
                 } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
-                    if(user.getCustomer().getLastUpdatedLocation() != null){
-                        latLng = new LatLng(user.getCustomer().getLastUpdatedLocationLatitide(), user.getCustomer().getLastUpdatedLocationLatitide());
-                        mainActivity.replaceFragment(R.layout.fragment_map, null);
-                        EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
+                    //TODO DO THIS LATER..
+                    //fetch user current location..
+                    /*if(user.getContactNumber() != null){
+                        if(user.getCustomer().getLastUpdatedLocation() != null){
+                            latLng = new LatLng(user.getCustomer().getLastUpdatedLocationLatitide(), user.getCustomer().getLastUpdatedLocationLatitide());
+                            mainActivity.replaceFragment(R.layout.fragment_map, null);
+                            EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
+                        }
                     }
-
+*/
                 }
             }
         });
@@ -121,32 +125,51 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
                 .setMessage("Are you sure you want to delete this contact?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if(BackgroundService.getCustomer() != null){
-                            List<String> fk = new ArrayList<String>();
-                            fk.add((String)user.getCustomer().getId());
-                            BackgroundService.getCustomerRepository().__disconnect__location_shared((String) BackgroundService.getCustomer().getId(), fk, new Adapter.JsonObjectCallback() {
-                                @Override
-                                public void onSuccess(JSONObject response) {
+                        if (TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
 
+                            if (BackgroundService.getCustomer() != null) {
+                                //Now remove from customer list..
+                                if (BackgroundService.getCustomer().getLastUpdatedLocations() != null) {
+                                    //Now find the shared numbers..
+                                    LastUpdatedLocation lastUpdatedLocation = BackgroundService.getCustomer().getLastUpdatedLocations();
+                                    if (lastUpdatedLocation.getSharedLocation() != null) {
+                                        boolean found = false;
+                                        for (Map<String, Object> friendsObj : lastUpdatedLocation.getSharedLocation()) {
+                                            if (friendsObj.get("number") != null) {
+                                                String phoneNumber = String.valueOf(friendsObj.get("number"));
+                                                if (phoneNumber.equals(user.getContactNumber())) {
+                                                    //remove this item..
+                                                    lastUpdatedLocation.getSharedLocation().remove(friendsObj);
+                                                    found = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if (found) {
+                                            //Remove the data..
+                                            lastUpdatedLocation.save(new VoidCallback() {
+                                                @Override
+                                                public void onSuccess() {
+
+                                                }
+
+                                                @Override
+                                                public void onError(Throwable t) {
+                                                    Log.e(Constants.TAG, t.toString() + " in  LocationShareAdapter file");
+                                                }
+                                            });
+                                        }
+                                    }
                                 }
-
-                                @Override
-                                public void onError(Throwable t) {
-                                    Log.e(Constants.TAG, t.toString());
-                                }
-                            });
-                            //Now remove from list..
-                            sharedLocation.remove(user);
-                            Toast.makeText(mainActivity, "User removed!", Toast.LENGTH_SHORT).show();
-                            //TODO CALL GET NOTIFY SET CHANGE TO FRAGMENT...
-
+                                //Now remove from list..
+                                sharedLocation.remove(user);
+                                Toast.makeText(mainActivity, "User removed!", Toast.LENGTH_SHORT).show();
+                                EventBus.getDefault().post(sharedLocation, Constants.REMOVE_LOCATION_SHARED_BY_USER);
+                            }
+                        }else if (TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
 
                         }
-                        /*if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
-                            EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER);
-                        } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
-                            EventBus.getDefault().post(shareLocationModel, Constants.DELETE_LOCATION_SHARED_BY_USER_FRIENDS);
-                        }*/
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

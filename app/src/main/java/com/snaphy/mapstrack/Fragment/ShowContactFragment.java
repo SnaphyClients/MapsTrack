@@ -13,6 +13,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.RecyclerItemClickListener;
+import com.snaphy.mapstrack.Services.BackgroundService;
+import com.strongloop.android.loopback.callbacks.VoidCallback;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -160,7 +163,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @Subscriber( tag = Constants.DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT )
     public void showSelectedContactsFromSharedFragment(List<ContactModel> contactModelList) {
-        EventBus.getDefault().removeStickyEvent(track.getClass(), Constants.DISPLAY_CONTACT);
+        EventBus.getDefault().removeStickyEvent(track.getClass(), Constants.DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT);
         for(ContactModel contactModel : contactModelList){
             if(contactModel != null){
                 if(contactModel.getContactNumber() != null){
@@ -218,49 +221,42 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
             }
         }else{
             addCustomerToSharedList();
-            //TODO SEND list of contactmodel to locationShareByUser fragment...
-            //EventBus.getDefault().post(contactModelArrayList, Constants.ADD_CONTACTS_IN_SHARE_LOCATION);
         }
     }
 
 
 
     private void addCustomerToSharedList(){
-        List<String> fk = new ArrayList<>();
-        //TODO LATER SAVE IT AT SERVER..
-        //TODO FIRST DISCONNECT THE PREVIOUS CONTACTS LIST FROM SERVER..
-        //TODO THEN CONNECT THE NEW CONTACTS...
+        List<Map<String, Object>>  friendList = new ArrayList<>();
+        for(String key: contactModelMap.keySet()){
+            Map<String, Object> number = new HashMap<>();
+            number.put("number", mainActivity.formatNumber(key));
+            friendList.add(number);
+        }
 
+        if(BackgroundService.getCustomer() != null){
+            if(BackgroundService.getCustomer().getLastUpdatedLocations() != null){
+                //Set new friend list..
+                BackgroundService.getCustomer().getLastUpdatedLocations().setSharedLocation(friendList);
+                BackgroundService.getCustomer().getLastUpdatedLocations().save(new VoidCallback() {
+                    @Override
+                    public void onSuccess() {
 
-        //Map<String, ContactModel> contactModelMap;
-        /*for(String number: contactModelMap.keySet()){
-            if(contactModelMap.get(number) != null){
-                if(contactModelMap.get(number).getCustomer() != null) {
-                    fk.add((String)contactModelMap.get(number).getCustomer().getId());
-                }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.e(Constants.TAG, t.toString() + " in ShowContactFragment");
+                    }
+                });
             }
         }
 
-        //Now share with server..
-        BackgroundService.getCustomerRepository().__connect__location_shared((String) BackgroundService.getCustomer().getId(), fk, new Adapter.JsonObjectCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
+        EventBus.getDefault().post(friendList, Constants.UPDATE_SHARED_FRIENDS_BY_USER_LIST);
 
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                Log.e(Constants.TAG, t.toString());
-            }
-        });*/
-
-        if(fk.size() != 0){
-            Toast.makeText(mainActivity, "Location has been shared with the users.", Toast.LENGTH_SHORT).show();
-        }
-
+        Toast.makeText(mainActivity, "Shared location list updated!", Toast.LENGTH_SHORT).show();
         //Now go back..
         mainActivity.onBackPressed();
-
     }
 
 

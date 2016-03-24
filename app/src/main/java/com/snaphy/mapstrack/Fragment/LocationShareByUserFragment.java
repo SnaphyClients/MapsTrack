@@ -2,7 +2,6 @@ package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.LastUpdatedLocation;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.LastUpdatedLocationRepository;
 import com.snaphy.mapstrack.Adapter.LocationShareAdapterContacts;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Helper.ContactMatcher;
@@ -67,8 +67,24 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscriber ( tag = Constants.UPDATE_SHARED_FRIENDS_BY_USER_LIST)
+    public void updateSharedList(List<ContactModel> contactModels){
+        sharedLocation.clear();
+        if(contactModels != null){
+            if(contactModels.size() != 0){
+                sharedLocation.addAll(contactModels);
+                setLocation(sharedLocation);
+            }
+        }
     }
 
     @Override
@@ -81,10 +97,11 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        shareWithUser();
         return view;
     }
 
-    @Subscriber(tag = Constants.INITIALIZE_LOCATION_SHARED_BY_USER)
+  /*  @Subscriber(tag = Constants.INITIALIZE_LOCATION_SHARED_BY_USER)
     private void onInitialize(ArrayList<ShareLocationModel> shareLocationModelArrayList) {
 
         this.shareLocationModelArrayList.clear();
@@ -98,28 +115,21 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
 
         locationShareAdapterContacts.notifyDataSetChanged();
     }
-
+*/
     /**
      *  It is called when data is deleted from fragment
-     * @param shareLocationModel
      */
     @Subscriber(tag = Constants.REMOVE_LOCATION_SHARED_BY_USER)
-    private void onDelete(ShareLocationModel shareLocationModel) {
-        for(ShareLocationModel element : shareLocationModelArrayList) {
-            if(element.getId() == shareLocationModel.getId()) {
-                int position = shareLocationModelArrayList.indexOf(element);
-                shareLocationModelArrayList.remove(position);
-                break;
-            }
-        }
+    private void onDelete(List<ContactModel> sharedLocation) {
         locationShareAdapterContacts.notifyDataSetChanged();
     }
+
 
     @OnClick(R.id.fragment_location_share_by_user_floating_button1) void addFriends() {
         mainActivity.replaceFragment(R.id.fragment_location_share_by_user_floating_button1, null);
     }
 
-    @Subscriber(tag = Constants.SHOW_CONTACTS_IN_SHARE_LOCATION)
+ /*   @Subscriber(tag = Constants.SHOW_CONTACTS_IN_SHARE_LOCATION)
     private void onSave(ArrayList<ContactModel> contactModelArrayList) {
         for(ContactModel contactModel: contactModelArrayList) {
             if(contactModel.isSelected()) {
@@ -129,7 +139,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
         }
 
         locationShareAdapterContacts.notifyDataSetChanged();
-    }
+    }*/
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -141,7 +151,6 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     @Override
     public void onResume() {
         super.onResume();
-        shareWithUser();
     }
 
     @Override
@@ -180,29 +189,49 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
 
     public void shareWithUser(){
         if(BackgroundService.getCustomer() != null){
-            if(BackgroundService.getCustomer().getLocation_shared() == null){
+            if(BackgroundService.getCustomer().getPhoneNumber() != null){
+                String phoneNumber = mainActivity.formatNumber(BackgroundService.getCustomer().getPhoneNumber());
                 Map<String, Object> filter = new HashMap<>();
-                //fetch data first..
-                BackgroundService.getCustomer().get__location_shared(filter, mainActivity.getLoopBackAdapter(), new ListCallback<Customer>() {
+                Map<String, Object> where = new HashMap<>();
+                where.put("customerId", BackgroundService.getCustomer().getId());
+                filter.put("where", where);
+                LastUpdatedLocationRepository lastUpdatedLocationRepository = mainActivity.getLoopBackAdapter().createRepository(LastUpdatedLocationRepository.class);
+                lastUpdatedLocationRepository.find(filter, new ListCallback<LastUpdatedLocation>() {
                     @Override
-                    public void onSuccess(List<Customer> objects) {
+                    public void onSuccess(List<LastUpdatedLocation> objects) {
                         if(objects != null){
                             if(objects.size() != 0){
-                                sharedLocation.clear();
-                                for(Customer customer : objects){
-                                    ContactModel contactModel = new ContactModel();
-                                    String formattedNumber = mainActivity.formatNumber(String.valueOf(customer.getPhoneNumber()));
-                                    contactModel.setContactNumber(formattedNumber);
-                                    contactModel.setCustomer(customer);
-                                    sharedLocation.add(contactModel);
+                                LastUpdatedLocation lastUpdatedLocation = objects.get(0);
+                                lastUpdatedLocation.addRelation(BackgroundService.getCustomer());
+                                BackgroundService.getCustomer().addRelation(lastUpdatedLocation);
+
+                                if(lastUpdatedLocation.getSharedLocation() != null){
+                                    if(lastUpdatedLocation.getSharedLocation().size() != 0){
+                                        sharedLocation.clear();
+                                        for (Map<String, Object> sharedFriend : lastUpdatedLocation.getSharedLocation()) {
+                                            ContactModel contactModel = new ContactModel();
+                                            if(sharedFriend.get("number") != null){
+                                                String formattedNumber = mainActivity.formatNumber(String.valueOf(sharedFriend.get("number")));
+                                                contactModel.setContactNumber(formattedNumber);
+                                                sharedLocation.add(contactModel);
+                                            }
+                                        }
+
+                                        setLocation(sharedLocation);
+                                    }else{
+                                        sharedLocation.clear();
+                                        setLocation(sharedLocation);
+                                    }
+                                }else{
+                                    sharedLocation.clear();
+                                    setLocation(sharedLocation);
                                 }
 
-                                setLocation(sharedLocation);
                             }else{
                                 sharedLocation.clear();
                                 setLocation(sharedLocation);
                             }
-                        }else {
+                        }else{
                             sharedLocation.clear();
                             setLocation(sharedLocation);
                         }
@@ -213,20 +242,15 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
                         sharedLocation.clear();
                         Log.e(Constants.TAG, t.toString());
                         Log.v(Constants.TAG, "Error in Location Share By User Fragment");
-                       // Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
                     }
                 });
             }else{
                 sharedLocation.clear();
-                for(Customer customer :  BackgroundService.getCustomer().getLocation_shared()){
-                    ContactModel contactModel = new ContactModel();
-                    contactModel.setContactNumber(customer.getPhoneNumber());
-                    contactModel.setCustomer(customer);
-                    sharedLocation.add(contactModel);
-                }
                 setLocation(sharedLocation);
             }
-
+        }else{
+            sharedLocation.clear();
+            setLocation(sharedLocation);
         }
     }
 
@@ -234,15 +258,14 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     public void setLocation(List<ContactModel> location){
         locationShareAdapterContacts = new LocationShareAdapterContacts(mainActivity, location, Constants.LOCATION_SHARE_BY_USER_FRAGMENT);
         recyclerView.setAdapter(locationShareAdapterContacts);
-        AsyncTask asyncTask = new PopulateContact(BackgroundService.getCustomer(), location);
-        asyncTask.execute(new String[]{""});
+        ContactMatcher contactMatcher = new ContactMatcher(mainActivity, location, locationShareAdapterContacts);
         locationShareAdapterContacts.notifyDataSetChanged();
     }
 
 
 
 
-
+/*
     private class PopulateContact extends AsyncTask<String, Void, String> {
 
         public Customer user;
@@ -287,6 +310,6 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
 
         @Override
         protected void onProgressUpdate(Void... values) {}
-    }
+    }*/
 
 }

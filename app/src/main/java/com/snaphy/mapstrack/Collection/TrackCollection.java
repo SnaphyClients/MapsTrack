@@ -163,18 +163,19 @@ public class TrackCollection {
                             locationList.clear();
                         }
                     }
-                    if (objects.size() != 0) {
-
-                        if (type.equals("event")) {
-                            //setEventList(objects);
+                    if (type.equals("event")) {
+                        //setEventList(objects);
+                        if (objects.size() != 0) {
                             getEventList().addAll(objects);
-                            EventBus.getDefault().post(reset, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
-                        } else {
-                            // setLocationList(objects);
-                            getLocationList().addAll(objects);
-                            EventBus.getDefault().post(reset, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
-
                         }
+                        EventBus.getDefault().post(reset, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
+                    } else {
+                        // setLocationList(objects);
+                        if (objects.size() != 0) {
+                            getLocationList().addAll(objects);
+                        }
+                        EventBus.getDefault().post(reset, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
+
                     }
                 }
             }
@@ -196,7 +197,7 @@ public class TrackCollection {
 
     @Subscriber ( tag = Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT)
     public void requestMoreEvents(SmoothProgressBar progressBar){
-        initialize("event", false, progressBar);
+            initialize("event", false, progressBar);
     }
 
     @Subscriber ( tag = Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT)
