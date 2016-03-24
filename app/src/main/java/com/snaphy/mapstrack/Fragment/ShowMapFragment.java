@@ -120,7 +120,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
     @Subscriber(tag = Constants.OPEN_MAP_FROM_LOCATION)
     private void setFriendsDestination(LatLng latLng) {
-        EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.SEND_MAP_COORDINATES_LOCATION);
+        EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.OPEN_MAP_FROM_LOCATION);
         destination = latLng;
         Log.v(Constants.TAG, "Destination = "+ destination);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
@@ -221,7 +221,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
                             googleMap.addPolyline(polylineOptions);
 
                         } else {
-                            Snackbar.make(getView(), "Direction Not Found", Snackbar.LENGTH_SHORT).show();
+                            //Snackbar.make(getView(), "Direction Not Found", Snackbar.LENGTH_SHORT).show();
                         }
                     }
 

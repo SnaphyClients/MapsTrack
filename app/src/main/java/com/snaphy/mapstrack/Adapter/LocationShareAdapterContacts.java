@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.LastUpdatedLocation;
 import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Constants;
@@ -44,9 +45,8 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
         this.sharedLocation = sharedLocation;
         this.mainActivity = mainActivity;
         this.TAG = TAG;
-        EventBus.getDefault().registerSticky(this);
-        EventBus.getDefault().register(this);
     }
+
 
     /**
      * Inflate the layout file layout.display.contact here
@@ -103,7 +103,17 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
                 if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRAGMENT)) {
                     // Nothing can be done here
                 } else if(TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
-                    //TODO DO THIS LATER..
+                    if(user.getLastUpdatedLocation() != null){
+                        if(user.getLastUpdatedLocation().getCustomer() != null){
+                            Customer customer = user.getLastUpdatedLocation().getCustomer();
+                            if(customer.getLastUpdatedLocation() != null){
+                                latLng = new LatLng(customer.getLastUpdatedLocationLatitide(), customer.getLastUpdatedLocationLongitude());
+                                EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
+                                mainActivity.replaceFragment(R.layout.fragment_map, null);
+
+                            }
+                        }
+                    }
                     //fetch user current location..
                     /*if(user.getContactNumber() != null){
                         if(user.getCustomer().getLastUpdatedLocation() != null){
@@ -168,7 +178,47 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
                                 EventBus.getDefault().post(sharedLocation, Constants.REMOVE_LOCATION_SHARED_BY_USER);
                             }
                         }else if (TAG.equals(Constants.LOCATION_SHARE_BY_USER_FRIENDS_FRAGMENT)){
+                            if(user != null){
+                                boolean found = false;
+                                if(user.getLastUpdatedLocation() != null){
+                                    if(BackgroundService.getCustomer() != null){
+                                        if(BackgroundService.getCustomer().getPhoneNumber() != null){
+                                            String phoneNumber = mainActivity.formatNumber(BackgroundService.getCustomer().getPhoneNumber());
+                                            for(Map<String, Object> sharedList : user.getLastUpdatedLocation().getSharedLocation()){
+                                                if(sharedList != null){
+                                                    if(sharedList.get("number") != null){
+                                                        String targetNumber = mainActivity.formatNumber(String.valueOf(sharedList.get("number")));
+                                                        if(targetNumber.equals(phoneNumber)){
+                                                            user.getLastUpdatedLocation().getSharedLocation().remove(sharedList);
+                                                            found = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
 
+                                            if (found) {
+                                                //Remove the data..
+                                                user.getLastUpdatedLocation().save(new VoidCallback() {
+                                                    @Override
+                                                    public void onSuccess() {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onError(Throwable t) {
+                                                        Log.e(Constants.TAG, t.toString() + " in  LocationShareAdapter file");
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            //Now remove from list..
+                            sharedLocation.remove(user);
+                            Toast.makeText(mainActivity, "User removed!", Toast.LENGTH_SHORT).show();
+                            EventBus.getDefault().post(sharedLocation, Constants.REMOVE_LOCATION_SHARED_BY_USER_FRIENDS);
                         }
                     }
                 })

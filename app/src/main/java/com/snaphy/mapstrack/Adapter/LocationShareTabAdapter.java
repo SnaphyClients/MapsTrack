@@ -41,5 +41,7 @@ public class LocationShareTabAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return 2;
     }
+
+    
 }
 

@@ -1,6 +1,6 @@
 package com.snaphy.mapstrack.Model;
 
-import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.LastUpdatedLocation;
 
 /**
  * Created by Ravi-Gupta on 3/3/2016.
@@ -31,17 +31,19 @@ public class ContactModel {
         this.isSelected = isSelected;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public LastUpdatedLocation getLastUpdatedLocation() {
+        return lastUpdatedLocation;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setLastUpdatedLocation(LastUpdatedLocation lastUpdatedLocation) {
+        this.lastUpdatedLocation = lastUpdatedLocation;
     }
+
+
 
 
     private String contactNumber;
     private String contactName;
     private boolean isSelected;
-    private Customer customer;
+    LastUpdatedLocation lastUpdatedLocation;
 }

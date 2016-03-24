@@ -97,7 +97,6 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        shareWithUser();
         return view;
     }
 
@@ -127,6 +126,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
 
     @OnClick(R.id.fragment_location_share_by_user_floating_button1) void addFriends() {
         mainActivity.replaceFragment(R.id.fragment_location_share_by_user_floating_button1, null);
+        EventBus.getDefault().postSticky(sharedLocation ,Constants.DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT);
     }
 
  /*   @Subscriber(tag = Constants.SHOW_CONTACTS_IN_SHARE_LOCATION)
@@ -260,6 +260,18 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
         recyclerView.setAdapter(locationShareAdapterContacts);
         ContactMatcher contactMatcher = new ContactMatcher(mainActivity, location, locationShareAdapterContacts);
         locationShareAdapterContacts.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // load data here
+            shareWithUser();
+        }else{
+            // fragment is no longer visible
+        }
     }
 
 

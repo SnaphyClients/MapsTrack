@@ -163,10 +163,11 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @Subscriber( tag = Constants.DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT )
     public void showSelectedContactsFromSharedFragment(List<ContactModel> contactModelList) {
-        EventBus.getDefault().removeStickyEvent(track.getClass(), Constants.DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT);
+        EventBus.getDefault().removeStickyEvent(contactModelList.getClass(), Constants.DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT);
         for(ContactModel contactModel : contactModelList){
             if(contactModel != null){
                 if(contactModel.getContactNumber() != null){
+                    contactModel.setIsSelected(true);
                     contactModelMap.put(contactModel.getContactNumber(), contactModel);
                 }
             }
@@ -228,10 +229,12 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     private void addCustomerToSharedList(){
         List<Map<String, Object>>  friendList = new ArrayList<>();
+        List<ContactModel> contactModels  = new ArrayList<>();
         for(String key: contactModelMap.keySet()){
             Map<String, Object> number = new HashMap<>();
             number.put("number", mainActivity.formatNumber(key));
             friendList.add(number);
+            contactModels.add(contactModelMap.get(key));
         }
 
         if(BackgroundService.getCustomer() != null){
@@ -252,7 +255,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
             }
         }
 
-        EventBus.getDefault().post(friendList, Constants.UPDATE_SHARED_FRIENDS_BY_USER_LIST);
+        EventBus.getDefault().post(contactModels, Constants.UPDATE_SHARED_FRIENDS_BY_USER_LIST);
 
         Toast.makeText(mainActivity, "Shared location list updated!", Toast.LENGTH_SHORT).show();
         //Now go back..
