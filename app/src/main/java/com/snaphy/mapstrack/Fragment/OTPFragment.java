@@ -163,8 +163,8 @@ public class OTPFragment extends android.support.v4.app.Fragment {
     @OnClick (R.id.fragment_otp_verification_button3) void requestOTP() {
         if(isPhoneValidate(mobileNumber.getText().toString())) {
             requestOtpServer(mobileNumber.getText().toString());
-            //progress = new ProgressDialog(mainActivity);
-           // mainActivity.setProgress(progress);
+            progress = new ProgressDialog(mainActivity);
+            mainActivity.setProgress(progress);
             View view1 = mainActivity.getCurrentFocus();
             if (view1 != null) {
                 InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
