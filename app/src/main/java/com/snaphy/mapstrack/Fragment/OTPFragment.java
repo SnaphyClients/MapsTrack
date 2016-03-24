@@ -135,21 +135,25 @@ public class OTPFragment extends android.support.v4.app.Fragment {
             customerRepository.loginWithCode(BackgroundService.getAccessToken(), code, mobileNumber.getText().toString(), new Adapter.JsonObjectCallback() {
                 @Override
                 public void onSuccess(JSONObject response) {
-                    progress.dismiss();
+                    if (progress != null) {
+                        progress.dismiss();
+                    }
                     if (response != null) {
                         Log.i(Constants.TAG, "Google = " + response.toString());
                         mainActivity.addUser(response);
                         //mainActivity.replaceFragment(R.layout.fragment_main, null);
 
                     } else {
-                        Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
                         Log.v(Constants.TAG, "Null returned from server.");
                     }
                 }
 
                 @Override
                 public void onError(Throwable t) {
-                    progress.dismiss();
+                    if (progress != null) {
+                        progress.dismiss();
+                    }
                     Toast.makeText(mainActivity, "Invalid code", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -159,8 +163,8 @@ public class OTPFragment extends android.support.v4.app.Fragment {
     @OnClick (R.id.fragment_otp_verification_button3) void requestOTP() {
         if(isPhoneValidate(mobileNumber.getText().toString())) {
             requestOtpServer(mobileNumber.getText().toString());
-            progress = new ProgressDialog(mainActivity);
-            mainActivity.setProgress(progress);
+            //progress = new ProgressDialog(mainActivity);
+           // mainActivity.setProgress(progress);
             View view1 = mainActivity.getCurrentFocus();
             if (view1 != null) {
                 InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -185,7 +189,9 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
                 @Override
                 public void onError(Throwable t) {
-                    progress.dismiss();
+                    if(progress != null) {
+                        progress.dismiss();
+                    }
                     Snackbar.make(rootview, "Enter Valid Mobile Number", Snackbar.LENGTH_SHORT).show();
                     //TODO ADD RETRY BUTTON.. CALL THIS SAME METHOD..
                 }

@@ -7,5 +7,25 @@
     android:id="@+id/container"
     android:background="@drawable/login_page2">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_login_textview0"
+        android:id="@+id/activity_main_textview0"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="220dp"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_login_textview1"
+        android:id="@+id/activity_main_textview1"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/activity_main_textview0"
+        android:paddingLeft="12dp" />
 
 </RelativeLayout>

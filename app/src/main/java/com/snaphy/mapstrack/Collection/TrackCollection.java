@@ -3,7 +3,6 @@ package com.snaphy.mapstrack.Collection;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
@@ -182,8 +181,8 @@ public class TrackCollection {
 
             @Override
             public void onError(Throwable t) {
-                Log.e(Constants.TAG, t.toString());
-                Toast.makeText(context, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                Log.v(Constants.TAG, "Error in track collection");
                 if (progressBar != null) {
                     //CLOSE LOADING BAR
                     stopProgressBar(progressBar);

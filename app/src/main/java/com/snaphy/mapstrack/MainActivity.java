@@ -2,17 +2,18 @@ package com.snaphy.mapstrack;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -23,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
@@ -84,10 +86,10 @@ import com.snaphy.mapstrack.Model.CustomContainer;
 import com.snaphy.mapstrack.Model.CustomContainerRepository;
 import com.snaphy.mapstrack.Model.CustomFileRepository;
 import com.snaphy.mapstrack.Model.ImageModel;
-import com.snaphy.mapstrack.Services.AlarmReceiver;
 import com.snaphy.mapstrack.Services.BackgroundService;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 import com.snaphy.mapstrack.Services.MyRestAdapter;
+import com.snaphy.mapstrack.Services.UnboundService;
 import com.strongloop.android.loopback.AccessToken;
 import com.strongloop.android.loopback.AccessTokenRepository;
 import com.strongloop.android.loopback.LocalInstallation;
@@ -147,8 +149,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     public static final int LOCATION_ALERT = 103;
     LocationManager mLocationManager;
     private static LocalInstallation installation;
-    private PendingIntent pendingIntent;
     View parentLayout;
+    UnboundService testService;
+    boolean isBound = false;
     public static LocalInstallation getInstallation() {
         return installation;
     }
@@ -168,10 +171,16 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         //DONT DELETE THIS LINE..WARNING
         getLoopBackAdapter();
 
-        /* Retrieve a PendingIntent that will perform a broadcast */
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-        start();
+
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Hobo.ttf");
+        TextView textView1 = (TextView)findViewById(R.id.activity_main_textview0);
+        TextView textView2 = (TextView)findViewById(R.id.activity_main_textview1);
+
+        textView1.setTypeface(typeface);
+        textView2.setTypeface(typeface);
+
+        Intent myIntent = new Intent(MainActivity.this, UnboundService.class);
+        bindService(myIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
 
         context = getApplicationContext();
@@ -208,11 +217,20 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
     }
 
-    public void start() {
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Constants.SET_LOCATION_UPDATE_TIMEOUT, pendingIntent);
-        Log.v(Constants.TAG, "Alarm Set From Activity");
-    }
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            UnboundService.MyBinder binder = (UnboundService.MyBinder) service;
+            testService = binder.getService();
+            isBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            testService = null;
+            isBound = false;
+        }
+    };
 
 
     public static boolean isLocationEnabled(Context context) {

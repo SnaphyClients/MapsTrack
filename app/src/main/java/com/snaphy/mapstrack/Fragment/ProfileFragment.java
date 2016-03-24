@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.google.android.gms.auth.api.Auth;
@@ -125,7 +124,8 @@ public class ProfileFragment extends Fragment {
             public void onError(Throwable t) {
                 //TODO CLOSE LOADING BAR
                 Log.e(Constants.TAG, t.toString());
-                Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                Log.v(Constants.TAG, "Error In Logout");
+                //Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
             }
         });
 

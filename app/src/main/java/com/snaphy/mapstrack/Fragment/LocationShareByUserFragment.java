@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
 import com.snaphy.mapstrack.Adapter.LocationShareAdapterContacts;
@@ -213,7 +212,8 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
                     public void onError(Throwable t) {
                         sharedLocation.clear();
                         Log.e(Constants.TAG, t.toString());
-                        Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                        Log.v(Constants.TAG, "Error in Location Share By User Fragment");
+                       // Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
                     }
                 });
             }else{

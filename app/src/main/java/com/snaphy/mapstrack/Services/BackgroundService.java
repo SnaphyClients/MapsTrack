@@ -141,5 +141,6 @@ public class BackgroundService extends Service {
 
     public static void setLoopBackAdapter(MyRestAdapter adapter){
         restAdapter = adapter;
+
     }
 }

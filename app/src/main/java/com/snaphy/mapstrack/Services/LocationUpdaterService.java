@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Services;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +14,36 @@ import android.os.PowerManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.snaphy.mapstrack.Constants;
+import com.strongloop.android.loopback.callbacks.ObjectCallback;
 
 /**
  * Created by Ravi-Gupta on 3/23/2016.
  */
 public class LocationUpdaterService extends Service implements android.location.LocationListener {
+
+
+    public static MyRestAdapter getRestAdapter() {
+        return restAdapter;
+    }
+
+    public static void setRestAdapter(MyRestAdapter restAdapter) {
+        LocationUpdaterService.restAdapter = restAdapter;
+    }
+
+    static MyRestAdapter restAdapter;
+
+    public static Customer getCustomer() {
+        return customer;
+    }
+
+    public static void setCustomer(Customer customer) {
+        LocationUpdaterService.customer = customer;
+    }
+
+    private static Customer customer;
 
     private enum State {
         IDLE, WORKING;
@@ -41,6 +66,16 @@ public class LocationUpdaterService extends Service implements android.location.
         this.wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LocationUpdaterService");
     }
 
+    public MyRestAdapter getLoopBackAdapter() {
+        if (restAdapter == null) {
+
+            restAdapter = new MyRestAdapter(
+                    getApplicationContext(),
+                    Constants.apiUrl);
+        }
+        return restAdapter;
+    }
+
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -49,6 +84,8 @@ public class LocationUpdaterService extends Service implements android.location.
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        LocationUpdaterService.setRestAdapter(getLoopBackAdapter());
+        checkLogin();
         /*if (state == State.IDLE) {*/
             state = State.WORKING;
             this.wakeLock.acquire();
@@ -80,6 +117,8 @@ public class LocationUpdaterService extends Service implements android.location.
 
     private void sendToServer(Location location) {
         Log.v(Constants.TAG, location.getLatitude() + "");
+        Log.v(Constants.TAG, LocationUpdaterService.getCustomer()+"");
+        Log.v(Constants.TAG, LocationUpdaterService.getRestAdapter()+"");
 
         // send to server in background thread. you might want to start AsyncTask here
     }
@@ -114,5 +153,52 @@ public class LocationUpdaterService extends Service implements android.location.
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
+
+    public void checkLogin(){
+        if(BackgroundService.getCustomerRepository() == null){
+            CustomerRepository customerRepository = getLoopBackAdapter().createRepository(CustomerRepository.class);
+            BackgroundService.setCustomerRepository(customerRepository);
+        }
+
+        // later in one of the Activity classes
+        Customer current = BackgroundService.getCustomerRepository().getCachedCurrentUser();
+
+        if (current != null) {
+
+            LocationUpdaterService.setCustomer(current);
+            //Move to home fragment
+        } else {
+            //SHOW PROGRESS DIALOG
+            final ProgressDialog progress = new ProgressDialog(this);
+            BackgroundService.getCustomerRepository().findCurrentUser(new ObjectCallback<Customer>() {
+                @Override
+                public void onSuccess(Customer object) {
+                    //CLOSE PROGRESS DIALOG
+                    progress.dismiss();
+                    if(object != null){
+                        LocationUpdaterService.setCustomer(object);
+                        //Move to home fragment
+                    }else{
+                        // you have to login first
+                        LocationUpdaterService.setCustomer(null);
+                        //Register anonymous for push service..
+                    }
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    //CLOSE PROGRESS DIALOG
+                    progress.dismiss();
+                    // you have to login first
+                    LocationUpdaterService.setCustomer(null);
+                    //Register anonymous for push service..
+                }
+            });
+
+        }
+
+    }
+
 
 }
