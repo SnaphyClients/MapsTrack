@@ -18,6 +18,7 @@ import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.snaphy.mapstrack.Constants;
 import com.strongloop.android.loopback.callbacks.ObjectCallback;
+import com.strongloop.android.loopback.callbacks.VoidCallback;
 
 /**
  * Created by Ravi-Gupta on 3/23/2016.
@@ -116,10 +117,24 @@ public class LocationUpdaterService extends Service implements android.location.
     }
 
     private void sendToServer(Location location) {
-        Log.v(Constants.TAG, location.getLatitude() + "");
+       /* Log.v(Constants.TAG, location.getLatitude() + "");
         Log.v(Constants.TAG, LocationUpdaterService.getCustomer()+"");
-        Log.v(Constants.TAG, LocationUpdaterService.getRestAdapter()+"");
+        Log.v(Constants.TAG, LocationUpdaterService.getRestAdapter()+"");*/
+        if(location != null && LocationUpdaterService.getCustomer() != null){
+            //Now update customer..
+            LocationUpdaterService.getCustomer().setLastUpdatedLocation(location.getLatitude(), location.getLongitude());
+            LocationUpdaterService.getCustomer().save(new VoidCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.i(Constants.TAG, "Location updated successfully..");
+                }
 
+                @Override
+                public void onError(Throwable t) {
+                    Log.e(Constants.TAG, t.toString());
+                }
+            });
+        }
         // send to server in background thread. you might want to start AsyncTask here
     }
 
