@@ -14,7 +14,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/layout_display_contact_textview1"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="20dp"
         android:textColor="@color/black"
@@ -39,7 +38,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/layout_select_contact"
         android:layout_below="@id/layout_fragment_select_contact_relative1"
         android:id="@+id/layout_fragment_show_contact_textview2"
         android:layout_marginLeft="20dp"/>

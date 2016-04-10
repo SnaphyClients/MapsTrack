@@ -11,7 +11,6 @@
         android:id="@+id/fragment_profile_picture"
         android:layout_width="135dp"
         android:layout_height="135dp"
-        android:src="@drawable/profile"
         app:civ_border_width="0dp"
         app:civ_border_color="#FF000000"
         android:layout_centerHorizontal="true"
@@ -27,7 +26,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fragment_profile_textview1"
         android:layout_below="@+id/fragment_profile_picture"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
@@ -37,7 +35,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fragment_profile_textview2"
         android:layout_below="@+id/fragment_profile_textview1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="1dp"
@@ -48,7 +45,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fragment_profile_textview3"
         android:layout_below="@+id/fragment_profile_textview2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="1dp"

@@ -201,7 +201,6 @@ public class ProfileFragment extends Fragment {
 
 
     public void addProfileData(){
-        //TODO REMVOE STATIC DATA..
         if(BackgroundService.getCustomer() != null){
             String userName = "";
             String userEmail = "";

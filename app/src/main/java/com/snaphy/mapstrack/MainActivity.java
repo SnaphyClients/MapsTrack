@@ -76,6 +76,7 @@ import com.snaphy.mapstrack.Fragment.LoginFragment;
 import com.snaphy.mapstrack.Fragment.MainFragment;
 import com.snaphy.mapstrack.Fragment.OTPFragment;
 import com.snaphy.mapstrack.Fragment.ProfileFragment;
+import com.snaphy.mapstrack.Fragment.RetryLoginFragment;
 import com.snaphy.mapstrack.Fragment.SettingFragment;
 import com.snaphy.mapstrack.Fragment.ShareFragment;
 import com.snaphy.mapstrack.Fragment.ShowContactFragment;
@@ -328,7 +329,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     BackgroundService.setCustomer(null);
                     //Register anonymous for push service..
                     registerInstallation(null);
-                    moveToLogin();
+                    //moveToLogin();
+                    //Retry Login
+                    replaceFragment(R.layout.fragment_retry_login, null);
                 }
             });
 
@@ -470,6 +473,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
                 case R.id.fragment_event_info_button5:
                     openAddFriendsFromEventInfo(fragmentTransaction);
+                    break;
+
+                case R.layout.fragment_retry_login:
+                    retryLogin(fragmentTransaction);
                     break;
             }
         }
@@ -614,6 +621,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.replace(R.id.container, loginFragment, LoginFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
     }
+
+
+    private void retryLogin(FragmentTransaction fragmentTransaction) {
+        RetryLoginFragment retryLoginFragment = (RetryLoginFragment) getSupportFragmentManager().
+                findFragmentByTag(RetryLoginFragment.TAG);
+        if (retryLoginFragment == null) {
+            retryLoginFragment = RetryLoginFragment.newInstance();
+        }
+        fragmentTransaction.replace(R.id.container, retryLoginFragment, RetryLoginFragment.TAG);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+
 
     /**  Event Info Fragment is open from here
      * @param fragmentTransaction {FragmentTransaction}
@@ -827,6 +847,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         fragmentTransaction.replace(R.id.main_container, filterFragment, FilterFragment.TAG).addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
     }
+
+
 
     public void startProgressBar(SmoothProgressBar progressBar) {
         if(progressBar != null) {
