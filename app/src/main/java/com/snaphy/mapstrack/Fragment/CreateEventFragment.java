@@ -322,6 +322,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_event_imagebutton2) void openContactDialog() {
+        View view1 = mainActivity.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
         if(track.getFriends() != null){
             if(track.getFriends().size() == 0) {
                 Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
@@ -448,6 +453,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      */
     //TODO Design DatePicker
     private void datePickerClickListener(View view) {
+        dateEdittext.setText("");
         dateEdittext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -467,7 +473,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_create_event_button1) void openGallery() {
-
+        View view1 = mainActivity.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
         int permissionCheck = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             EasyImage.openDocuments(this);
@@ -522,11 +532,21 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_create_event_button4) void selectContact() {
+        View view1 = mainActivity.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
         mainActivity.replaceFragment(R.layout.layout_select_contact, null);
         EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
     }
 
     @OnClick (R.id.fragment_create_event_button5) void openMap() {
+        View view1 = mainActivity.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
         mainActivity.replaceFragment(R.id.fragment_create_event_button5, null);
     }
 
@@ -565,6 +585,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                     mainActivity.saveTrack(trackObj);
                     EventBus.getDefault().post(track, Constants.SHOW_EVENT_INFO);
                     //On back pressed..
+                    View view1 = mainActivity.getCurrentFocus();
+                    if (view1 != null) {
+                        InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+                    }
                     mainActivity.onBackPressed();
                     saveInProgress = false;
                 }

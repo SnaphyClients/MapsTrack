@@ -117,6 +117,8 @@ import java.util.TimeZone;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
+//import com.google.android.gms.analytics.Tracker;
+
 /*import com.google.android.gms.analytics.Tracker;*/
 
 public class MainActivity extends AppCompatActivity implements OnFragmentChange,
@@ -131,7 +133,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         LocationShareByUserFragment.OnFragmentInteractionListener, LocationShareByUserFriendsFragment.OnFragmentInteractionListener,
         LatitudeLongitudeFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
         OTPFragment.OnFragmentInteractionListener, FilterFragment.OnFragmentInteractionListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        RetryLoginFragment.OnFragmentInteractionListener
 {
 
     protected Location mLastLocation;
@@ -140,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     double latitude;
     double longitude;
     static MainActivity mainActivity;
-    /*Tracker tracker;*/
+    //Tracker tracker;
     /*Push Implementation*/
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     GoogleCloudMessaging gcm;
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         parentLayout = findViewById(R.id.container);
-       /* MapsTrackDB application = (MapsTrackDB) getApplication();
+        /*MapsTrackDB application = (MapsTrackDB) getApplication();
         tracker = application.getDefaultTracker();
         tracker.setScreenName("MainActivity");*/
         mainActivity = this;
@@ -216,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 }).create().show();
             }
         }
+        TrackCollection.setFilterColor(Constants.NEAR_BY);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -329,9 +333,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     BackgroundService.setCustomer(null);
                     //Register anonymous for push service..
                     registerInstallation(null);
-                    //moveToLogin();
+                    moveToLogin();
                     //Retry Login
-                    replaceFragment(R.layout.fragment_retry_login, null);
+                    //replaceFragment(R.layout.fragment_retry_login, null);
                 }
             });
 
@@ -628,6 +632,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 findFragmentByTag(RetryLoginFragment.TAG);
         if (retryLoginFragment == null) {
             retryLoginFragment = RetryLoginFragment.newInstance();
+        } else {
+            retryLoginFragment.viewMyDialog();
         }
         fragmentTransaction.replace(R.id.container, retryLoginFragment, RetryLoginFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
@@ -1686,7 +1692,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
         //Now parsing time..
 
-
+        Log.v(Constants.TAG, date_.toString());
         String orderDay = date_.toString().substring(8, 10);
         String orderMonth = date_.toString().substring(4, 7);
         String orderYear = date_.toString().substring(24, 28);
@@ -1759,6 +1765,39 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     public String changeToUpperCase(String source) {
         String cap = source.substring(0, 1).toUpperCase() + source.substring(1);
         return cap;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage("You want to exit MapsTrack?");
+
+            alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                    finish();
+                }
+            });
+
+            alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+        }
+        else {
+            getSupportFragmentManager().popBackStack();
+        }
+
     }
 
 

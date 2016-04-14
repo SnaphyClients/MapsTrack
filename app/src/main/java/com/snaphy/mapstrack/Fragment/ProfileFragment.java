@@ -154,7 +154,6 @@ public class ProfileFragment extends Fragment {
     @Subscriber ( tag = Constants.RESPONSE_EDIT_PROFILE_FRAGMENT)
     public void saveEditedData(EditProfileModel editProfileModel) {
         name.setText(editProfileModel.getFirstName().toString() + " " + editProfileModel.getLastName().toString());
-        phone.setText(editProfileModel.getMobileNumber());
         profilePicture.setImageDrawable(editProfileModel.getImage());
     }
 

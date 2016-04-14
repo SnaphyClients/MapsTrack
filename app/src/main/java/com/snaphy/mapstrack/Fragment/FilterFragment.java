@@ -64,23 +64,23 @@ public class FilterFragment extends android.support.v4.app.Fragment {
     }
 
     public void setSelectedFilter() {
-        if(TrackCollection.getTrackCurrentFilterSelect().get(Constants.MY_EVENTS)) {
+        if(TrackCollection.getTrackCurrentFilterSelect() != null) {
+            if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.MY_EVENTS)) {
 
-            myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_my_events_selected, 0, 0);
-            sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_share_events, 0, 0);
-            nearbyEvents.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_nearby_events, 0, 0);
-        }
-        else if(TrackCollection.getTrackCurrentFilterSelect().get(Constants.NEAR_BY)) {
+                myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_my_events_selected, 0, 0);
+                sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_share_events, 0, 0);
+                nearbyEvents.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_events, 0, 0);
+            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.NEAR_BY)) {
 
-            myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_my_events, 0, 0);
-            sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_share_events, 0, 0);
-            nearbyEvents.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_nearby_events_selected, 0, 0);
-        }
-        else if(TrackCollection.getTrackCurrentFilterSelect().get(Constants.SHARED_EVENTS)) {
+                myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_my_events, 0, 0);
+                sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_share_events, 0, 0);
+                nearbyEvents.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_events_selected, 0, 0);
+            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.SHARED_EVENTS)) {
 
-            myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_my_events, 0, 0);
-            sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_share_events_selected, 0, 0);
-            nearbyEvents.setCompoundDrawablesWithIntrinsicBounds( 0, R.mipmap.filter_nearby_events, 0, 0);
+                myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_my_events, 0, 0);
+                sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_share_events_selected, 0, 0);
+                nearbyEvents.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_events, 0, 0);
+            }
         }
     }
 

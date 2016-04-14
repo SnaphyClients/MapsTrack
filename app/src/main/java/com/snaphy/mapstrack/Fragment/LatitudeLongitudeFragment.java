@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -97,6 +98,11 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         //DATA is in selected latlng
         if(selectedLatLng != null) {
             EventBus.getDefault().post(selectedLatLng, Constants.SET_LATITUDE_LONGITUDE);
+        }
+        View view1 = mainActivity.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
         }
         mainActivity.onBackPressed();
     }

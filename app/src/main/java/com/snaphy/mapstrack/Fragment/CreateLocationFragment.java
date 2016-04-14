@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -111,6 +112,11 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_location_imagebutton2) void openContactDialog() {
+        View view1 = mainActivity.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
         if(track.getFriends() != null){
             if(track.getFriends().size() == 0) {
                 Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
@@ -277,11 +283,21 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Contact are selected from list of avialable contact in phone contact
      */
     @OnClick(R.id.fragment_create_location_button1) void selectContact() {
+        View view1 = mainActivity.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
         mainActivity.replaceFragment(R.id.fragment_create_location_button1, null);
         EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
     }
 
     @OnClick(R.id.fragment_create_location_button5) void setLocation() {
+        View view1 = mainActivity.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
         mainActivity.replaceFragment(R.id.fragment_create_location_button5, null);
     }
 
@@ -318,6 +334,11 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                     track.addRelation(BackgroundService.getCustomer());
                     EventBus.getDefault().post(track, Constants.SHOW_LOCATION_INFO);
                     //On back pressed..
+                    View view1 = mainActivity.getCurrentFocus();
+                    if (view1 != null) {
+                        InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+                    }
                     mainActivity.onBackPressed();
                     saveInProgress = false;
                 }

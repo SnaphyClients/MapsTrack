@@ -20,8 +20,16 @@
         "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\color\\switch_thumb_material_light.xml"
     },
     {
+        "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\abc_background_cache_hint_selector_material_dark.xml",
+        "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\color\\abc_background_cache_hint_selector_material_dark.xml"
+    },
+    {
         "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\abc_secondary_text_material_dark.xml",
         "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\color\\abc_secondary_text_material_dark.xml"
+    },
+    {
+        "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\abc_background_cache_hint_selector_material_light.xml",
+        "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\color\\abc_background_cache_hint_selector_material_light.xml"
     },
     {
         "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\abc_search_url_text.xml",

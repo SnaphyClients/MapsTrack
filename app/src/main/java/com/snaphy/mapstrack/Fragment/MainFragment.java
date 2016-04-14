@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,7 +44,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     public static String TAG = "MainFragment";
     @Bind(R.id.fragment_main_tab_layout) TabLayout tabLayout;
     @Bind(R.id.fragment_main_view_pager) ViewPager viewPager;
-    @Bind(R.id.search_view) MaterialSearchView searchView;
+    public @Bind(R.id.search_view) MaterialSearchView searchView;
     @Bind(R.id.main_toolbar) android.support.v7.widget.Toolbar toolbar;
     String sugg[] = {"Birthday", "Party", "Marriage"};
     MainActivity mainActivity;
@@ -82,8 +81,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
         tabLayoutListener();
         return view;
     }
-
-
 
 
     private void showSuggestion(String text){
@@ -338,30 +335,5 @@ public class MainFragment extends android.support.v4.app.Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * In this method I have implemented back button functionality in which search button
-     * might get closed when android default back button is also pressed
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    if (searchView.isSearchOpen()) {
-                        searchView.closeSearch();
-                    } else {
-                        getActivity().onBackPressed();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
 
 }

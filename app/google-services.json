@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_id": "mapstrack-4f4f5",
-    "project_number": "470322410851",
+    "project_id": "mapstrack-ddc20",
+    "project_number": "443026556395",
     "name": "MapsTrack"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:470322410851:android:695d37ce9864818a",
+        "mobilesdk_app_id": "1:443026556395:android:695d37ce9864818a",
         "client_id": "android:com.snaphy.mapstrack",
         "client_type": 1,
         "android_client_info": {
@@ -21,7 +21,7 @@
         "analytics_service": {
           "status": 2,
           "analytics_property": {
-            "tracking_id": "UA-75358649-1"
+            "tracking_id": "UA-76378086-1"
           }
         },
         "cloud_messaging_service": {

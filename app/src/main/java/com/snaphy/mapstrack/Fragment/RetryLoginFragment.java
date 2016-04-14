@@ -33,10 +33,21 @@ public class RetryLoginFragment extends android.support.v4.app.Fragment {
         // Required empty public constructor
     }
 
+    public void viewMyDialog() {
+        showDialog();
+    }
+
     public static RetryLoginFragment newInstance() {
         RetryLoginFragment fragment = new RetryLoginFragment();
         return fragment;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showDialog();
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,8 +65,6 @@ public class RetryLoginFragment extends android.support.v4.app.Fragment {
         TextView textView2 = (TextView)view.findViewById(R.id.fragment_retry_login_textview1);
         textView1.setTypeface(typeface);
         textView2.setTypeface(typeface);
-
-        showDialog();
         return view;
     }
 
