@@ -117,9 +117,9 @@ public class LocationUpdaterService extends Service implements android.location.
     }
 
     private void sendToServer(Location location) {
-       /* Log.v(Constants.TAG, location.getLatitude() + "");
+        Log.v(Constants.TAG, location.getLatitude() + "");
         Log.v(Constants.TAG, LocationUpdaterService.getCustomer()+"");
-        Log.v(Constants.TAG, LocationUpdaterService.getRestAdapter()+"");*/
+        Log.v(Constants.TAG, LocationUpdaterService.getRestAdapter()+"");
         if(location != null && LocationUpdaterService.getCustomer() != null){
             //Now update customer..
             LocationUpdaterService.getCustomer().setLastUpdatedLocation(location.getLatitude(), location.getLongitude());

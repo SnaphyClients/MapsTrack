@@ -92,6 +92,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="Enter Location Address"
+                    android:focusableInTouchMode="false"
                     android:textSize="14sp"/>
 
             </android.support.design.widget.TextInputLayout>

@@ -98,6 +98,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         //DATA is in selected latlng
         if(selectedLatLng != null) {
             EventBus.getDefault().post(selectedLatLng, Constants.SET_LATITUDE_LONGITUDE);
+            EventBus.getDefault().post(placesAutocompleteTextView.getText().toString(), Constants.UPDATE_ADDRESS_FROM_MAP);
         }
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {

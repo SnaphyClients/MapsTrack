@@ -118,7 +118,8 @@
                             android:layout_height="wrap_content"
                             android:inputType="text"
                             android:hint="@string/fragment_create_event_edittext2"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp"
+                            android:focusableInTouchMode="false"/>
 
                     </android.support.design.widget.TextInputLayout>
 

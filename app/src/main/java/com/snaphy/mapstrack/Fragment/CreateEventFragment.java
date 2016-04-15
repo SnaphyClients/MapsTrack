@@ -193,7 +193,29 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         checkCreateOrEditedMode();
     }
 
+    @Subscriber ( tag = Constants.UPDATE_ADDRESS_FROM_MAP )
+    public void setAddressFromMap(String add) {
+        eventLocation.setText(add);
+        eventLocation.setFocusableInTouchMode(true);
+    }
 
+    @OnClick ( R.id.fragment_create_event_edittext2 ) void clickOnLocationFieldListener() {
+        if(eventLocation.getText().toString().isEmpty()) {
+            eventLocation.setFocusableInTouchMode(false);
+            View view1 = mainActivity.getCurrentFocus();
+            if (view1 != null) {
+                InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+            }
+            mainActivity.replaceFragment(R.id.fragment_create_event_button5, null);
+        } else {
+            View view1 = mainActivity.getCurrentFocus();
+            if (view1 != null) {
+                InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInputFromInputMethod(view1.getWindowToken(), 0);
+            }
+        }
+    }
 
     private void checkCreateOrEditedMode(){
         if(track == null){
