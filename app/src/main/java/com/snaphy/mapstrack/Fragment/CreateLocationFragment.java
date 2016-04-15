@@ -307,6 +307,10 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         mainActivity.replaceFragment(R.id.fragment_create_location_button5, null);
     }
 
+    @OnClick(R.id.fragment_location_info_imageview1) void noImageIsPresentInLocation() {
+        Toast.makeText(mainActivity, "Location doesn't have images", Toast.LENGTH_SHORT).show();
+    }
+
     @OnClick(R.id.fragment_create_location_edittext3) void addressClickListener() {
         if(locationAddress.getText().toString().isEmpty()) {
             locationAddress.setFocusableInTouchMode(false);

@@ -2,11 +2,13 @@ package com.snaphy.mapstrack.Fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -117,6 +119,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     static CreateEventFragment fragment;
     Track track;
     List<EventType> eventTypeList;
+    boolean fromEdited = false;
 
     /* Temp Variables */
     String tempEventName;
@@ -287,6 +290,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
     private void onEdit(Track track) {
 
+        fromEdited = true;
+
         if(track != null){
             this.track = track;
             if(track.getName() != null) {
@@ -326,6 +331,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
             if(track.getPicture() != null){
                 mainActivity.loadUnsignedUrl(track.getPicture(), imageView);
+                editedImageFile = new File("path");
             }
 
             if(track.getFriends() != null) {
@@ -494,7 +500,43 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         });
     }
 
+    @OnClick(R.id.fragment_event_info_imageview1) void openGalleryFromImageView() {
+       if(editedImageFile == null){
+            openGalleryFolder();
+        } else {
+            showAlertToRemoveProfilePic();
+        }
+    }
+
+    public void showAlertToRemoveProfilePic() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mainActivity);
+        alertDialogBuilder.setMessage("Remove this profile picture?");
+
+        alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                imageView.setImageResource(R.drawable.default_image);
+                editedImageFile = null;
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
     @OnClick(R.id.fragment_create_event_button1) void openGallery() {
+        openGalleryFolder();
+    }
+
+    public void openGalleryFolder() {
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -537,7 +579,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 Log.v(Constants.TAG, "Image File = " + uri + "");
                 imageLoader.displayImage(decoded, imageView);
                 //Now upload image..
-                mainActivity.uploadWithCallback(Constants.GRUBERR_CONTAINER, editedImageFile, new ObjectCallback<ImageModel>() {
+                mainActivity.uploadWithCallback(Constants.CONTAINER, editedImageFile, new ObjectCallback<ImageModel>() {
                     @Override
                     public void onSuccess(ImageModel object) {
                         imageModel = object;
@@ -613,6 +655,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                         imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
                     }
                     mainActivity.onBackPressed();
+                    if(fromEdited) {
+                        EventBus.getDefault().post(imageView.getDrawable(), Constants.UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT);
+                    }
                     saveInProgress = false;
                 }
             }

@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -236,10 +237,14 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         mainActivity.onBackPressed();
     }
 
-    @OnClick(R.id.fragment_event_info_button1)
-    void editEvent() {
+    @OnClick(R.id.fragment_event_info_button1) void editEvent() {
         mainActivity.replaceFragment(R.id.fragment_event_info_button1, null);
         EventBus.getDefault().post(track, Constants.SHOW_EVENT_EDIT);
+    }
+
+    @Subscriber
+    public void changeImageFromEdit(Drawable drawable){
+
     }
 
 

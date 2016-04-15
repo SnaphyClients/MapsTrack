@@ -153,7 +153,7 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
         BackgroundService.getCustomer().setFirstName(firstName.getText().toString());
         BackgroundService.getCustomer().setLastName(lastName.getText().toString());
         if(editedImage != null){
-            mainActivity.uploadWithCallback(Constants.GRUBERR_CONTAINER, editedImage, new ObjectCallback<ImageModel>() {
+            mainActivity.uploadWithCallback(Constants.CONTAINER, editedImage, new ObjectCallback<ImageModel>() {
                 @Override
                 public void onSuccess(ImageModel object) {
                     if(object != null){

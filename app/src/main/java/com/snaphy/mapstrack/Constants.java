@@ -18,7 +18,7 @@ public final class Constants {
     //public static String baseUrl = "http://104.236.76.111:3000";
     //public static String baseUrl = "http://ec2-54-209-33-191.compute-1.amazonaws.com:3000";
     public static String apiUrl = baseUrl+"/api";
-    public static final String AMAZON_CLOUD_FRONT_URL = "http://d2ppet2ho4r908.cloudfront.net/";
+    public static final String AMAZON_CLOUD_FRONT_URL = "http://do6n8ch9q1v85.cloudfront.net/";
 
     /**
      * Substitute you own sender ID here. This is the project number you got
@@ -31,7 +31,7 @@ public final class Constants {
     public static final String APP_PHONE = "tel:+91-9999566751";
     public static String APP_PLAY_STORE = "com.drugcorner.slider";
     public static String APP_SHARE_TEXT = "Finding event made easy \n\n";
-    public static final String GRUBERR_CONTAINER = "gruberr-recipes";
+    public static final String CONTAINER = "snaphy-mapstrack";
 
     public static String ERROR_MESSAGE = "Something went wrong!";
 
@@ -105,6 +105,7 @@ public final class Constants {
     public static final String UPDATE_SHARED_FRIENDS_BY_USER_LIST = "UpdateSharedFriendsByUserList";
 
     public static final String UPDATE_ADDRESS_FROM_MAP = "UpdateAddressFromMap";
+    public static final String UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT = "UpdateImageFromEditedCreateEvent";
 
 
 }
