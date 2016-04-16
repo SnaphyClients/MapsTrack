@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.Adapter.ShowContactAdapter;
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
@@ -58,7 +57,6 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     public static String TAG = "ShowContactFragment";
     @Bind(R.id.fragment_show_contact_recycler_view1) RecyclerView recyclerView;
     ShowContactAdapter showContactAdapter;
-    TemporaryContactDatabase temporaryContactDatabase;
     Cursor globalCursor;
     Track track;
     @SuppressLint("InlinedApi")
@@ -111,7 +109,6 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().registerSticky(this);
-        temporaryContactDatabase = new TemporaryContactDatabase();
     }
 
     @Override

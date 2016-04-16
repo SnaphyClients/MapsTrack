@@ -4,17 +4,17 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_filter"
-        android:orderInCategory="100"
-        android:title=""
-        app:showAsAction="always"
-        android:icon="@drawable/filter_home" />
-
-    <item
         android:id="@+id/action_search"
         android:orderInCategory="100"
         android:title=""
         app:showAsAction="always"
         android:icon="@drawable/ic_action_action_search" />
+
+    <item
+        android:id="@+id/action_filter"
+        android:orderInCategory="100"
+        android:title=""
+        app:showAsAction="always"
+        android:icon="@drawable/filter_home" />
 
 </menu>

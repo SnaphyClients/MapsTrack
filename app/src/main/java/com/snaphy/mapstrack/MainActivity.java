@@ -237,6 +237,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
     };
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
+    }
+
 
     public static boolean isLocationEnabled(Context context) {
         int locationMode = 0;
