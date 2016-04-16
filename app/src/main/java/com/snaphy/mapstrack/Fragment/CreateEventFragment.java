@@ -329,7 +329,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 materialSpinner.setText(track.getEventType().getName().toString());
             }
 
-            if(track.getPicture() != null){
+            if(track.getPicture() != null && track.getPicture().size() != 0){
                 mainActivity.loadUnsignedUrl(track.getPicture(), imageView);
                 editedImageFile = new File("path");
             }

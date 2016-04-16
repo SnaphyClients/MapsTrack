@@ -4,21 +4,24 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
 import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
-import com.snaphy.mapstrack.Model.EventHomeModel;
-import com.snaphy.mapstrack.Model.LocationHomeModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.RecyclerItemClickListener;
 
@@ -29,32 +32,32 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * It is a home fragment and it contains all the elements in the home page
  * ie... two recycler views, two floating buttons
  */
-public class HomeFragment extends android.support.v4.app.Fragment{
+public class HomeFragment extends android.support.v4.app.Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
     @Bind(R.id.fragment_home_recycler_view1) RecyclerView recyclerView1;
     @Bind(R.id.fragment_home_recycler_view2) RecyclerView recyclerView2;
     @Bind(R.id.fragment_home_textview1) TextView eventText;
     @Bind(R.id.fragment_home_textview2) TextView locationText;
+    @Bind(R.id.fragment_home_image_filter1) ImageView imageViewFilter;
     @Bind(R.id.fragment_cart_floating_button1) android.support.design.widget.FloatingActionButton floatingActionButton1;
     @Bind(R.id.fragment_cart_floating_button2) android.support.design.widget.FloatingActionButton floatingActionButton2;
 
     HomeEventAdapter homeEventAdapter;
     HomeLocationAdapter homeLocationAdapter;
 
-    ArrayList<EventHomeModel> eventHomeModelArrayList = new ArrayList<EventHomeModel>();
-    ArrayList<LocationHomeModel> locationHomeModelArrayList = new ArrayList<LocationHomeModel>();
-
     static MainActivity mainActivity;
     ArrayList<String> contacts  = new ArrayList<String>();
     LinearLayoutManager layoutManager1;
     LinearLayoutManager layoutManager2;
+    private ShowcaseView showcaseView;
+    private int counter = 0;
+    RelativeLayout.LayoutParams lps;
 
     /*Infinite Loading dataset*/
     private int previousTotal = 0;
@@ -87,11 +90,17 @@ public class HomeFragment extends android.support.v4.app.Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        TrackCollection.progressBar = (SmoothProgressBar) view.findViewById(R.id.fragment_home_progressBar);
+        TrackCollection.progressBar = (fr.castorflex.android.smoothprogressbar.SmoothProgressBar) view.findViewById(R.id.fragment_home_progressBar);
         mainActivity.stopProgressBar(TrackCollection.progressBar);
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Hobo.ttf");
         eventText.setTypeface(typeface);
         locationText.setTypeface(typeface);
+
+        lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        int margin = ((Number) (getResources().getDisplayMetrics().density * 12)).intValue();
+        lps.setMargins(margin, margin, margin, margin);
 
         layoutManager1 = new LinearLayoutManager(getActivity());
         layoutManager2 = new LinearLayoutManager(getActivity());
@@ -114,7 +123,7 @@ public class HomeFragment extends android.support.v4.app.Fragment{
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if(TrackCollection.eventList != null){
+                        if (TrackCollection.eventList != null) {
                             Track track = TrackCollection.eventList.get(position);
                             mainActivity.replaceFragment(R.layout.fragment_event_info, null);
                             EventBus.getDefault().post(track, Constants.SHOW_EVENT_INFO);
@@ -142,6 +151,22 @@ public class HomeFragment extends android.support.v4.app.Fragment{
 
         return view;
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        showcaseView = new ShowcaseView.Builder(getActivity())
+                .withMaterialShowcase()
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .setTarget(new ViewTarget(eventText))
+                .setOnClickListener(this)
+                .setContentTitle("Events")
+                .setContentText("In this section you will find any events that the going near to your house")
+                .build();
+        showcaseView.setButtonText("Next");
+        showcaseView.setButtonPosition(lps);
+    }
+
 
     /********************************************************Subscribers for event and locations**************************/
 
@@ -243,7 +268,7 @@ public class HomeFragment extends android.support.v4.app.Fragment{
                 }
                 if (!loading && (totalItemCount - visibleItemCount)
                         <= (firstVisibleItem + visibleThreshold)) {
-                    EventBus.getDefault().post( TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT);
+                    EventBus.getDefault().post(TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT);
                     loading = true;
                 }
             }
@@ -274,6 +299,72 @@ public class HomeFragment extends android.support.v4.app.Fragment{
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (counter) {
+            case 0:
+                //showcaseView.setShowcase(new ViewTarget(floatingActionButton1), true);
+                showcaseView.hide();
+                showcaseView = new ShowcaseView.Builder(getActivity())
+                        .withMaterialShowcase()
+                        .setStyle(R.style.CustomShowcaseTheme2)
+                        .setTarget(new ViewTarget(floatingActionButton1))
+                        .setOnClickListener(this)
+                        .setContentTitle("Create Events")
+                        .setContentText("Either a birthday or a meeting, create all type of events and share them to you friends with a button click")
+                        .build();
+                showcaseView.setButtonText("Next");
+                showcaseView.setButtonPosition(lps);
+                break;
+
+            case 1:
+                showcaseView.hide();
+                showcaseView = new ShowcaseView.Builder(getActivity())
+                        .withMaterialShowcase()
+                        .setStyle(R.style.CustomShowcaseTheme2)
+                        .setTarget(new ViewTarget(floatingActionButton2))
+                        .setOnClickListener(this)
+                        .setContentTitle("Create Locations")
+                        .setContentText("Difficulty in finding address, now create any location with mapstrack and share with your friends, so that they can reach your location easily")
+                        .build();
+                showcaseView.setButtonText("Next");
+                showcaseView.setButtonPosition(lps);
+                break;
+
+            case 2:
+                showcaseView.hide();
+                showcaseView = new ShowcaseView.Builder(getActivity())
+                        .withMaterialShowcase()
+                        .setStyle(R.style.CustomShowcaseTheme2)
+                        .setTarget(new ViewTarget(locationText))
+                        .setOnClickListener(this)
+                        .setContentTitle("Locations")
+                        .setContentText("Here you will find all the locations that you have created or your friends have share with you ")
+                        .build();
+                showcaseView.setButtonText("Next");
+                showcaseView.setButtonPosition(lps);
+                break;
+
+            case 3:
+                showcaseView.hide();
+                showcaseView = new ShowcaseView.Builder(getActivity())
+                        .withMaterialShowcase()
+                        .setStyle(R.style.CustomShowcaseTheme3)
+                        .setTarget(new ViewTarget(imageViewFilter))
+                        .setOnClickListener(this)
+                        .setContentTitle("Filter")
+                        .setContentText("Now select events only you want to see from Nearby Events, Shared Events and My Events")
+                        .build();
+                showcaseView.setButtonPosition(lps);
+                break;
+            case 4:
+                showcaseView.hide();
+                break;
+
+        }
+        counter ++;
     }
 
 

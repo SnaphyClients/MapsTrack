@@ -333,9 +333,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     BackgroundService.setCustomer(null);
                     //Register anonymous for push service..
                     registerInstallation(null);
-                    moveToLogin();
+                    //moveToLogin();
                     //Retry Login
-                    //replaceFragment(R.layout.fragment_retry_login, null);
+                    replaceFragment(R.layout.fragment_retry_login, null);
                 }
             });
 
@@ -1369,7 +1369,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         BackgroundService.getCustomerRepository().updateAttributes((String)customer.getId(), data, new ObjectCallback<Customer>() {
             @Override
             public void onSuccess(Customer object) {
-
+                Log.v(Constants.TAG, "Customer Profile is Updated");
             }
 
             @Override

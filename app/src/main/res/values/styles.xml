@@ -82,5 +82,16 @@
         <item name="spb_generate_background_with_colors">false</item>
     </style>
 
+    <style name="CustomShowcaseTheme2" parent="ShowcaseView">
+        <item name="sv_backgroundColor">#DD000000</item>
+        <item name="sv_showcaseColor">#25467A</item>
+    </style>
+
+    <style name="CustomShowcaseTheme3" parent="ShowcaseView">
+    <item name="sv_backgroundColor">#DD000000</item>
+    <item name="sv_showcaseColor">#25467A</item>
+    <item name="sv_buttonText">Close</item>
+    </style>
+
 
 </resources>

@@ -3,6 +3,7 @@ package com.snaphy.mapstrack.Fragment;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -75,6 +76,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         setHasOptionsMenu(true);
         viewPager.setAdapter(new HomeTabLayoutAdapter(mainActivity.getSupportFragmentManager()));
+        viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
         searchSetting();
         setIconInTabLayout();
@@ -322,6 +324,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
         getActivity().getMenuInflater().inflate(R.menu.search_item, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
+        /*ViewTarget target = new ViewTarget(R.id.action_filter, mainActivity);
+        ShowcaseView showcaseView = new ShowcaseView.Builder(getActivity())
+                .withMaterialShowcase()
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .setTarget(target)
+                .setContentTitle("Filter")
+                .setContentText("In this section you will find any events that the going near to your house")
+                .build();
+*/
     }
 
     @Override
@@ -331,8 +342,22 @@ public class MainFragment extends android.support.v4.app.Fragment {
             mainActivity.replaceFragment(R.layout.fragment_filter, null);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        /*ShowcaseView showcaseView = new ShowcaseView.Builder(getActivity())
+                .withMaterialShowcase()
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .setTarget(new ViewTarget(R.id.action_filter))
+                .setOnClickListener(this)
+                .setContentTitle("Events")
+                .setContentText("In this section you will find any events that the going near to your house")
+                .build();*/
+       /* showcaseView.setButtonText("Next");
+        showcaseView.setButtonPosition(lps);*/
     }
 
 

@@ -1,13 +1,11 @@
 package com.snaphy.mapstrack.Database;
 
 import android.app.Application;
-
-import com.activeandroid.ActiveAndroid;
-import com.crashlytics.android.Crashlytics;
+/*import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.ndk.CrashlyticsNdk;
 //import com.google.android.gms.analytics.Tracker;
 
-import io.fabric.sdk.android.Fabric;
+import io.fabric.sdk.android.Fabric;*/
 
 /*import com.google.android.gms.analytics.Tracker;*/
 
@@ -21,8 +19,8 @@ public class MapsTrackDB extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
-        ActiveAndroid.initialize(this);
+       /* Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+        ActiveAndroid.initialize(this);*/
     }
 
     /**

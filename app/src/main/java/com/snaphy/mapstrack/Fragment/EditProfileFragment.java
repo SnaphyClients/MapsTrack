@@ -122,7 +122,7 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
         }  else {
             isValidate = true;
         }
-        return true;
+        return isValidate;
     }
 
     boolean isNameValid(String name) {

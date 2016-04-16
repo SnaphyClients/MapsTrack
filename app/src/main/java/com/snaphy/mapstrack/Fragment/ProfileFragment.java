@@ -124,7 +124,14 @@ public class ProfileFragment extends Fragment {
             public void onError(Throwable t) {
                 //TODO CLOSE LOADING BAR
                 Log.e(Constants.TAG, t.toString());
-                Log.v(Constants.TAG, "Error In Logout");
+                BackgroundService.getCustomerRepository().setCurrentUserId(null);
+                //Snackbar.make(rootView,Constants.ERROR_MESSAGE, Snackbar.LENGTH_SHORT).show();
+                mainActivity.getLoopBackAdapter().clearAccessToken();
+                BackgroundService.setCustomer(null);
+                //ALSO ADD GOOGLE LOGOUT AND FACEBOOK LOGOUT HERE..
+                googleLogout();
+                mainActivity.stopService(new Intent(mainActivity, BackgroundService.class));
+                mainActivity.moveToLogin();
                 //Toast.makeText(mainActivity, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
             }
         });
@@ -137,8 +144,10 @@ public class ProfileFragment extends Fragment {
 
         if(!nameArray[0].isEmpty()) {
             editProfileModel.setFirstName(nameArray[0]);
-            if(!nameArray[1].isEmpty()) {
-                editProfileModel.setLastName(nameArray[1]);
+            if(nameArray[nameArray.length-1] != null) {
+                if (!nameArray[nameArray.length - 1].isEmpty()) {
+                    editProfileModel.setLastName(nameArray[nameArray.length - 1]);
+                }
             }
         }
 

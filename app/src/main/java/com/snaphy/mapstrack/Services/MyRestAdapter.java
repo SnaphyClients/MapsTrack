@@ -9,7 +9,7 @@ import com.strongloop.android.loopback.RestAdapter;
  */
 public class MyRestAdapter extends RestAdapter {
 
-    public static final int TIMEOUT = 15000;
+    public static final int TIMEOUT = 25000;
 
     public MyRestAdapter(Context context, String url){
         super(context, url);

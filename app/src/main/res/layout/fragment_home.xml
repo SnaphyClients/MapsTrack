@@ -19,6 +19,14 @@
            android:background="@color/colorPrimary"
            android:orientation="vertical">
 
+           <ImageView
+               android:layout_width="25dp"
+               android:layout_height="1dp"
+               android:src="@drawable/filter_home"
+               android:layout_alignParentRight="true"
+               android:layout_marginRight="70dp"
+               android:id="@+id/fragment_home_image_filter1"/>
+
            <TextView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
@@ -96,8 +104,7 @@
     </LinearLayout>
 
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res/com.snaphy.mapstrack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/GNowProgressBar"

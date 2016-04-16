@@ -1,4 +1,4 @@
-buildscript {
+/*buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
     }
@@ -20,13 +20,13 @@ buildscript {
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
     }
-}
+}*/
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+/*apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
-}
+}*/
 
 
 android {
@@ -53,6 +53,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile project(':snaphyandroidsdk')
+    compile 'com.github.amlcurran.showcaseview:library:5.4.3'
+
     // ButterKnife
     //Design Support Library Android
     //Recycler View
@@ -87,18 +89,18 @@ dependencies {
         exclude group: 'com.google.guava'
     }
 
-   /* compile('com.google.android.gms:play-services-analytics:8.4.0') {
+    /*compile('com.google.android.gms:play-services-analytics:8.4.0') {
         exclude group: 'com.google.guava'
     }*/
     //Change version of analyst
 
     /*compile 'com.google.android.gms:play-services-analytics:8.4.0'*/
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    /*compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
     compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
         transitive = true;
-    }
+    }*/
 
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -127,8 +129,9 @@ dependencies {
 }
 
 /*apply plugin: 'com.google.gms.google-services'*/
+/*
 crashlytics {
     enableNdk true
     androidNdkOut 'src/main/obj'
     androidNdkLibsOut 'src/main/libs'
-}
+}*/
