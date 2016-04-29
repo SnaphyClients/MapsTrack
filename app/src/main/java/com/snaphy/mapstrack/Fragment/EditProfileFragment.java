@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.EditProfileModel;
@@ -257,6 +258,13 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity.tracker.setScreenName("Edit Profile Screen");
+        mainActivity.tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

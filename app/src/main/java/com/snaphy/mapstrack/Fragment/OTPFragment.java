@@ -192,7 +192,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
                     if(progress != null) {
                         progress.dismiss();
                     }
-                    Snackbar.make(rootview, "Enter Valid Mobile Number", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootview, "Your internet seems to be slow or not working. Please try again later", Snackbar.LENGTH_SHORT).show();
                     //TODO ADD RETRY BUTTON.. CALL THIS SAME METHOD..
                 }
             });
@@ -201,8 +201,8 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
 
     public boolean isPhoneValidate(String phone) {
-        boolean isPhoneValid = false;
-        Pattern phonePattern = Pattern.compile("\\b\\d{10}\\b");
+        boolean isPhoneValid;
+        Pattern phonePattern = Pattern.compile("\\d{10}");
         Matcher phoneMatcher = phonePattern.matcher(phone);
         if (!phoneMatcher.matches()) {
             //Snackbar.make(getView(), "Enter Correct Phone Number", Snackbar.LENGTH_SHORT).show();

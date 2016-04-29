@@ -1,11 +1,11 @@
 [
     {
-        "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png",
-        "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\drawable-mdpi\\abc_btn_switch_to_on_mtrl_00001.9.png"
-    },
-    {
         "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_ic_ab_back_mtrl_am_alpha.png",
         "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\drawable-mdpi\\abc_ic_ab_back_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png",
+        "source": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.1\\res\\drawable-mdpi\\abc_btn_switch_to_on_mtrl_00001.9.png"
     },
     {
         "merged": "E:\\Clients\\Mapstrack\\Mapstrack\\snaphyandroidsdk\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_btn_rating_star_off_mtrl_alpha.png",

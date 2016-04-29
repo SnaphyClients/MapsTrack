@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.CompanyInfo;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CompanyInfoRepository;
+import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
@@ -45,6 +46,13 @@ public class TermsFragment extends android.support.v4.app.Fragment {
 
     public TermsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity.tracker.setScreenName("Terms Screen");
+        mainActivity.tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     public static TermsFragment newInstance() {

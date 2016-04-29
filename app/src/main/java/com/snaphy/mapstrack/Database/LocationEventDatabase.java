@@ -1,3 +1,4 @@
+/*
 package com.snaphy.mapstrack.Database;
 
 import com.activeandroid.Model;
@@ -6,9 +7,11 @@ import com.activeandroid.annotation.Table;
 
 import java.util.List;
 
+*/
 /**
  * Created by Ravi-Gupta on 12/24/2015.
- */
+ *//*
+
 @Table(name = "LocationEvent")
 public class LocationEventDatabase extends Model {
 
@@ -39,3 +42,4 @@ public class LocationEventDatabase extends Model {
     }
 }
 
+*/

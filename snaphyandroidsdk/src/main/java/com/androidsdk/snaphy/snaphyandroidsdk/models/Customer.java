@@ -3,53 +3,25 @@ package com.androidsdk.snaphy.snaphyandroidsdk.models;
 
 
 
-import com.strongloop.android.loopback.User;
-
-
-
-import org.json.JSONObject;
-import org.json.JSONArray;
-
-import java.util.List;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.FacebookAccessTokenRepository;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.LastUpdatedLocationRepository;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.strongloop.android.loopback.RestAdapter;
 import com.strongloop.android.loopback.callbacks.ListCallback;
 import com.strongloop.android.loopback.callbacks.ObjectCallback;
 import com.strongloop.android.loopback.callbacks.VoidCallback;
 import com.strongloop.android.remoting.adapters.Adapter;
 
-//Import self repository..
-import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
-
-//Now import repository of related models..
-
-    
-    
-
-    
-            import com.androidsdk.snaphy.snaphyandroidsdk.repository.FacebookAccessTokenRepository;
-            
-
-        
-    
-
-    
-            import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
-            
-
-        
-    
-
-    
-            import com.androidsdk.snaphy.snaphyandroidsdk.repository.LastUpdatedLocationRepository;
-            
-
-        
-    
-
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+//Import self repository..
+//Now import repository of related models..
 
 
 
@@ -250,7 +222,11 @@ public class Customer extends com.strongloop.android.loopback.User {
                 /* Adding Getter and Setter methods */
                 public double getLastUpdatedLocationLatitide(){
                     if(lastUpdatedLocation != null){
-                        return (Double)lastUpdatedLocation.get("lat");
+                        try {
+                            return (Double) lastUpdatedLocation.get("lat");
+                        } catch(Exception e) {
+                            return (int) lastUpdatedLocation.get("lat");
+                        }
                     }else{
                         return 0;
                     }

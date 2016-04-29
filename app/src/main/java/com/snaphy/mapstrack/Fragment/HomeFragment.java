@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
+import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
 import com.snaphy.mapstrack.Collection.TrackCollection;
@@ -52,6 +53,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
     HomeLocationAdapter homeLocationAdapter;
 
     static MainActivity mainActivity;
+    MainActivity mainActivity2;
     ArrayList<String> contacts  = new ArrayList<String>();
     LinearLayoutManager layoutManager1;
     LinearLayoutManager layoutManager2;
@@ -82,6 +84,13 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
         super.onCreate(savedInstanceState);
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity2.tracker.setScreenName("Home Screen");
+        mainActivity2.tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
@@ -179,6 +188,11 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
     @Subscriber (tag = Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
     public void notifyLocationList(boolean reset) {
         homeLocationAdapter.notifyDataSetChanged();
+    }
+
+    @Subscriber ( tag = Constants.UPDATE_EVENT_IN_HOME)
+    public void updateEventInHome(String dummyString) {
+        homeEventAdapter.notifyDataSetChanged();
     }
 
     /********************************************************Subscribers for event and locations**************************/
@@ -287,6 +301,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
     public void onAttach(Context context) {
         super.onAttach(context);
         mainActivity = (MainActivity) getActivity();
+        mainActivity2 = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

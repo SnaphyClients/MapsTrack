@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -105,8 +106,13 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
                     locationNameId.setText(track.getLocationId().toString());
                     CharSequence lName = drawTextViewDesign("Location Name : ",track.getLocationId().toString());
                     locationId.setText(lName);
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Location Id")
+                            .setAction(track.getLocationId())
+                            .build());
                 }
             }
+
 
             if(track.getAddress() != null) {
                 if(!track.getAddress().isEmpty()) {

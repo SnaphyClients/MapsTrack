@@ -1,3 +1,4 @@
+/*
 package com.snaphy.mapstrack.Database;
 
 import com.activeandroid.Model;
@@ -7,9 +8,11 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
+*/
 /**
  * Created by Ravi-Gupta on 12/24/2015.
- */
+ *//*
+
 @Table(name = "LocationContact")
 public class LocationContactDatabase extends Model {
 
@@ -44,3 +47,4 @@ public class LocationContactDatabase extends Model {
 
 
 }
+*/

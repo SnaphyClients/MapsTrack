@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.maps.model.LatLng;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
@@ -25,7 +26,6 @@ import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
@@ -42,7 +42,6 @@ import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,7 +74,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
-    List<TemporaryContactDatabase> temporaryContactDatabases;
+
     static CreateLocationFragment fragment;
     Track track;
     boolean saveInProgress = false;
@@ -199,6 +198,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mainActivity.tracker.setScreenName("Create Location Screen");
+        mainActivity.tracker.send(new HitBuilders.ScreenViewBuilder().build());
         if(isPublic()){
             disableFriendList(true);
         }else{

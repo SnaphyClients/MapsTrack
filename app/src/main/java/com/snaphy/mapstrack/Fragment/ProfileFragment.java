@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -61,6 +62,11 @@ public class ProfileFragment extends Fragment {
         EventBus.getDefault().register(this);
         imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -128,6 +134,7 @@ public class ProfileFragment extends Fragment {
                 //Snackbar.make(rootView,Constants.ERROR_MESSAGE, Snackbar.LENGTH_SHORT).show();
                 mainActivity.getLoopBackAdapter().clearAccessToken();
                 BackgroundService.setCustomer(null);
+                mainActivity.registerInstallation(null);
                 //ALSO ADD GOOGLE LOGOUT AND FACEBOOK LOGOUT HERE..
                 googleLogout();
                 mainActivity.stopService(new Intent(mainActivity, BackgroundService.class));
@@ -218,6 +225,10 @@ public class ProfileFragment extends Fragment {
                     userName = userName + " " + BackgroundService.getCustomer().getLastName();
                 }
                 name.setText(userName);
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("User")
+                        .setAction(userName)
+                        .build());
             }
 
             if(BackgroundService.getCustomer().getEmail() != null){

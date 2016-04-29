@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -89,6 +90,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     }
 
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -154,6 +156,11 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
                 eventName2.setText(eName);
             }
         }
+
+        mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Event Name")
+                .setAction(track.getName())
+                .build());
 
         if(track.getType() != null){
             if(!this.track.getType().isEmpty()) {

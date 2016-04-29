@@ -1,6 +1,12 @@
 package com.snaphy.mapstrack.Database;
 
 import android.app.Application;
+
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
+import com.snaphy.mapstrack.R;
+
+/*import com.google.android.gms.analytics.Tracker;*/
 /*import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.ndk.CrashlyticsNdk;
 //import com.google.android.gms.analytics.Tracker;
@@ -14,7 +20,7 @@ import io.fabric.sdk.android.Fabric;*/
  */
 public class MapsTrackDB extends Application {
 
-    //private Tracker mTracker;
+   private Tracker mTracker;
 
     @Override
     public void onCreate() {
@@ -27,12 +33,12 @@ public class MapsTrackDB extends Application {
      * Gets the default {@link Tracker} for this {@link Application}.
      * @return tracker
      */
-    /*synchronized public Tracker getDefaultTracker() {
+    synchronized public Tracker getDefaultTracker() {
         if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-           // mTracker = analytics.newTracker(R.xml.global_tracker);
+            mTracker = analytics.newTracker(R.xml.global_tracker);
         }
         return mTracker;
-    }*/
+    }
 }

@@ -30,6 +30,7 @@ import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -42,8 +43,8 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Adapter.SpinnerAdapter;
 import com.snaphy.mapstrack.Collection.EventTypeCollection;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.Model.DisplayContactModel;
@@ -108,7 +109,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
     DisplayContactAdapter displayContactAdapter;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
-    List<TemporaryContactDatabase> temporaryContactDatabases;
     ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
     HashMap<String,Double> latLongHashMap = new HashMap<String, Double>();
     HashMap<String,String> imageURL =  new HashMap<String, String>();
@@ -176,10 +176,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         //selectPosition();
         return view;
     }
+    
 
     @Override
     public void onResume() {
         super.onResume();
+        mainActivity.tracker.setScreenName("Create Event Screen");
+        mainActivity.tracker.send(new HitBuilders.ScreenViewBuilder().build());
         this.getView().setFocusableInTouchMode(true);
         this.getView().requestFocus();
         this.getView().setOnKeyListener(new View.OnKeyListener() {
@@ -510,7 +513,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     public void showAlertToRemoveProfilePic() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mainActivity);
-        alertDialogBuilder.setMessage("Remove this profile picture?");
+        alertDialogBuilder.setMessage("Remove this event image?");
 
         alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             @Override
@@ -649,11 +652,24 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                     mainActivity.saveTrack(trackObj);
                     EventBus.getDefault().post(track, Constants.SHOW_EVENT_INFO);
                     //On back pressed..
+
                     View view1 = mainActivity.getCurrentFocus();
                     if (view1 != null) {
                         InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
                     }
+
+                    if(!fromEdited) {
+                        //edit the event which is not saved on server
+                        TrackCollection.eventList.add(track);
+                    } else {
+                        for(Track trackData : TrackCollection.eventList) {
+                            if(trackData.getId() == null) {
+                                TrackCollection.eventList.remove(trackData);
+                            }
+                        }
+                    }
+                    EventBus.getDefault().post("update", Constants.UPDATE_EVENT_IN_HOME);
                     mainActivity.onBackPressed();
                     if(fromEdited) {
                         EventBus.getDefault().post(imageView.getDrawable(), Constants.UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT);

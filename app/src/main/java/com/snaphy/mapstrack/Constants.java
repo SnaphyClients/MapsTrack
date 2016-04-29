@@ -108,5 +108,7 @@ public final class Constants {
     public static final String UPDATE_ADDRESS_FROM_MAP = "UpdateAddressFromMap";
     public static final String UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT = "UpdateImageFromEditedCreateEvent";
 
+    public static final String UPDATE_EVENT_IN_HOME = "UpdateLocationInHome";
+
 
 }

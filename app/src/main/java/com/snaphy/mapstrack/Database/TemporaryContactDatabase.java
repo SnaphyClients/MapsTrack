@@ -1,3 +1,4 @@
+/*
 package com.snaphy.mapstrack.Database;
 
 import com.activeandroid.Model;
@@ -5,9 +6,11 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 
+*/
 /**
  * Created by Ravi-Gupta on 12/24/2015.
- */
+ *//*
+
 @Table(name = "Temp")
 public class TemporaryContactDatabase extends Model {
 
@@ -32,3 +35,4 @@ public class TemporaryContactDatabase extends Model {
         new Delete().from(TemporaryContactDatabase.class).execute();
     }
 }
+*/

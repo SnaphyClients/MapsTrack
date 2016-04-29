@@ -52,6 +52,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -59,6 +61,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
 import com.snaphy.mapstrack.Collection.TrackCollection;
+import com.snaphy.mapstrack.Database.MapsTrackDB;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
 import com.snaphy.mapstrack.Fragment.ContactFragment;
 import com.snaphy.mapstrack.Fragment.CreateEventFragment;
@@ -117,6 +120,8 @@ import java.util.TimeZone;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
+/*import com.google.android.gms.analytics.Tracker;*/
+
 //import com.google.android.gms.analytics.Tracker;
 
 /*import com.google.android.gms.analytics.Tracker;*/
@@ -143,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     double latitude;
     double longitude;
     static MainActivity mainActivity;
-    //Tracker tracker;
+    public Tracker tracker;
     /*Push Implementation*/
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     GoogleCloudMessaging gcm;
@@ -166,9 +171,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         parentLayout = findViewById(R.id.container);
-        /*MapsTrackDB application = (MapsTrackDB) getApplication();
+        /*Mint.initAndStartSession(MainActivity.this, "16020362");*/
+        MapsTrackDB application = (MapsTrackDB) getApplication();
         tracker = application.getDefaultTracker();
-        tracker.setScreenName("MainActivity");*/
+        tracker.setScreenName("MainActivity");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
         mainActivity = this;
         that = this;
         //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
@@ -341,7 +348,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     registerInstallation(null);
                     //moveToLogin();
                     //Retry Login
-                    replaceFragment(R.layout.fragment_retry_login, null);
+
+                    if(t.toString().equals("org.apache.http.client.HttpResponseException: Unauthorized")) {
+                        moveToLogin();
+                    } else {
+                        replaceFragment(R.layout.fragment_retry_login, null);
+                    }
+
                 }
             });
 
@@ -357,6 +370,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     @Override
     public void onResume() {
         super.onResume();
+        tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("MapsTrack")
+                .setAction("")
+                .build());
     }
 
     @Override
@@ -1574,7 +1591,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }else {
             track.get__eventType(false, getLoopBackAdapter(), new ObjectCallback<EventType>() {
                 @Override
-                public void onSuccess(EventType object) {
+                public void onSuccess(EventType object)
+                {
                     addEventTypeToView(object, textView);
                 }
 
@@ -1669,6 +1687,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         String pattern = "\\+\\d{12,12}";
         String checkZero = "^0\\d+";
         // Now create matcher object.
+
+        contactNumberDataString = contactNumberDataString.replaceAll("\\s","");
         boolean match = contactNumberDataString.matches(pattern);
         if (!match) {
             boolean isZero = contactNumberDataString.matches(checkZero);

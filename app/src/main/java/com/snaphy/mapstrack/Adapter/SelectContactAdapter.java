@@ -1,3 +1,4 @@
+/*
 package com.snaphy.mapstrack.Adapter;
 
 import android.content.Context;
@@ -12,15 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.Database.TemporaryContactDatabase;
 import com.snaphy.mapstrack.Model.SelectContactModel;
 import com.snaphy.mapstrack.R;
 
 import org.simple.eventbus.EventBus;
 
+*/
 /**
  * Created by Ravi-Gupta on 12/24/2015.
- */
+ *//*
+
 public class SelectContactAdapter extends SimpleCursorAdapter {
 
     private Context mContext;
@@ -98,4 +100,4 @@ public class SelectContactAdapter extends SimpleCursorAdapter {
         CheckBox checkBox;
     }
 
-}
+}*/

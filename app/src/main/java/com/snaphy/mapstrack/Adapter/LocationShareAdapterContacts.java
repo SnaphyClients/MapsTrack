@@ -107,7 +107,24 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
                         if(user.getLastUpdatedLocation().getCustomer() != null){
                             Customer customer = user.getLastUpdatedLocation().getCustomer();
                             if(customer.getLastUpdatedLocation() != null){
-                                latLng = new LatLng(customer.getLastUpdatedLocationLatitide(), customer.getLastUpdatedLocationLongitude());
+
+                                double latitude;
+                                try {
+                                    int lat = (int)customer.getLastUpdatedLocationLatitide();
+                                    latitude = (double) lat;
+                                } catch (Exception e) {
+                                    latitude = customer.getLastUpdatedLocationLatitide();
+                                }
+
+                                double longitude;
+                                try {
+                                    longitude = customer.getLastUpdatedLocationLongitude();
+                                } catch (Exception e) {
+                                    int longi = (int)customer.getLastUpdatedLocationLongitude();
+                                    longitude = (double) longi;
+                                }
+
+                                latLng = new LatLng(latitude, longitude);
                                 EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
                                 mainActivity.replaceFragment(R.layout.fragment_map, null);
 

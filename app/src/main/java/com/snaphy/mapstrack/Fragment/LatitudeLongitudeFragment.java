@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
+import com.seatgeek.placesautocomplete.model.AutocompleteResultType;
 import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.GPSTracker;
@@ -39,6 +41,7 @@ import org.simple.eventbus.EventBus;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -61,6 +64,8 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     GoogleMap globalGoogleMap;
     PlacesAutocompleteTextView placesAutocompleteTextView;
     LatLng selectedLatLng;
+    @Bind(R.id.fragment_latitude_longitude_button1)
+    ImageButton cancelAddressButton;
 
     public LatitudeLongitudeFragment() {
         // Required empty public constructor
@@ -85,6 +90,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         View view = inflater.inflate(R.layout.fragment_latitude_longitude, container, false);
         ButterKnife.bind(this, view);
         placesAutocompleteTextView = (PlacesAutocompleteTextView) view.findViewById(R.id.fragment_lat_long_place_autocomplete1);
+        placesAutocompleteTextView.setResultType(AutocompleteResultType.GEOCODE);
         gps=new GPSTracker(mainActivity);
         supportMapFragment = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.fragment_latitude_longitude_map));
         supportMapFragment.getMapAsync(this);
@@ -92,6 +98,10 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         setAddress();
         setPlaces();
         return view;
+    }
+
+    @OnClick(R.id.fragment_latitude_longitude_button1) void cancelAddress() {
+        placesAutocompleteTextView.setText("");
     }
 
     @OnClick ( R.id.fragment_lat_long_button1) void setMyLocation() {

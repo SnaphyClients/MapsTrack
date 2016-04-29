@@ -27,7 +27,7 @@
 
         <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
             android:id="@+id/fragment_lat_long_place_autocomplete1"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="text"
             android:background="@drawable/round_edit_text"
@@ -35,8 +35,17 @@
             android:textSize="13sp"
             android:textColor="#777"
             android:hint="Search Location"
-            android:layout_weight="4"
+            android:layout_weight="7"
             app:pacv_googleMapsApiKey="AIzaSyDOkFISQfDfooJwIxYhbYEoOOvcMn8Hoqk" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/round_cross_button"
+            android:paddingRight="0dp"
+            android:layout_weight="2"
+            android:id="@+id/fragment_latitude_longitude_button1"
+            android:src="@drawable/ic_action_navigation_close"/>
 
     </LinearLayout>
 

@@ -1,12 +1,15 @@
+/*
 package com.snaphy.mapstrack.Database;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+*/
 /**
  * Created by Ravi-Gupta on 12/23/2015.
- */
+ *//*
+
 @Table(name = "Profile")
 public class ProfileDatabase extends Model {
 
@@ -32,3 +35,4 @@ public class ProfileDatabase extends Model {
         this.pictureUrl = pictureUrl;
     }
 }
+*/
