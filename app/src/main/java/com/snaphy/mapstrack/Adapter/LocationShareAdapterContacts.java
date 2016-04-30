@@ -3,6 +3,8 @@ package com.snaphy.mapstrack.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -125,8 +127,14 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
                                 }
 
                                 latLng = new LatLng(latitude, longitude);
-                                EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
-                                mainActivity.replaceFragment(R.layout.fragment_map, null);
+                               /* EventBus.getDefault().postSticky(latLng, Constants.OPEN_MAP_FROM_LOCATION);
+                                mainActivity.replaceFragment(R.layout.fragment_map, null);*/
+                                if(latLng != null) {
+                                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latLng.latitude + "," + latLng.longitude);
+                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                    mapIntent.setPackage("com.google.android.apps.maps");
+                                    mainActivity.startActivity(mapIntent);
+                                }
 
                             }
                         }

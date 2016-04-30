@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -269,10 +270,13 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     }
 
-    @OnClick(R.id.fragment_event_info_button3)
-    void openMap() {
-        mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
-        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);
+    @OnClick(R.id.fragment_event_info_button3) void openMap() {
+       /* mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
+        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);*/
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     @OnClick(R.id.fragment_event_info_button5) void addFriends() {
