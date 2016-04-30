@@ -3,43 +3,18 @@ package com.androidsdk.snaphy.snaphyandroidsdk.models;
 
 
 
-import com.strongloop.android.loopback.Model;
-
-
-
-import org.json.JSONObject;
-import org.json.JSONArray;
-
-import java.util.List;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.EventTypeRepository;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
 import com.strongloop.android.loopback.RestAdapter;
-import com.strongloop.android.loopback.callbacks.ListCallback;
 import com.strongloop.android.loopback.callbacks.ObjectCallback;
-import com.strongloop.android.loopback.callbacks.VoidCallback;
-import com.strongloop.android.remoting.adapters.Adapter;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //Import self repository..
-import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
-
 //Now import repository of related models..
-
-    
-            import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
-            
-
-        
-    
-
-    
-            import com.androidsdk.snaphy.snaphyandroidsdk.repository.EventTypeRepository;
-            
-
-        
-    
-
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 
@@ -64,6 +39,9 @@ public class Track extends Model {
         that = this;
     }
 
+    public void setTrackId(){
+
+    }
     
         
             

@@ -624,6 +624,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 saveInProgress = true;
                 if (saveInProgress) {
                     //Now create the event first ..
+
                     Map<String, Object> trackObj = (Map<String, Object>) track.convertMap();
                     if (BackgroundService.getCustomer() != null) {
                         //Now add customer ..
@@ -645,13 +646,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                         trackObj.put("id", track.getId());
                     }
 
+                    //Now save the event..
+                    track = mainActivity.saveTrack(trackObj);
+
                     track.addRelation(BackgroundService.getCustomer());
                     track.addRelation(selectedEventType);
-
-                    //Now save the event..
-                    mainActivity.saveTrack(trackObj);
                     EventBus.getDefault().post(track, Constants.SHOW_EVENT_INFO);
-                    //On back pressed..
 
                     View view1 = mainActivity.getCurrentFocus();
                     if (view1 != null) {
@@ -659,17 +659,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                         imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
                     }
 
-                    if(!fromEdited) {
+                    if(track.getId() == null) {
                         //edit the event which is not saved on server
                         TrackCollection.eventList.add(track);
-                    } else {
-                        for(Track trackData : TrackCollection.eventList) {
-                            if(trackData.getId() == null) {
-                                TrackCollection.eventList.remove(trackData);
-                            }
-                        }
                     }
-                    EventBus.getDefault().post("update", Constants.UPDATE_EVENT_IN_HOME);
+
+                    EventBus.getDefault().post(true, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
                     mainActivity.onBackPressed();
                     if(fromEdited) {
                         EventBus.getDefault().post(imageView.getDrawable(), Constants.UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT);

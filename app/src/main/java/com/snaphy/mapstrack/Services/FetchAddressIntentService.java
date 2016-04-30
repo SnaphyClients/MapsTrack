@@ -15,6 +15,8 @@ import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
+import org.simple.eventbus.EventBus;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,5 +108,9 @@ public class FetchAddressIntentService extends IntentService {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RESULT_DATA_KEY, message);
         mReceiver.send(resultCode, bundle);
+        if(resultCode == 1){
+            EventBus.getDefault().postSticky("", Constants.SEND_ERROR_IN_FINDING_LOCATION);
+            EventBus.getDefault().post("", Constants.SEND_ERROR_IN_FINDING_LOCATION);
+        }
     }
 }

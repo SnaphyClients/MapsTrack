@@ -2,44 +2,26 @@ package com.androidsdk.snaphy.snaphyandroidsdk.repository;
 
 
 
-import com.google.common.collect.ImmutableMap;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.strongloop.android.loopback.callbacks.ListCallback;
 import com.strongloop.android.loopback.callbacks.ObjectCallback;
-import com.strongloop.android.loopback.callbacks.VoidCallback;
 import com.strongloop.android.remoting.JsonUtil;
 import com.strongloop.android.remoting.adapters.Adapter;
 import com.strongloop.android.remoting.adapters.RestContract;
 import com.strongloop.android.remoting.adapters.RestContractItem;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-
-
-
-import com.strongloop.android.loopback.ModelRepository;
-
-
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 //Import its models too.
-import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
-
 //Now import model of related models..
-
-    
-            import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
-            import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
-            
-        
-    
-
-    
-            import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
-            import com.androidsdk.snaphy.snaphyandroidsdk.repository.EventTypeRepository;
             
         
     

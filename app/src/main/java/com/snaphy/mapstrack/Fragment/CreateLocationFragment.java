@@ -25,6 +25,7 @@ import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
@@ -359,8 +360,9 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                     }
 
                     //Now save the event..
-                    mainActivity.saveTrack(trackObj);
+                    track = mainActivity.saveTrack(trackObj);
                     track.addRelation(BackgroundService.getCustomer());
+
                     EventBus.getDefault().post(track, Constants.SHOW_LOCATION_INFO);
                     //On back pressed..
                     View view1 = mainActivity.getCurrentFocus();
@@ -368,6 +370,14 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                         InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
                     }
+
+                    if(track.getId() == null) {
+                        //edit the location which is not saved on server
+                        TrackCollection.locationList.add(track);
+                    }
+
+                   /* EventBus.getDefault().post(true, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);*/
+
                     mainActivity.onBackPressed();
                     saveInProgress = false;
                 }

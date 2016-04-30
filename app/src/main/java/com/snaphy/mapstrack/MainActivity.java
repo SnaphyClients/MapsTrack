@@ -104,6 +104,7 @@ import com.strongloop.android.remoting.adapters.Adapter;
 
 import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -176,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         tracker = application.getDefaultTracker();
         tracker.setScreenName("MainActivity");
         tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
         mainActivity = this;
         that = this;
         //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
@@ -379,7 +382,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     @Override
     public void onPause() {
         super.onPause();
-        //EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -1516,6 +1518,36 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
     }
 
+    @Subscriber ( tag = Constants.SEND_ERROR_IN_FINDING_LOCATION )
+    public void showErrorMessage(String resultCode) {
+        Log.v(Constants.TAG, "Error Fetching Address");
+        Toast.makeText(this, "Cannot locate you, Please try again", Toast.LENGTH_LONG);
+        startIntentService();
+    }
+
+    public void showAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Unable to locate you, try again?");
+
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                startIntentService();
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+
 
     /**
      * It is a class which is used to get result received from the service
@@ -1552,16 +1584,16 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     public void run() {
                         if (mAddressOutput != null) {
                             BackgroundService.setAddress(mAddressOutput);
-
+                            mainActivity.startService();
                         }
                     }
                 });
 
-            } else {
+            } else if(resultCode == Constants.FAILURE_RESULT){
                 Log.v(Constants.TAG,"Try again");
+                // SHOW MESSAGE THAT ADDRESS CANNOT BE FETCHED AT THE MOMENT
                 //startIntentService();
             }
-            mainActivity.startService();
         }
     }
 
@@ -1620,7 +1652,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
-    public void saveTrack(Track track){
+    public void saveTrack(final Track track){
         Map<String,Object> trackObj = (Map<String,Object>)track.convertMap();
 
         if(track.getId() != null){
@@ -1629,7 +1661,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             saveTrack.updateAttributes((String) track.getId(), trackObj, new ObjectCallback<Track>() {
                 @Override
                 public void onSuccess(Track object) {
-
                 }
 
                 @Override
@@ -1653,15 +1684,20 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
-    public void saveTrack(Map<String, Object> trackObj){
+    public Track saveTrack(Map<String, Object> trackObj){
         TrackRepository saveTrack = getLoopBackAdapter().createRepository(TrackRepository.class);
+
         if(trackObj.get("id") == null){
             trackObj.remove("id");
         }
+
+        final Track tempTrack = saveTrack.createObject(trackObj);
+
+
         saveTrack.upsert(trackObj, new ObjectCallback<Track>() {
             @Override
             public void onSuccess(Track object) {
-
+                tempTrack.setId(object.getId());
             }
 
             @Override
@@ -1669,6 +1705,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 Log.e(Constants.TAG, t.toString());
             }
         });
+
+        return tempTrack;
     }
 
 
@@ -1829,3 +1867,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
 }
+
+
+//ON UPDATING SDK FOLLOWING FILE SHOULD BE TAKEN INTO CONSIDERATION
+//Model.java {Loopback}
+//ModelRepository.java {Loopback}
+//CustomModel.java {APP}

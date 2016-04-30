@@ -28,7 +28,7 @@ public class TrackCollection {
 
     MyRestAdapter restAdapter;
 
-    private int limit = 10;
+    private int limit = 20;
 
     public static Map<String, Boolean> getTrackCurrentFilterSelect() {
         return trackCurrentFilterSelect;

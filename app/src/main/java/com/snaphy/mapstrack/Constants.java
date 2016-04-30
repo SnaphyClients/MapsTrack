@@ -109,6 +109,7 @@ public final class Constants {
     public static final String UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT = "UpdateImageFromEditedCreateEvent";
 
     public static final String UPDATE_EVENT_IN_HOME = "UpdateLocationInHome";
+    public static final String SEND_ERROR_IN_FINDING_LOCATION = "SendErrorInFindingLocation";
 
 
 }
