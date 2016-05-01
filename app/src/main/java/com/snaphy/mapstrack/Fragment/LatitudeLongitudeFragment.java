@@ -2,13 +2,13 @@ package com.snaphy.mapstrack.Fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -17,7 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,10 +32,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
-import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
-import com.seatgeek.placesautocomplete.model.AutocompleteResultType;
-import com.seatgeek.placesautocomplete.model.Place;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.GPSTracker;
 import com.snaphy.mapstrack.MainActivity;
@@ -62,7 +64,11 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     Marker marker;
     MainActivity mainActivity;
     GoogleMap globalGoogleMap;
-    PlacesAutocompleteTextView placesAutocompleteTextView;
+    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final int RESULT_OK = -1;
+    private static final int RESULT_CANCELED = 0;
+    /*PlacesAutocompleteTextView placesAutocompleteTextView;*/
+    TextView showCurrentLocationText;
     LatLng selectedLatLng;
     @Bind(R.id.fragment_latitude_longitude_button1)
     ImageButton cancelAddressButton;
@@ -89,26 +95,68 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_latitude_longitude, container, false);
         ButterKnife.bind(this, view);
-        placesAutocompleteTextView = (PlacesAutocompleteTextView) view.findViewById(R.id.fragment_lat_long_place_autocomplete1);
-        placesAutocompleteTextView.setResultType(AutocompleteResultType.GEOCODE);
+        showCurrentLocationText = (TextView) view.findViewById(R.id.fragment_lat_long_place_autocomplete1);
+
         gps=new GPSTracker(mainActivity);
         supportMapFragment = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.fragment_latitude_longitude_map));
         supportMapFragment.getMapAsync(this);
         selectedLatLng = BackgroundService.getCurrentLocation();
         setAddress();
-        setPlaces();
+        setCurrentLocation(view);
         return view;
     }
 
+    public void setCurrentLocation(final View view) {
+        showCurrentLocationText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findPlace(view);
+            }
+        });
+    }
+
+    public void findPlace(View view) {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(mainActivity);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+    }
+
+    // A place has been received; use requestCode to track the request.
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(mainActivity, data);
+                Log.i(TAG, "Place: " + place.getName());
+                setNewMarkerLocation(place.getAddress().toString());
+                showCurrentLocationText.setText(place.getAddress().toString());
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(mainActivity, data);
+                // TODO: Handle the error.
+                Log.i(TAG, status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+
     @OnClick(R.id.fragment_latitude_longitude_button1) void cancelAddress() {
-        placesAutocompleteTextView.setText("");
+        /*placesAutocompleteTextView.setText("");*/
     }
 
     @OnClick ( R.id.fragment_lat_long_button1) void setMyLocation() {
         //DATA is in selected latlng
         if(selectedLatLng != null) {
             EventBus.getDefault().post(selectedLatLng, Constants.SET_LATITUDE_LONGITUDE);
-            EventBus.getDefault().post(placesAutocompleteTextView.getText().toString(), Constants.UPDATE_ADDRESS_FROM_MAP);
+            EventBus.getDefault().post(showCurrentLocationText.getText().toString(), Constants.UPDATE_ADDRESS_FROM_MAP);
         }
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
@@ -120,11 +168,11 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
 
     private void setAddress() {
         if(BackgroundService.getAddress() != null) {
-            placesAutocompleteTextView.setText(BackgroundService.getAddress());
+            showCurrentLocationText.setText(BackgroundService.getAddress());
         }
     }
 
-    public void setPlaces() {
+    /*public void setPlaces() {
         placesAutocompleteTextView.setOnPlaceSelectedListener(
                 new OnPlaceSelectedListener() {
                     @Override
@@ -134,7 +182,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
                     }
                 }
         );
-    }
+    }*/
 
     public void setNewMarkerLocation(String address) {
         Geocoder coder = new Geocoder(mainActivity);
@@ -234,7 +282,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
 
     @Override
     public void onMyLocationChange(Location location) {
-        placesAutocompleteTextView.setCurrentLocation(location);
+        /*placesAutocompleteTextView.setCurrentLocation(location);*/
     }
 
     /**
