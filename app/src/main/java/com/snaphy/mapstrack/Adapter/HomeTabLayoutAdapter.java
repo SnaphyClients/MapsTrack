@@ -33,11 +33,11 @@ public class HomeTabLayoutAdapter extends FragmentPagerAdapter {
             case 0 :
                 return new HomeFragment();
             case 1 :
-                return new ShareFragment();
-            case 2 :
                 return new ProfileFragment();
-            case 3 :
+            case 2 :
                 return new SettingFragment();
+            case 3 :
+                return new ShareFragment();
             default:
                 return new HomeFragment();
         }

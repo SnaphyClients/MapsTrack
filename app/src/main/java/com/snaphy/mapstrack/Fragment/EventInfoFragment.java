@@ -202,6 +202,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
             CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", (String.valueOf(track.getFriends().size())));
             contact.setText(eContact);
         } else {
+            moreButton.setVisibility(View.GONE);
             CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", "0");
             contact.setText(eContact);
         }

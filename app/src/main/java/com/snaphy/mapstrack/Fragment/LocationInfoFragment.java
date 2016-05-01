@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,8 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_location_info_button1) com.github.clans.fab.FloatingActionButton editLocation;
     @Bind(R.id.fragment_location_info_button3) com.github.clans.fab.FloatingActionButton deleteLocation;
     @Bind(R.id.fragment_location_info_button6) com.github.clans.fab.FloatingActionButton addFriends;
+    @Bind(R.id.fragment_location_info_button5)
+    Button moreButton;
     ImageLoader imageLoader;
     LatLng latLng;
     MainActivity mainActivity;
@@ -132,6 +135,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
                 CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", (String.valueOf(track.getFriends().size())));
                 contacts.setText(eContact);
             } else {
+                moreButton.setVisibility(View.GONE);
                 CharSequence eContact = mainActivity.drawTextViewDesign("Friends Invited : ", "0");
                 contacts.setText(eContact);
             }

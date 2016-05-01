@@ -106,7 +106,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_floating_button1) com.github.clans.fab.FloatingActionMenu parentFloatingButton;
 
     com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner materialSpinner;
-    static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;
+    /*static com.seatgeek.placesautocomplete.PlacesAutocompleteTextView placesAutocompleteTextView;*/
     DisplayContactAdapter displayContactAdapter;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();

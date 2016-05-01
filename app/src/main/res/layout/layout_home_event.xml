@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/layout_home_event_textview1"
         android:textColor="@color/white"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="15dp"
         android:textSize="15sp"
         android:textStyle="bold"/>
@@ -24,6 +24,6 @@
         android:layout_marginLeft="15dp"
         android:textSize="11sp"
         android:layout_marginTop="2dp"
-        android:layout_marginBottom="14dp"/>
+        android:layout_marginBottom="5dp"/>
 
 </RelativeLayout>

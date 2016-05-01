@@ -183,9 +183,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
      */
     public void setIconInTabLayout() {
         tabLayout.getTabAt(0).setIcon(R.mipmap.selected_home);
-        tabLayout.getTabAt(1).setIcon(R.mipmap.share);
-        tabLayout.getTabAt(2).setIcon(R.mipmap.profile);
-        tabLayout.getTabAt(3).setIcon(R.mipmap.setting);
+        tabLayout.getTabAt(3).setIcon(R.mipmap.share);
+        tabLayout.getTabAt(1).setIcon(R.mipmap.profile);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.setting);
 
     }
 
@@ -202,15 +202,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
                 break;
 
             case 1 :
-                tabLayout.getTabAt(1).setIcon(R.mipmap.selected_share);
+                tabLayout.getTabAt(1).setIcon(R.mipmap.selected_profile);
                 break;
 
             case 2 :
-                tabLayout.getTabAt(2).setIcon(R.mipmap.selected_profile);
+                tabLayout.getTabAt(2).setIcon(R.mipmap.selected_setting);
                 break;
 
             case 3 :
-                tabLayout.getTabAt(3).setIcon(R.mipmap.selected_setting);
+                tabLayout.getTabAt(3).setIcon(R.mipmap.selected_share);
                 break;
 
             default:
@@ -230,15 +230,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
                 break;
 
             case 1 :
-                tabLayout.getTabAt(1).setIcon(R.mipmap.share);
+                tabLayout.getTabAt(1).setIcon(R.mipmap.profile);
                 break;
 
             case 2 :
-                tabLayout.getTabAt(2).setIcon(R.mipmap.profile);
+                tabLayout.getTabAt(2).setIcon(R.mipmap.setting);
                 break;
 
             case 3 :
-                tabLayout.getTabAt(3).setIcon(R.mipmap.setting);
+                tabLayout.getTabAt(3).setIcon(R.mipmap.share);
                 break;
 
         }
