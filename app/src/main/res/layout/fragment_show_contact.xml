@@ -62,5 +62,13 @@
         android:layout_marginTop="10dp"
         android:scrollbars="vertical"/>
 
+    <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
+        android:id="@+id/fast_scroller"
+        android:layout_width="5dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        />
+
 
 </RelativeLayout>

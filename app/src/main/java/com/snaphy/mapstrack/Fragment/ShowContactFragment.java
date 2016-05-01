@@ -40,6 +40,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -117,7 +118,13 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_show_contact, container, false);
         ButterKnife.bind(this, view);
+        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) view.findViewById(R.id.fast_scroller);
 
+        // Connect the recycler to the scroller (to let the scroller scroll the list)
+        fastScroller.setRecyclerView(recyclerView);
+
+        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
+        recyclerView.setOnScrollListener(fastScroller.getOnScrollListener());
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
