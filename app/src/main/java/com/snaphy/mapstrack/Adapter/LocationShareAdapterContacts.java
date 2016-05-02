@@ -112,10 +112,10 @@ public class LocationShareAdapterContacts  extends RecyclerView.Adapter<Location
 
                                 double latitude;
                                 try {
+                                    latitude = customer.getLastUpdatedLocationLatitide();
+                                } catch (Exception e) {
                                     int lat = (int)customer.getLastUpdatedLocationLatitide();
                                     latitude = (double) lat;
-                                } catch (Exception e) {
-                                    latitude = customer.getLastUpdatedLocationLatitide();
                                 }
 
                                 double longitude;

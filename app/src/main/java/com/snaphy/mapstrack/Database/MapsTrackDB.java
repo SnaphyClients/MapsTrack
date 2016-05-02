@@ -25,8 +25,10 @@ public class MapsTrackDB extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-       /* Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
-        ActiveAndroid.initialize(this);*/
+/*
+        Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+*/
+        /*ActiveAndroid.initialize(this);*/
     }
 
     /**
@@ -38,6 +40,7 @@ public class MapsTrackDB extends Application {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
             mTracker = analytics.newTracker(R.xml.global_tracker);
+            mTracker.enableExceptionReporting(true);
         }
         return mTracker;
     }
