@@ -1585,6 +1585,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                         if (mAddressOutput != null) {
                             BackgroundService.setAddress(mAddressOutput);
                             mainActivity.startService();
+                            Log.v(Constants.TAG, "From Result Receiver");
                         }
                     }
                 });
@@ -1597,7 +1598,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
     }
 
-
+    @Subscriber( tag = Constants.SEND_ADDRESS_HAS_BEEN_FOUND)
+    public void getAddressFromService(String address) {
+        BackgroundService.setAddress(address);
+        mainActivity.startService();
+        Log.v(Constants.TAG,"From EventBus");
+    }
 
 
 

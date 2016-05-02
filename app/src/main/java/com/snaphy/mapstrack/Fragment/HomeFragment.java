@@ -68,6 +68,13 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
     int firstVisibleItem, visibleItemCount, totalItemCount;
     /*Infinite Loading data set*/
 
+    /*Infinite Loading dataset*/
+    private int previousTotal2 = 0;
+    private boolean loading2 = true;
+    private int visibleThreshold2 = 3;
+    int firstVisibleItem2, visibleItemCount2, totalItemCount2;
+    /*Infinite Loading data set*/
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -270,20 +277,20 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                visibleItemCount = recyclerView.getChildCount();
-                totalItemCount = layoutManager2.getItemCount();
-                firstVisibleItem = layoutManager2.findFirstVisibleItemPosition();
+                visibleItemCount2 = recyclerView.getChildCount();
+                totalItemCount2 = layoutManager2.getItemCount();
+                firstVisibleItem2 = layoutManager2.findFirstVisibleItemPosition();
 
-                if (loading) {
-                    if (totalItemCount > previousTotal) {
-                        loading = false;
-                        previousTotal = totalItemCount;
+                if (loading2) {
+                    if (totalItemCount2 > previousTotal2) {
+                        loading2 = false;
+                        previousTotal2 = totalItemCount2;
                     }
                 }
-                if (!loading && (totalItemCount - visibleItemCount)
-                        <= (firstVisibleItem + visibleThreshold)) {
+                if (!loading2 && (totalItemCount2 - visibleItemCount2)
+                        <= (firstVisibleItem2 + visibleThreshold2)) {
                     EventBus.getDefault().post(TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT);
-                    loading = true;
+                    loading2 = true;
                 }
             }
         });

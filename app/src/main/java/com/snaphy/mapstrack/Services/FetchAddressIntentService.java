@@ -93,6 +93,8 @@ public class FetchAddressIntentService extends IntentService {
                 addressFragments.add(address.getAddressLine(i));
             }
             Log.i(Constants.TAG, getString(R.string.address_found));
+            String foundAddress = TextUtils.join(" ", addressFragments);
+            EventBus.getDefault().post(foundAddress, Constants.SEND_ADDRESS_HAS_BEEN_FOUND);
             deliverResultToReceiver(Constants.SUCCESS_RESULT,
                     TextUtils.join(" ",
                             addressFragments));

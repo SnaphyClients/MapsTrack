@@ -43,7 +43,6 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
 import com.snaphy.mapstrack.Adapter.SpinnerAdapter;
 import com.snaphy.mapstrack.Collection.EventTypeCollection;
-import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
@@ -661,7 +660,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
                     if(track.getId() == null) {
                         //edit the event which is not saved on server
-                        TrackCollection.eventList.add(track);
+                       // TrackCollection.eventList.add(track);
                     }
 
                     EventBus.getDefault().post(true, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);

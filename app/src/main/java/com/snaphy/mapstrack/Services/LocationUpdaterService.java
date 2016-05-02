@@ -126,7 +126,7 @@ public class LocationUpdaterService extends Service implements android.location.
             LocationUpdaterService.getCustomer().save(new VoidCallback() {
                 @Override
                 public void onSuccess() {
-                    Log.i(Constants.TAG, "Location updated successfully..");
+                   /* Log.i(Constants.TAG, "Location updated successfully..");*/
                 }
 
                 @Override
