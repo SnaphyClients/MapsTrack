@@ -162,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     View parentLayout;
     UnboundService testService;
     boolean isBound = false;
+    static ProgressDialog progressMain;
+    int count = 0;
     public static LocalInstallation getInstallation() {
         return installation;
     }
@@ -1046,7 +1048,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         mGoogleApiClient.connect();
         //NOW move to home fragment..
         replaceFragment(R.layout.fragment_main, null);
-
+        progressMain = new ProgressDialog(this);
+        setProgress(progressMain);
     }
 
 
@@ -1522,7 +1525,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     public void showErrorMessage(String resultCode) {
         Log.v(Constants.TAG, "Error Fetching Address");
         Toast.makeText(this, "Cannot locate you, Please try again", Toast.LENGTH_LONG);
-        startIntentService();
+        if(count < 5) {
+            startIntentService();
+        } else {
+            progressMain.dismiss();
+            Snackbar.make(parentLayout, "Slow Connection, Please try again later", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     public void showAlertDialog() {
@@ -1586,6 +1594,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                             BackgroundService.setAddress(mAddressOutput);
                             mainActivity.startService();
                             Log.v(Constants.TAG, "From Result Receiver");
+                            progressMain.dismiss();
                         }
                     }
                 });
@@ -1602,6 +1611,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     public void getAddressFromService(String address) {
         BackgroundService.setAddress(address);
         mainActivity.startService();
+        progressMain.dismiss();
         Log.v(Constants.TAG,"From EventBus");
     }
 
