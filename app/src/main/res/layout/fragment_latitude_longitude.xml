@@ -26,6 +26,13 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp">
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/back_map_button"
+            android:id="@+id/fragment_latitude_longitude_back_button"
+            android:src="@drawable/ic_action_navigation_arrow_back"/>
+
 
         <TextView
             android:id="@+id/fragment_lat_long_place_autocomplete1"
@@ -44,10 +51,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/round_cross_button"
-            android:paddingRight="0dp"
             android:layout_weight="2"
             android:id="@+id/fragment_latitude_longitude_button1"
-            android:src="@drawable/ic_action_navigation_close"/>
+            android:src="@mipmap/edit_location"/>
 
     </LinearLayout>
 

@@ -65,6 +65,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_location_info_button1) com.github.clans.fab.FloatingActionButton editLocation;
     @Bind(R.id.fragment_location_info_button3) com.github.clans.fab.FloatingActionButton deleteLocation;
     @Bind(R.id.fragment_location_info_button6) com.github.clans.fab.FloatingActionButton addFriends;
+    @Bind(R.id.fragment_location_info_floating_button1) com.github.clans.fab.FloatingActionMenu floatingActionMenu;
     @Bind(R.id.fragment_location_info_button5)
     Button moreButton;
     ImageLoader imageLoader;
@@ -196,10 +197,12 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_location_info_image_button1) void backButton() {
+        floatingActionMenu.close(true);
         mainActivity.onBackPressed();
     }
 
     @OnClick(R.id.fragment_location_info_button1) void editLocation() {
+        floatingActionMenu.close(true);
         mainActivity.replaceFragment(R.id.fragment_location_info_button1, null);
         EventBus.getDefault().post(track, Constants.SHOW_LOCATION_EDIT);
 
@@ -216,6 +219,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_location_info_button3) void deleteLocation() {
+        floatingActionMenu.close(true);
         if(isLocationOwner){
             //Now delete this event from server..
             mainActivity.deleteTrack(track);
@@ -230,6 +234,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_location_info_button2) void openMap() {
+        floatingActionMenu.close(true);
        /* mainActivity.replaceFragment(R.id.fragment_location_info_button2, null);
         EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_LOCATION);*/
         Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude);
@@ -240,6 +245,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_location_info_button4) void createEventFromLocation() {
+        floatingActionMenu.close(true);
         if(track != null){
             TrackRepository trackRepository = mainActivity.getLoopBackAdapter().createRepository(TrackRepository.class);
             Map<String, Object> objectMap = (Map<String, Object>)track.convertMap();
@@ -249,16 +255,19 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
             Track locationToEvent = trackRepository.createObject(objectMap);
             mainActivity.replaceFragment(R.id.fragment_location_info_button4, null);
             EventBus.getDefault().post(locationToEvent, Constants.SHOW_EVENT_EDIT);
+            EventBus.getDefault().post("",Constants.CREATE_EVENT_FROM_LOCATION_FRAGMENT);
         }
     }
 
     @OnClick(R.id.fragment_location_info_button6) void addFriends() {
+        floatingActionMenu.close(true);
         mainActivity.replaceFragment(R.id.fragment_location_info_button6, null);
         EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
     }
 
 
     @OnClick(R.id.fragment_location_info_button5) void openContacts() {
+        floatingActionMenu.close(true);
         if(track.getFriends() != null) {
             if (track.getFriends().size() == 0) {
                 Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();

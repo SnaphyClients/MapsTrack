@@ -69,6 +69,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_info_button1) com.github.clans.fab.FloatingActionButton  editEventButton;
     @Bind(R.id.fragment_event_info_button2) com.github.clans.fab.FloatingActionButton  deleteEventButton;
     @Bind(R.id.fragment_event_info_button5) com.github.clans.fab.FloatingActionButton  addFriendsEventButton;
+    @Bind(R.id.fragment_event_info_floating_button1) com.github.clans.fab.FloatingActionMenu floatingMenu;
     @Bind(R.id.fragment_event_info_button4) Button moreButton;
     ImageLoader imageLoader;
     LatLng latLng;
@@ -242,11 +243,13 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_event_info_image_button1) void backButton() {
+        floatingMenu.close(true);
         EventBus.getDefault().post(false, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
         mainActivity.onBackPressed();
     }
 
     @OnClick(R.id.fragment_event_info_button1) void editEvent() {
+        floatingMenu.close(true);
         mainActivity.replaceFragment(R.id.fragment_event_info_button1, null);
         EventBus.getDefault().post(track, Constants.SHOW_EVENT_EDIT);
     }
@@ -259,6 +262,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button2) void deleteEvent() {
         if(isEventOwner){
+            floatingMenu.close(true);
             //Now delete this event from server..
             mainActivity.deleteTrack(track);
             TrackCollection.eventList.remove(this.track);
@@ -272,6 +276,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_event_info_button3) void openMap() {
+        floatingMenu.close(true);
        /* mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
         EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);*/
         Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude);
@@ -281,12 +286,15 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_event_info_button5) void addFriends() {
+        floatingMenu.close(true);
         mainActivity.replaceFragment(R.id.fragment_event_info_button5, null);
         EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
+
     }
 
 
     @OnClick(R.id.fragment_event_info_button4) void openContacts() {
+        floatingMenu.close(true);
         if(track.getFriends() != null) {
             if (track.getFriends().size() == 0) {
                 Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
@@ -304,10 +312,6 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     public void updateContactNumber(Track track) {
         showEventInfo(track);
     }
-
-
-
-
 
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {

@@ -25,7 +25,6 @@ import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
-import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
@@ -70,6 +69,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_create_location_radio_group) RadioGroup radioGroup;
     @Bind(R.id.fragment_create_location_imagebutton2) com.github.clans.fab.FloatingActionButton showSelectedFriends;
     @Bind(R.id.fragment_create_location_button1) com.github.clans.fab.FloatingActionButton addFriends;
+    @Bind(R.id.fragment_create_location_floating_button1) com.github.clans.fab.FloatingActionMenu parentFloatingMenu;
 
     MainActivity mainActivity;
 
@@ -112,6 +112,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_location_imagebutton2) void openContactDialog() {
+        parentFloatingMenu.close(true);
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -291,6 +292,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * Contact are selected from list of avialable contact in phone contact
      */
     @OnClick(R.id.fragment_create_location_button1) void selectContact() {
+        parentFloatingMenu.close(true);
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -301,6 +303,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_create_location_button5) void setLocation() {
+        parentFloatingMenu.close(true);
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -310,10 +313,12 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_location_info_imageview1) void noImageIsPresentInLocation() {
+        parentFloatingMenu.close(true);
         Toast.makeText(mainActivity, "Location doesn't have images", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.fragment_create_location_edittext3) void addressClickListener() {
+        parentFloatingMenu.close(true);
         if(locationAddress.getText().toString().isEmpty()) {
             locationAddress.setFocusableInTouchMode(false);
             View view1 = mainActivity.getCurrentFocus();
@@ -335,7 +340,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * When publish event button is clicked
      */
     @OnClick(R.id.fragment_create_location_button2) void publishLocation() {
-
+        parentFloatingMenu.close(true);
         validateData(new ObjectCallback<Track>() {
             @Override
             public void onSuccess(Track object) {
@@ -373,7 +378,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
                     if(track.getId() == null) {
                         //edit the location which is not saved on server
-                        TrackCollection.locationList.add(track);
+                        /*TrackCollection.locationList.add(track);*/
                     }
 
                    /* EventBus.getDefault().post(true, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);*/

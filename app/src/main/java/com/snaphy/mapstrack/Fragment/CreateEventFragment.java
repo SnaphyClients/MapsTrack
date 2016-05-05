@@ -119,6 +119,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     Track track;
     List<EventType> eventTypeList;
     boolean fromEdited = false;
+    boolean makeEventFromLocation = false;
 
     /* Temp Variables */
     String tempEventName;
@@ -159,7 +160,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         materialSpinner = (com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
         //placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         backButtonClickListener();
-        parentFloatingButton.setIconAnimated(false);
 
         //TODO May be clear list contact list here
 
@@ -205,6 +205,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick ( R.id.fragment_create_event_edittext2 ) void clickOnLocationFieldListener() {
+        parentFloatingButton.close(true);
         if(eventLocation.getText().toString().isEmpty()) {
             eventLocation.setFocusableInTouchMode(false);
             View view1 = mainActivity.getCurrentFocus();
@@ -289,6 +290,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         latLongHashMap.put("longitude", locationHomeModel.getLatLong().get("longitude"));
     }
 
+    @Subscriber( tag = Constants.CREATE_EVENT_FROM_LOCATION_FRAGMENT)
+    private void comingFromLocation(String testString) {
+        makeEventFromLocation = true;
+    }
+
     @Subscriber(tag = Constants.SHOW_EVENT_EDIT)
     private void onEdit(Track track) {
 
@@ -352,6 +358,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
      * Show contacts button event listener
      */
     @OnClick(R.id.fragment_create_event_imagebutton2) void openContactDialog() {
+        parentFloatingButton.close(true);
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -374,6 +381,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     @Subscriber ( tag = Constants.SEND_SELECTED_CONTACT_TO_CREATE_EVENT_FRAGMENT)
     public void saveSelectedContacts(ArrayList<ContactModel> contactModelArrayList) {
+        parentFloatingButton.close(true);
         for(ContactModel contactModel : contactModelArrayList) {
             if(contactModel.isSelected()) {
                 displayContactModelArrayList.add(new DisplayContactModel(contactModel.getContactName()));
@@ -503,6 +511,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_event_info_imageview1) void openGalleryFromImageView() {
+        parentFloatingButton.close(true);
        if(editedImageFile == null){
             openGalleryFolder();
         } else {
@@ -535,6 +544,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_create_event_button1) void openGallery() {
+        parentFloatingButton.close(true);
         openGalleryFolder();
     }
 
@@ -598,6 +608,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_create_event_button4) void selectContact() {
+        parentFloatingButton.close(true);
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -617,6 +628,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_create_event_button2) void publishEvent() {
+        parentFloatingButton.close(true);
         validateData(new ObjectCallback<Track>() {
             @Override
             public void onSuccess(Track object) {
@@ -664,6 +676,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                     }
 
                     EventBus.getDefault().post(true, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
+                    if(makeEventFromLocation) {
+                        mainActivity.onBackPressed();
+                    }
                     mainActivity.onBackPressed();
                     if(fromEdited) {
                         EventBus.getDefault().post(imageView.getDrawable(), Constants.UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT);

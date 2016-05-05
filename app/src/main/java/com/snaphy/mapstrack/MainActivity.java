@@ -1765,8 +1765,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         Log.v(Constants.TAG, date_.toString());
         String orderDay = date_.toString().substring(8, 10);
         String orderMonth = date_.toString().substring(4, 7);
-        String orderYear = date_.toString().substring(24, 28);
-        String actualDate = orderDay + " " + orderMonth.toUpperCase() + " " + orderYear;
+        String actualDate = orderDay + " " + orderMonth.toUpperCase();
         return actualDate;
     }
 

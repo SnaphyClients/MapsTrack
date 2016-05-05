@@ -70,8 +70,8 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     /*PlacesAutocompleteTextView placesAutocompleteTextView;*/
     TextView showCurrentLocationText;
     LatLng selectedLatLng;
-    @Bind(R.id.fragment_latitude_longitude_button1)
-    ImageButton cancelAddressButton;
+    @Bind(R.id.fragment_latitude_longitude_button1) ImageButton cancelAddressButton;
+    @Bind(R.id.fragment_latitude_longitude_back_button) ImageButton backButton;
 
     public LatitudeLongitudeFragment() {
         // Required empty public constructor
@@ -87,6 +87,10 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         super.onCreate(savedInstanceState);
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
+    }
+
+    @OnClick(R.id.fragment_latitude_longitude_back_button) void backButton() {
+        mainActivity.onBackPressed();
     }
 
     @Override
@@ -110,12 +114,12 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         showCurrentLocationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findPlace(view);
+                //findPlace();
             }
         });
     }
 
-    public void findPlace(View view) {
+    public void findPlace() {
         try {
             Intent intent =
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
@@ -148,8 +152,8 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         }
     }
 
-    @OnClick(R.id.fragment_latitude_longitude_button1) void cancelAddress() {
-        /*placesAutocompleteTextView.setText("");*/
+    @OnClick(R.id.fragment_latitude_longitude_button1) void editAddress() {
+        findPlace();
     }
 
     @OnClick ( R.id.fragment_lat_long_button1) void setMyLocation() {
