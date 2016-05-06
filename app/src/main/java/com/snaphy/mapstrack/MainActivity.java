@@ -353,7 +353,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     registerInstallation(null);
                     //moveToLogin();
                     //Retry Login
-
                     if(t.toString().equals("org.apache.http.client.HttpResponseException: Unauthorized")) {
                         moveToLogin();
                     } else {
@@ -1713,11 +1712,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         saveTrack.upsert(trackObj, new ObjectCallback<Track>() {
             @Override
             public void onSuccess(Track object) {
+
                 tempTrack.setId(object.getId());
             }
 
             @Override
             public void onError(Throwable t) {
+
                 Log.e(Constants.TAG, t.toString());
             }
         });

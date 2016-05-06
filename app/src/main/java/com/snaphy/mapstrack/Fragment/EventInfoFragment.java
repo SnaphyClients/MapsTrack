@@ -250,6 +250,10 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button1) void editEvent() {
         floatingMenu.close(true);
+        if(track.getId() == null){
+            Toast.makeText(mainActivity, "Please wait! Event saving is still in progress", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mainActivity.replaceFragment(R.id.fragment_event_info_button1, null);
         EventBus.getDefault().post(track, Constants.SHOW_EVENT_EDIT);
     }
@@ -263,8 +267,11 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @OnClick(R.id.fragment_event_info_button2) void deleteEvent() {
         if(isEventOwner){
             floatingMenu.close(true);
-            //Now delete this event from server..
-            mainActivity.deleteTrack(track);
+            if(track.getId() != null){
+                //Now delete this event from server..
+                mainActivity.deleteTrack(track);
+            }
+
             TrackCollection.eventList.remove(this.track);
             EventBus.getDefault().post(false, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
             Toast.makeText(mainActivity, "Event deleted successfully", Toast.LENGTH_SHORT).show();

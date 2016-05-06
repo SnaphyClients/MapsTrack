@@ -166,7 +166,25 @@ public class TrackCollection {
                     if (type.equals("event")) {
                         //setEventList(objects);
                         if (objects.size() != 0) {
-                            getEventList().addAll(objects);
+                            if(reset){
+                                getEventList().addAll(objects);
+                            }else{
+                                for(Track track: objects){
+                                    boolean found = false;
+                                    for(Track savedTrack : getEventList()){
+                                        if(savedTrack.getId().toString().equals(track.getId().toString())){
+                                            found = true;
+                                        }
+                                    }
+
+                                    if(!found){
+                                        getEventList().add(track);
+                                    }
+
+                                }
+                            }
+
+                            //getEventList().addAll(objects);
                         }
                         EventBus.getDefault().post(reset, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
                     } else {
@@ -196,8 +214,8 @@ public class TrackCollection {
 
 
     @Subscriber ( tag = Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT)
-    public void requestMoreEvents(SmoothProgressBar progressBar){
-            initialize("event", false, progressBar);
+    public void requestMoreEvents(SmoothProgressBar progressBar) {
+        initialize("event", false, progressBar);
     }
 
     @Subscriber ( tag = Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT)
