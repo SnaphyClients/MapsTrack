@@ -92,6 +92,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     ImageModel imageModel;
     LatLng currentLatLng;
     boolean saveInProgress = false;
+    boolean isImageEdited = false;
 
 
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
@@ -437,6 +438,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.v(Constants.TAG, t.toString());
             }
         });
@@ -532,7 +537,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -591,6 +596,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 final String decoded = Uri.decode(uri);
                 Log.v(Constants.TAG, "Image File = " + uri + "");
                 imageLoader.displayImage(decoded, imageView);
+                isImageEdited = true;
                 //Now upload image..
                 mainActivity.uploadWithCallback(Constants.CONTAINER, editedImageFile, new ObjectCallback<ImageModel>() {
                     @Override
@@ -600,6 +606,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
                     @Override
                     public void onError(Throwable t) {
+                        mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                                .setCategory("Exception")
+                                .setAction(t.toString())
+                                .build());
                         Log.e(Constants.TAG, t.toString());
                     }
                 });
@@ -683,6 +693,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                     if(makeEventFromLocation) {
                         mainActivity.onBackPressed();
                     }
+                    if(fromEdited) {
+                        mainActivity.onBackPressed();
+                    }
                     mainActivity.onBackPressed();
                     if(fromEdited) {
                         EventBus.getDefault().post(imageView.getDrawable(), Constants.UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT);
@@ -693,6 +706,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 saveInProgress = false;
             }
         });
@@ -738,14 +755,27 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     private void validateData(ObjectCallback<Track> callback){
         Exception t = new Exception();
-        if(editedImageFile != null){
-            if(imageModel == null){
+        if(!fromEdited) {
+            if (imageModel == null) {
                 String message = "Please! image is getting uploaded";
                 Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
                 callback.onError(t);
                 return;
-            }else{
+            } else {
                 track.setPicture(imageModel.getHashMap());
+            }
+        } else {
+            if(isImageEdited) {
+                if (imageModel == null) {
+                    String message = "Please! image is getting uploaded";
+                    Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
+                    callback.onError(t);
+                    return;
+                } else {
+                    track.setPicture(imageModel.getHashMap());
+                }
+            } else {
+                track.setPicture(track.getPicture());
             }
         }
 

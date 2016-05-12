@@ -108,6 +108,10 @@ public class TermsFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.e(Constants.TAG, t + "");
                 if(rootview != null) {
                     Snackbar.make(rootview, "Error fetching data", Snackbar.LENGTH_SHORT).show();

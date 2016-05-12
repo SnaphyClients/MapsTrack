@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Adapter.ShowContactAdapter;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
@@ -253,6 +254,10 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
                     @Override
                     public void onError(Throwable t) {
+                        mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                                .setCategory("Exception")
+                                .setAction(t.toString())
+                                .build());
                         Log.e(Constants.TAG, t.toString() + " in ShowContactFragment");
                     }
                 });

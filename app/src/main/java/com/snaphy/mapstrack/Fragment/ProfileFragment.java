@@ -128,6 +128,10 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 //TODO CLOSE LOADING BAR
                 Log.e(Constants.TAG, t.toString());
                 BackgroundService.getCustomerRepository().setCurrentUserId(null);

@@ -28,6 +28,7 @@ import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     public static final int LOCATION_ALERT = 103;
     LocationManager mLocationManager;
     private static LocalInstallation installation;
-    View parentLayout;
+    static View parentLayout;
     UnboundService testService;
     boolean isBound = false;
     static ProgressDialog progressMain;
@@ -337,7 +338,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                         // you have to login first
                         BackgroundService.setCustomer(null);
                         //Register anonymous for push service..
-                        registerInstallation(null);
                         moveToLogin();
                     }
 
@@ -345,12 +345,15 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
                 @Override
                 public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction(t.toString())
+                            .build());
                     //CLOSE PROGRESS DIALOG
                     progress.dismiss();
                     // you have to login first
                     BackgroundService.setCustomer(null);
                     //Register anonymous for push service..
-                    registerInstallation(null);
                     //moveToLogin();
                     //Retry Login
                     if(t.toString().equals("org.apache.http.client.HttpResponseException: Unauthorized")) {
@@ -821,8 +824,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 findFragmentByTag(LatitudeLongitudeFragment.TAG);
         if (latitudeLongitudeFragment == null) {
             latitudeLongitudeFragment = LatitudeLongitudeFragment.newInstance();
+        } else {
+            FragmentManager manager = getSupportFragmentManager();
+            manager.popBackStack(LatitudeLongitudeFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-        fragmentTransaction.replace(R.id.fragment_create_event_container, latitudeLongitudeFragment, LatitudeLongitudeFragment.TAG).addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_create_event_container, latitudeLongitudeFragment, LatitudeLongitudeFragment.TAG).addToBackStack(LatitudeLongitudeFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
@@ -835,8 +841,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 findFragmentByTag(LatitudeLongitudeFragment.TAG);
         if (latitudeLongitudeFragment == null) {
             latitudeLongitudeFragment = LatitudeLongitudeFragment.newInstance();
+        } else {
+            FragmentManager manager = getSupportFragmentManager();
+            manager.popBackStack(LatitudeLongitudeFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-        fragmentTransaction.replace(R.id.fragment_create_location_container, latitudeLongitudeFragment, LatitudeLongitudeFragment.TAG).addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_create_location_container, latitudeLongitudeFragment, LatitudeLongitudeFragment.TAG).addToBackStack(LatitudeLongitudeFragment.TAG);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
@@ -1004,6 +1013,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             @Override
             public void onError(final Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.e(Constants.TAG, "Error saving Installation.", t);
 
             }
@@ -1282,6 +1295,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.v(Constants.TAG, "Could not fetch url. Please try again later..");
             }
         });
@@ -1326,6 +1343,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
                 @Override
                 public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction(t.toString())
+                            .build());
                     callback.onError(t);
                 }
             });
@@ -1374,6 +1395,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
                 @Override
                 public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction(t.toString())
+                            .build());
                     Log.e(Constants.TAG, t.toString());
                     ImageModel imageModel = new ImageModel();
                     EventBus.getDefault().post(imageModel, TAG);
@@ -1401,6 +1426,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.e(Constants.TAG, t.toString());
                 Log.v(Constants.TAG, "Error in update Customer Method");
                 //Toast.makeText(that, Constants.ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
@@ -1523,9 +1552,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     @Subscriber ( tag = Constants.SEND_ERROR_IN_FINDING_LOCATION )
     public void showErrorMessage(String resultCode) {
         Log.v(Constants.TAG, "Error Fetching Address");
-        Toast.makeText(this, "Cannot locate you, Please try again", Toast.LENGTH_LONG);
+        Log.v(Constants.TAG, "Cannot locate you, Please try again");
         if(count < 5) {
             startIntentService();
+            count++;
         } else {
             progressMain.dismiss();
             Snackbar.make(parentLayout, "Slow Connection, Please try again later", Snackbar.LENGTH_LONG).show();
@@ -1599,7 +1629,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 });
 
             } else if(resultCode == Constants.FAILURE_RESULT){
-                Log.v(Constants.TAG,"Try again");
+                Log.v(Constants.TAG, "Try again");
                 // SHOW MESSAGE THAT ADDRESS CANNOT BE FETCHED AT THE MOMENT
                 //startIntentService();
             }
@@ -1625,6 +1655,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.e(Constants.TAG, t.toString());
             }
         });
@@ -1645,6 +1679,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
                 @Override
                 public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction(t.toString())
+                            .build());
                     Log.e(Constants.TAG, t.toString());
                     textView.setVisibility(View.GONE);
                 }
@@ -1680,6 +1718,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
                 @Override
                 public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction(t.toString())
+                            .build());
                     Log.e(Constants.TAG, t.toString());
                 }
             });
@@ -1692,6 +1734,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
                 @Override
                 public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction(t.toString())
+                            .build());
                     Log.e(Constants.TAG, t.toString());
                 }
             });
@@ -1718,7 +1764,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             @Override
             public void onError(Throwable t) {
-
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.e(Constants.TAG, t.toString());
             }
         });

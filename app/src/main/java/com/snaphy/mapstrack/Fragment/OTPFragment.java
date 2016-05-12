@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
+import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
@@ -151,6 +152,10 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
                 @Override
                 public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction(t.toString())
+                            .build());
                     if (progress != null) {
                         progress.dismiss();
                     }
@@ -163,8 +168,8 @@ public class OTPFragment extends android.support.v4.app.Fragment {
     @OnClick (R.id.fragment_otp_verification_button3) void requestOTP() {
         if(isPhoneValidate(mobileNumber.getText().toString())) {
             requestOtpServer(mobileNumber.getText().toString());
-            //progress = new ProgressDialog(mainActivity);
-            //mainActivity.setProgress(progress);
+            progress = new ProgressDialog(mainActivity);
+            setProgress(progress);
             View view1 = mainActivity.getCurrentFocus();
             if (view1 != null) {
                 InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -172,8 +177,19 @@ public class OTPFragment extends android.support.v4.app.Fragment {
             }
 
         } else {
+            View view1 = mainActivity.getCurrentFocus();
+            if (view1 != null) {
+                InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+            }
             Snackbar.make(rootview, "Enter Valid Mobile Number", Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    public void setProgress(ProgressDialog progress) {
+        progress.setIndeterminate(true);
+        progress.setMessage("Loading...");
+        progress.show();
     }
 
 
@@ -189,6 +205,10 @@ public class OTPFragment extends android.support.v4.app.Fragment {
 
                 @Override
                 public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction(t.toString())
+                            .build());
                     if(progress != null) {
                         progress.dismiss();
                     }

@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
+import com.google.android.gms.analytics.HitBuilders;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.snaphy.mapstrack.Adapter.CustomizeSearchAdapter;
 import com.snaphy.mapstrack.Adapter.HomeTabLayoutAdapter;
@@ -107,6 +108,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.e(Constants.TAG, t.toString());
             }
         });

@@ -133,7 +133,6 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
             finally {
                /* data.close();
                 data = null;*/
-                data.moveToFirst();
             }
             return "Executed";
         }

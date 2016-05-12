@@ -189,6 +189,14 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
 
     @Subscriber (tag = Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
     public void notifyEventList(boolean reset) {
+        if(TrackCollection.getTrackCurrentFilterSelect() != null) {
+            previousTotal = 0;
+            loading = true;
+            visibleThreshold = 3;
+            firstVisibleItem = 0;
+            visibleItemCount = 0;
+            totalItemCount = 0;
+        }
         homeEventAdapter.notifyDataSetChanged();
     }
 

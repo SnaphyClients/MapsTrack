@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.CompanyInfo;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CompanyInfoRepository;
+import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
@@ -97,6 +98,10 @@ public class FaqsFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.e(Constants.TAG, t + "");
                 mainActivity.stopProgressBar(progressBar);
                 if(rootview != null) {

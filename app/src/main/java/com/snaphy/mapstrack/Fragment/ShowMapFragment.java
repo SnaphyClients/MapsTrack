@@ -2,6 +2,7 @@ package com.snaphy.mapstrack.Fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.akexorcist.googledirection.DirectionCallback;
@@ -68,6 +70,8 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     MainActivity mainActivity;
     @Bind(R.id.fragment_map_textview1) TextView distance;
     @Bind(R.id.fragment_map_textview2) TextView time;
+    @Bind(R.id.fragment_map_button1)
+    Button openNavigation;
     String serverKey = "AIzaSyBMKfG1V911wOn3sx3cvhx01OsDqKzOmrs";
     LatLng position;
     LatLng destination;
@@ -98,6 +102,14 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @OnClick(R.id.fragment_map_button1) void openNavigation() {
+        mainActivity.onBackPressed();
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+destination.latitude+","+destination.longitude);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     @Subscriber(tag = Constants.SEND_MAP_COORDINATES_EVENT)

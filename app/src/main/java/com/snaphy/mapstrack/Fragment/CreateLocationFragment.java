@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
@@ -25,6 +26,7 @@ import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
 import com.snaphy.mapstrack.Adapter.DisplayContactAdapter;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
@@ -63,6 +65,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_create_location_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_location_edittext2) EditText locationId;
     @Bind(R.id.fragment_create_location_edittext3) EditText locationAddress;
+    @Bind(R.id.fragment_create_location_textview0)
+    TextView heading;
 
     @Bind(R.id.fragment_create_location_radio_button1) RadioButton publicRadioButton;
     @Bind(R.id.fragment_create_location_radio_button2) RadioButton privateRadioButton;
@@ -228,6 +232,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
             if(track.getLocationId() != null){
                 locationId.setEnabled(false);
                 locationId.setText(track.getLocationId().toString());
+                heading.setText(track.getLocationId().toString());
             }
 
             if(track.getAddress() != null) {
@@ -378,10 +383,10 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
                     if(track.getId() == null) {
                         //edit the location which is not saved on server
-                        /*TrackCollection.locationList.add(track);*/
+                        TrackCollection.locationList.add(track);
                     }
 
-                   /* EventBus.getDefault().post(true, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);*/
+                    EventBus.getDefault().post(true, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
 
                     mainActivity.onBackPressed();
                     saveInProgress = false;
@@ -390,6 +395,10 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 saveInProgress = false;
             }
         });
@@ -480,10 +489,13 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
             }else{
                 if(checkForSpaces(location.toString())) {
                     Toast.makeText(mainActivity, "Location Id could not have white spaces", Toast.LENGTH_SHORT).show();
+                    callback.onError(t);
+                    return;
                 } else {
                     //LocationID cannot be editable..
                     if(track.getId() == null){
                         track.setLocationId(location);
+                        track.setName(location);
                     }
 
                 }

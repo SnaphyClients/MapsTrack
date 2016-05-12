@@ -92,6 +92,7 @@
                 android:layout_below="@+id/fragment_event_info_textview3"
                 android:text=""
                 android:textSize="13sp"
+                android:paddingRight="15dp"
                 android:id="@+id/fragment_event_info_textview4"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"/>
@@ -141,6 +142,7 @@
                 android:layout_gravity="bottom|center"
                 android:layout_below="@+id/fragment_event_info_textview6"
                 android:text=""
+                android:paddingRight="15dp"
                 android:textSize="13sp"
                 android:id="@+id/fragment_event_info_textview5"
                 android:layout_marginTop="15dp"
@@ -222,7 +224,7 @@
         </android.support.design.widget.AppBarLayout>
 
          <com.github.clans.fab.FloatingActionMenu
-             android:id="@+id/fragment_event_info_floating_button1"
+             android:id="@+id/fragment_event_info_floating_menu1"
              android:layout_width="wrap_content"
              android:layout_height="match_parent"
              fab:menu_icon="@mipmap/menu"

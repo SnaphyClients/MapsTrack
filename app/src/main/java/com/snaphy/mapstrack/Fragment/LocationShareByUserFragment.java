@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.LastUpdatedLocation;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.LastUpdatedLocationRepository;
+import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Adapter.LocationShareAdapterContacts;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Helper.ContactMatcher;
@@ -239,6 +240,10 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
 
                     @Override
                     public void onError(Throwable t) {
+                        mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                                .setCategory("Exception")
+                                .setAction(t.toString())
+                                .build());
                         sharedLocation.clear();
                         Log.e(Constants.TAG, t.toString());
                         Log.v(Constants.TAG, "Error in Location Share By User Fragment");

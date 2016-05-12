@@ -1,7 +1,6 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -225,7 +224,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
             mainActivity.deleteTrack(track);
             TrackCollection.locationList.remove(this.track);
             EventBus.getDefault().post(false, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
-            Toast.makeText(mainActivity, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, "Location deleted successfully", Toast.LENGTH_SHORT).show();
             mainActivity.onBackPressed();
         }else {
             Toast.makeText(mainActivity, "You are not authorised to delete this location", Toast.LENGTH_SHORT).show();
@@ -235,12 +234,8 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_location_info_button2) void openMap() {
         floatingActionMenu.close(true);
-       /* mainActivity.replaceFragment(R.id.fragment_location_info_button2, null);
-        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_LOCATION);*/
-        Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude);
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+        mainActivity.replaceFragment(R.id.fragment_location_info_button2, null);
+        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_LOCATION);
     }
 
 

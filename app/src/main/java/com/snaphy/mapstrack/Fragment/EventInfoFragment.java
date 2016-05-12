@@ -1,7 +1,6 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,7 +68,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_info_button1) com.github.clans.fab.FloatingActionButton  editEventButton;
     @Bind(R.id.fragment_event_info_button2) com.github.clans.fab.FloatingActionButton  deleteEventButton;
     @Bind(R.id.fragment_event_info_button5) com.github.clans.fab.FloatingActionButton  addFriendsEventButton;
-    @Bind(R.id.fragment_event_info_floating_button1) com.github.clans.fab.FloatingActionMenu floatingMenu;
+    @Bind(R.id.fragment_event_info_floating_menu1) com.github.clans.fab.FloatingActionMenu floatingMenu;
     @Bind(R.id.fragment_event_info_button4) Button moreButton;
     ImageLoader imageLoader;
     LatLng latLng;
@@ -249,13 +248,13 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_event_info_button1) void editEvent() {
-        floatingMenu.close(true);
         if(track.getId() == null){
             Toast.makeText(mainActivity, "Please wait! Event saving is still in progress", Toast.LENGTH_SHORT).show();
             return;
         }
         mainActivity.replaceFragment(R.id.fragment_event_info_button1, null);
         EventBus.getDefault().post(track, Constants.SHOW_EVENT_EDIT);
+        floatingMenu.close(true);
     }
 
     @Subscriber
@@ -284,12 +283,12 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button3) void openMap() {
         floatingMenu.close(true);
-       /* mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
-        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);*/
-        Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude);
+        mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
+        EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);
+       /* Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+        startActivity(mapIntent);*/
     }
 
     @OnClick(R.id.fragment_event_info_button5) void addFriends() {

@@ -107,6 +107,10 @@ public class AboutusFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Exception")
+                        .setAction(t.toString())
+                        .build());
                 Log.e(Constants.TAG, t + "");
                 mainActivity.stopProgressBar(progressBar);
                 if(rootview != null) {
