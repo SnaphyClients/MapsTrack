@@ -98,6 +98,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     boolean saveInProgress = false;
     boolean isImageEdited = false;
 
+    int selectedDay;
+    int selectedMonth;
+    int selectedYear;
+
 
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
@@ -535,6 +539,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                     @Override
                     public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
                         //handler the result here
+                        selectedDay = day;
+                        selectedMonth = month;
+                        selectedYear = year;
+                        Log.v(Constants.TAG, "Date Picker = "+ " Year = "+ year+ "Month = "+ month);
                         dateEdittext.setText(dateDesc);
                     }
                 });
@@ -638,6 +646,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                                 .setAction(t.toString())
                                 .build());
                         Log.e(Constants.TAG, t.toString());
+                        Toast.makeText(mainActivity, "Image uploading failed", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -795,7 +804,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         if(!fromEdited) {
             if(editedImageFile != null) {
                 if (imageModel == null) {
-                    String message = "Please! image is getting uploaded";
+                    String message = "Please wait ! image is getting uploaded";
                     Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
                     callback.onError(t);
                     return;
@@ -806,7 +815,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         } else {
             if(isImageEdited) {
                 if (imageModel == null) {
-                    String message = "Please! image is getting uploaded";
+                    String message = "Please wait! image is getting uploaded";
                     Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
                     callback.onError(t);
                     return;
@@ -883,7 +892,41 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 callback.onError(t);
                 return;
             }else{
-                track.setEventDate(date);
+                //To check if date is less than current date
+
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                //get current date time with Date()
+                Date currentDate = new Date();
+                String currentDateString = dateFormat.format(currentDate);
+                Log.v(Constants.TAG,currentDateString);
+
+                String[] tokens = currentDateString.split("-");
+                Log.v(Constants.TAG, tokens[0]+ Integer.parseInt(tokens[1])+ Integer.parseInt(tokens[2])+" = 1");
+                Log.v(Constants.TAG, Integer.parseInt(tokens[0]) +"");
+                Log.v(Constants.TAG, "Year = " + selectedYear);
+                if(selectedYear >= Integer.parseInt(tokens[0])) {
+                    if(selectedMonth >= Integer.parseInt(tokens[1])) {
+                        if(selectedDay >= Integer.parseInt(tokens[2])) {
+                            track.setEventDate(date);
+                        }
+                        else {
+                            Toast.makeText(mainActivity,"Event date is Invalid", Toast.LENGTH_SHORT).show();
+                            callback.onError(t);
+                            return;
+                        }
+                    }
+                    else {
+                        Toast.makeText(mainActivity,"Event date is Invalid", Toast.LENGTH_SHORT).show();
+                        callback.onError(t);
+                        return;
+                    }
+                } else {
+                    Toast.makeText(mainActivity,"Event date is Invalid", Toast.LENGTH_SHORT).show();
+                    callback.onError(t);
+                    return;
+                }
+
+
             }
         }else{
             Toast.makeText(mainActivity, "Date is required", Toast.LENGTH_SHORT).show();

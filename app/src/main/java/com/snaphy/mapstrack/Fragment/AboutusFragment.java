@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +73,7 @@ public class AboutusFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_aboutus, container, false);
         rootview = view;
         ButterKnife.bind(this, view);
+        textView.setMovementMethod(new ScrollingMovementMethod());
         setAboutusText();
         pressBackButton();
         return view;

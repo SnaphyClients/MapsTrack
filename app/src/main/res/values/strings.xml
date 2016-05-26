@@ -14,7 +14,7 @@
 
     <!--Setting Fragment-->
     <string name="fragment_setting_textview1">Settings</string>
-    <string name="fragment_setting_button1">About</string>
+    <string name="fragment_setting_button1">About us</string>
     <string name="fragment_setting_button2">FAQs</string>
     <string name="fragment_setting_button3">Share</string>
     <string name="fragment_setting_button4">Rate</string>
