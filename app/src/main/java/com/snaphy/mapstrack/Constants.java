@@ -94,12 +94,15 @@ public final class Constants {
     public static final String SET_LATITUDE_LONGITUDE = "setLatitudeLongitude";
 
     public static final String RESET_EVENTS_FROM_FILTER_FRAGMENT = "resetEventsFromFilterFragment";
+    public static final String RESET_LOCATION_FROM_FILTER_FRAGMENT = "resetLocationFromFilterFragment";
     public static final String UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER = "updateDataInHomeFragmentFromFilter";
+    public static final String UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER_LOCATION = "updateDataInHomeFragmentFromFilterLocation";
 
 
     public static final String NEAR_BY = "nearby";
     public static final String SHARED_EVENTS = "shared";
     public static final String MY_EVENTS = "myevents";
+    public static final String MY_LOCATION = "myLocation";
 
     public static final String DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT = "displayContactFromSharedUserFragment";
 

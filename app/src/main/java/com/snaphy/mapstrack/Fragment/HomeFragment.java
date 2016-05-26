@@ -218,6 +218,14 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
 
     @Subscriber (tag = Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
     public void notifyLocationList(boolean reset) {
+        if(TrackCollection.getTrackCurrentFilterSelect() != null) {
+            previousTotal2 = 0;
+            loading2 = true;
+            visibleThreshold2 = 3;
+            firstVisibleItem2 = 0;
+            visibleItemCount2 = 0;
+            totalItemCount2 = 0;
+        }
         homeLocationAdapter.notifyDataSetChanged();
     }
 
@@ -288,6 +296,11 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
     @Subscriber ( tag = Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER)
     public void setFilterData(String emptyString) {
         EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+    }
+
+    @Subscriber ( tag = Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER_LOCATION)
+    public void setLocationFilterData(String emptyString) {
+        EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_LOCATION_FROM_FILTER_FRAGMENT);
     }
 
     public void recyclerViewLoadMoreLocationData() {

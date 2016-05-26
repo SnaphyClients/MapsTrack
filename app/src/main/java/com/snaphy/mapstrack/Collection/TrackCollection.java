@@ -79,6 +79,7 @@ public class TrackCollection {
         trackCurrentFilterSelect.put(Constants.MY_EVENTS, false);
         trackCurrentFilterSelect.put(Constants.NEAR_BY, false);
         trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, false);
+        trackCurrentFilterSelect.put(Constants.MY_LOCATION, false);
     }
 
     public void resetFilter(String type){
@@ -223,6 +224,11 @@ public class TrackCollection {
         initialize("event",true, progressBar);
     }
 
+    @Subscriber ( tag = Constants.RESET_LOCATION_FROM_FILTER_FRAGMENT)
+    public void initLocations(SmoothProgressBar progressBar){
+        initialize("location",true, progressBar);
+    }
+
     @Subscriber ( tag = Constants.REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT)
     public void requestMoreLocation(SmoothProgressBar progressBar) {
         initialize("location", false, progressBar);
@@ -249,6 +255,7 @@ public class TrackCollection {
         trackCurrentFilterSelect.put(Constants.MY_EVENTS, false);
         trackCurrentFilterSelect.put(Constants.NEAR_BY, false);
         trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, false);
+        trackCurrentFilterSelect.put(Constants.MY_LOCATION,false);
 
         if (filterType.equals(Constants.MY_EVENTS)) {
             trackCurrentFilterSelect.put(Constants.MY_EVENTS, true);
@@ -260,6 +267,10 @@ public class TrackCollection {
 
         if (filterType.equals(Constants.SHARED_EVENTS)) {
             trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, true);
+        }
+
+        if (filterType.equals(Constants.MY_LOCATION)) {
+            trackCurrentFilterSelect.put(Constants.MY_LOCATION, true);
         }
 
     }

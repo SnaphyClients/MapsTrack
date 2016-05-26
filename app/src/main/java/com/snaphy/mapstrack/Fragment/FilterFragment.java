@@ -36,6 +36,7 @@ public class FilterFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_filter_button1) Button sharedEventAndLocation;
     @Bind(R.id.fragment_filter_button2) Button myEventAndLocation;
     @Bind(R.id.fragment_filter_button3) Button nearbyEvents;
+    @Bind(R.id.fragment_filter_button4) Button myLocation;
     SmoothProgressBar smoothProgressBar;
     MainActivity mainActivity;
 
@@ -70,16 +71,26 @@ public class FilterFragment extends android.support.v4.app.Fragment {
                 myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_my_events_selected, 0, 0);
                 sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_share_events, 0, 0);
                 nearbyEvents.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_events, 0, 0);
+                myLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_location, 0, 0);
             } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.NEAR_BY)) {
 
                 myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_my_events, 0, 0);
                 sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_share_events, 0, 0);
                 nearbyEvents.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_events_selected, 0, 0);
+                myLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_location, 0, 0);
+
             } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.SHARED_EVENTS)) {
 
                 myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_my_events, 0, 0);
                 sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_share_events_selected, 0, 0);
                 nearbyEvents.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_events, 0, 0);
+                myLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_location, 0, 0);
+
+            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.MY_LOCATION)) {
+                myEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_my_events, 0, 0);
+                sharedEventAndLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_share_events, 0, 0);
+                nearbyEvents.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_events, 0, 0);
+                myLocation.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.filter_nearby_location_selected, 0, 0);
             }
         }
     }
@@ -87,20 +98,33 @@ public class FilterFragment extends android.support.v4.app.Fragment {
     @OnClick(R.id.fragment_filter_button1) void sharedEventAndLocation() {
         //TODO CHANCES OF ERROR CHECK LATER..
         mainActivity.setOnlySharedEventsFilter();
+        checkIfLocationIsChecked();
         EventBus.getDefault().post("", Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER);
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.fragment_filter_button2) void myEventAndLocation() {
         mainActivity.showMyEventFilter();
+        checkIfLocationIsChecked();
         EventBus.getDefault().post("", Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER);
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.fragment_filter_button3) void nearbyEvents() {
         mainActivity.setNearByEventFilter();
+        checkIfLocationIsChecked();
         EventBus.getDefault().post("", Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER);
         getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.fragment_filter_button4) void myLocations() {
+        mainActivity.showMyLocationFilter();
+        EventBus.getDefault().post("", Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER_LOCATION);
+        getActivity().onBackPressed();
+    }
+
+    public void checkIfLocationIsChecked() {
+            EventBus.getDefault().post("", Constants.UPDATE_DATA_IN_HOME_FRAGMENT_FROM_FILTER_LOCATION);
     }
 
     @OnClick(R.id.fragment_filter_imagebutton1) void backButton() {

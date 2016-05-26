@@ -1841,6 +1841,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public void setOnlySharedEventsFilter(){
+        setNearByLocationFilter();
         Map<String, Object> where = new HashMap<>();
         if(BackgroundService.getCustomer() != null){
             //First clear the where of track collection..
@@ -1858,6 +1859,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public void setNearByEventFilter(){
+        setNearByLocationFilter();
         Map<String, Object> where = new HashMap<>();
         //Add nearby
         if(BackgroundService.getCurrentLocation() != null){
@@ -1881,6 +1883,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public void showMyEventFilter(){
+        setNearByLocationFilter();
         Map<String, Object> where = new HashMap<>();
         //Add nearby
         if(BackgroundService.getCustomer() != null){
@@ -1891,6 +1894,40 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             }
         }
         TrackCollection.setFilterColor(Constants.MY_EVENTS);
+    }
+
+    public void showMyLocationFilter(){
+        Map<String, Object> where = new HashMap<>();
+        //Add nearby
+        if(BackgroundService.getCustomer() != null){
+            //First clear the where of track collection..
+            if(TrackCollection.getLocationFilter() != null){
+                TrackCollection.getLocationFilter().put("where", where);
+                where.put("customerId", BackgroundService.getCustomer().getId());
+            }
+        }
+        TrackCollection.setFilterColor(Constants.MY_LOCATION);
+    }
+
+    public void setNearByLocationFilter() {
+        Map<String, Object> where = new HashMap<>();
+        //Add nearby
+        if(BackgroundService.getCurrentLocation() != null){
+            /*
+            * where: {
+                location: {near: '153.536,-28'}
+            }*/
+            //First clear the where of track collection..
+            if(TrackCollection.getLocationFilter() != null){
+                TrackCollection.getLocationFilter().put("where", where);
+                Map<String, String> near = new HashMap<>();
+                near.put("near", "" + BackgroundService.getCurrentLocation().latitude+","+ BackgroundService.getCurrentLocation().longitude);
+                where.put("geolocation", near);
+                //Now only allow status of allowed event to view..
+                where.put("status", "allow");
+                where.put("isPublic", "public");
+            }
+        }
     }
 
     public String changeToUpperCase(String source) {
