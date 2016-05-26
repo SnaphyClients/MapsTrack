@@ -1,5 +1,6 @@
 package com.snaphy.mapstrack.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -83,6 +84,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     static CreateLocationFragment fragment;
     Track track;
     boolean saveInProgress = false;
+
+    ProgressDialog progress;
 
     public CreateLocationFragment() {
         // Required empty public constructor
@@ -346,9 +349,12 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      */
     @OnClick(R.id.fragment_create_location_button2) void publishLocation() {
         parentFloatingMenu.close(true);
+        progress = new ProgressDialog(mainActivity);
+        setProgress(progress);
         validateData(new ObjectCallback<Track>() {
             @Override
             public void onSuccess(Track object) {
+                progress.dismiss();
                 saveInProgress = true;
                 if (saveInProgress) {
                     //Now create the event first ..
@@ -377,11 +383,11 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                     //On back pressed..
                     View view1 = mainActivity.getCurrentFocus();
                     if (view1 != null) {
-                        InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
                     }
 
-                    if(track.getId() == null) {
+                    if (track.getId() == null) {
                         //edit the location which is not saved on server
                         TrackCollection.locationList.add(track);
                     }
@@ -395,6 +401,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                progress.dismiss();
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
                         .setAction(t.toString())
@@ -403,6 +410,12 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
             }
         });
 
+    }
+
+    public void setProgress(ProgressDialog progress) {
+        progress.setIndeterminate(true);
+        progress.setMessage("Loading...");
+        progress.show();
     }
 
 

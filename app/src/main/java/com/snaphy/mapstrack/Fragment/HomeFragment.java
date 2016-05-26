@@ -1,9 +1,11 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +50,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
     @Bind(R.id.fragment_home_image_filter1) ImageView imageViewFilter;
     @Bind(R.id.fragment_cart_floating_button1) android.support.design.widget.FloatingActionButton floatingActionButton1;
     @Bind(R.id.fragment_cart_floating_button2) android.support.design.widget.FloatingActionButton floatingActionButton2;
+    SharedPreferences app_preferences;
 
     HomeEventAdapter homeEventAdapter;
     HomeLocationAdapter homeLocationAdapter;
@@ -171,16 +174,29 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        showcaseView = new ShowcaseView.Builder(getActivity())
-                .withMaterialShowcase()
-                .setStyle(R.style.CustomShowcaseTheme2)
-                .setTarget(new ViewTarget(eventText))
-                .setOnClickListener(this)
-                .setContentTitle("Events")
-                .setContentText("In this section you will find any events that the going near to your house")
-                .build();
-        showcaseView.setButtonText("Next");
-        showcaseView.setButtonPosition(lps);
+
+        Boolean isFirstTime;
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
+        SharedPreferences.Editor editor = app_preferences.edit();
+        isFirstTime = app_preferences.getBoolean("isFirstTime", true);
+        if (isFirstTime) {
+            editor.putBoolean("isFirstTime", false);
+            editor.commit();
+
+            showcaseView = new ShowcaseView.Builder(getActivity())
+                    .withMaterialShowcase()
+                    .setStyle(R.style.CustomShowcaseTheme2)
+                    .setTarget(new ViewTarget(eventText))
+                    .setOnClickListener(this)
+                    .setContentTitle("Events")
+                    .setContentText("In this section you will find any events that the going near to your house")
+                    .build();
+            showcaseView.setButtonText("Next");
+            showcaseView.setButtonPosition(lps);
+
+        }else{
+
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -24,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
@@ -101,6 +105,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_create_event_edittext1) EditText eventName;
     @Bind(R.id.fragment_create_event_edittext4) EditText eventDescription;
     @Bind(R.id.fragment_event_info_imageview1) ImageView imageView;
+    @Bind(R.id.eventDescriptionMaxChar) TextView eventDescriptionMaxChar;
     @Bind(R.id.fragment_create_event_radio_button1) RadioButton publicRadioButton;
     @Bind(R.id.fragment_create_event_radio_button2) RadioButton privateRadioButton;
     @Bind(R.id.fragment_create_event_radio_group) RadioGroup radioGroup;
@@ -122,6 +127,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     List<EventType> eventTypeList;
     boolean fromEdited = false;
     boolean makeEventFromLocation = false;
+
+    ProgressDialog progress;
 
     /* Temp Variables */
     String tempEventName;
@@ -170,6 +177,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 .saveInRootPicturesDirectory()
                 .setCopyExistingPicturesToPublicLocation(true);
 
+        eventDescription.addTextChangedListener(mTextEditorWatcher);
+
         dateFormat = new SimpleDateFormat();
         setSpinner();
         datePickerClickListener(view);
@@ -177,6 +186,24 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         //selectPosition();
         return view;
     }
+
+    private final TextWatcher mTextEditorWatcher = new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //This sets a textview to the current length
+            if(s.length() <= 255) {
+                eventDescriptionMaxChar.setText(String.valueOf(s.length()) + "/255");
+            } else {
+
+            }
+
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+    };
     
 
     @Override
@@ -640,9 +667,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_create_event_button2) void publishEvent() {
         parentFloatingButton.close(true);
+        progress = new ProgressDialog(mainActivity);
+        setProgress(progress);
         validateData(new ObjectCallback<Track>() {
             @Override
             public void onSuccess(Track object) {
+                progress.dismiss();
                 saveInProgress = true;
                 if (saveInProgress) {
                     //Now create the event first ..
@@ -678,11 +708,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
                     View view1 = mainActivity.getCurrentFocus();
                     if (view1 != null) {
-                        InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
                     }
 
-                    if(track.getId() == null) {
+                    if (track.getId() == null) {
                         //edit the event which is not saved on server
                         TrackCollection.eventList.add(track);
                     }
@@ -690,14 +720,14 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                     EventBus.getDefault().post(true, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
 
 
-                    if(makeEventFromLocation) {
+                    if (makeEventFromLocation) {
                         mainActivity.onBackPressed();
                     }
-                    if(fromEdited) {
+                    if (fromEdited) {
                         mainActivity.onBackPressed();
                     }
                     mainActivity.onBackPressed();
-                    if(fromEdited) {
+                    if (fromEdited) {
                         EventBus.getDefault().post(imageView.getDrawable(), Constants.UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT);
                     }
                     saveInProgress = false;
@@ -706,6 +736,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onError(Throwable t) {
+                progress.dismiss();
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
                         .setAction(t.toString())
@@ -713,6 +744,12 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 saveInProgress = false;
             }
         });
+    }
+
+    public void setProgress(ProgressDialog progress) {
+        progress.setIndeterminate(true);
+        progress.setMessage("Loading...");
+        progress.show();
     }
 
     public void onButtonPressed(Uri uri) {
@@ -756,13 +793,15 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     private void validateData(ObjectCallback<Track> callback){
         Exception t = new Exception();
         if(!fromEdited) {
-            if (imageModel == null) {
-                String message = "Please! image is getting uploaded";
-                Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
-                callback.onError(t);
-                return;
-            } else {
-                track.setPicture(imageModel.getHashMap());
+            if(editedImageFile != null) {
+                if (imageModel == null) {
+                    String message = "Please! image is getting uploaded";
+                    Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
+                    callback.onError(t);
+                    return;
+                } else {
+                    track.setPicture(imageModel.getHashMap());
+                }
             }
         } else {
             if(isImageEdited) {

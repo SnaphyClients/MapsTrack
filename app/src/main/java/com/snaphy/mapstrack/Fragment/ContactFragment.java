@@ -68,7 +68,7 @@ public class ContactFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick( R.id.fragment_contact_button1) void contactButton() {
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
         callIntent.setData(Uri.parse(Constants.APP_PHONE));
         startActivity(callIntent);
     }

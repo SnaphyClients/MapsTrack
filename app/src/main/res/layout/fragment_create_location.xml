@@ -232,7 +232,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/map"
-            fab:fab_label="Set Your Location"
+            fab:fab_label="Set Location"
+            style="@style/MenuButtonsStyle" />
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_create_location_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/add_friend"
+            fab:fab_label="Invite Friends"
             style="@style/MenuButtonsStyle" />
 
 
@@ -241,23 +250,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/show_friends"
-            fab:fab_label="Show Selected Friends"
+            fab:fab_label="See Added Friends"
             style="@style/MenuButtonsStyle" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fragment_create_location_button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/add_friend"
-            fab:fab_label="Add Friends"
-            style="@style/MenuButtonsStyle" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fragment_create_location_button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/publish"
-            fab:fab_label="@string/fragment_create_location_button2"
+            fab:fab_label="Publish Your Location"
             style="@style/MenuButtonsStyle" />
 
     </com.github.clans.fab.FloatingActionMenu>

@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
-import com.snaphy.mapstrack.Services.BackgroundService;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -185,8 +185,8 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         googleMap.isTrafficEnabled();
         googleMap.setTrafficEnabled(true);
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
-        if(BackgroundService.getCurrentLocation() != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(BackgroundService.getCurrentLocation(), 15));
+        if(destination != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, 15));
         } else {
             Snackbar.make(getView(),"Cannot locate you at this moment, Please try again", Snackbar.LENGTH_SHORT).show();
         }
@@ -258,5 +258,29 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+
+                    mainActivity.onBackPressed();
+
+                    return true;
+
+                }
+
+                return false;
+            }
+        });
     }
 }

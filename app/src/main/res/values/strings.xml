@@ -50,9 +50,9 @@
     <string name="fragment_create_event_edittext4">Event Description</string>
     <string name="fragment_create_event_edittext5">Add Contact</string>
     <string name="fragment_create_event_button1">Edit Image</string>
-    <string name="fragment_create_event_button3">Show Selected Friends</string>
-    <string name="fragment_create_event_button4">Add Friends</string>
-    <string name="fragment_create_event_button2">Publish Event</string>
+    <string name="fragment_create_event_button3">Show Added Friends</string>
+    <string name="fragment_create_event_button4">Invite Friends</string>
+    <string name="fragment_create_event_button2">Publish Your Event</string>
     <string name="fragment_create_event_radio_button1">Public</string>
     <string name="fragment_create_event_radio_button2">Private</string>
     <string name="layout_display_contact_textview1">Ravi Gupta</string>

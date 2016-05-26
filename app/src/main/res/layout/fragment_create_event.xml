@@ -85,17 +85,27 @@
                         android:inputType="textMultiLine"
                         android:maxLines="3"
                         android:hint="@string/fragment_create_event_edittext4"
+                        android:maxLength="255"
                         android:textSize="14sp"/>
 
                 </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0/255"
+                    android:id="@+id/eventDescriptionMaxChar"
+                    android:gravity="right"
+                    android:paddingRight="20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_below="@+id/fragment_create_event_textInputLayout4"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:id="@+id/fragment_create_event_linear_layout1"
-                    android:layout_below="@+id/fragment_create_event_textInputLayout4"
-                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/eventDescriptionMaxChar"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="10dp">
 
@@ -287,20 +297,28 @@
         android:layout_marginBottom="20dp">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fragment_create_event_button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/map"
-            fab:fab_label="Set Your Location"
-            style="@style/MenuButtonsStyle" />
-
-
-        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fragment_create_event_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/gallery"
             fab:fab_label="@string/fragment_create_event_button1"
+            style="@style/MenuButtonsStyle" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_create_event_button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/map"
+            fab:fab_label="Set Location"
+            style="@style/MenuButtonsStyle" />
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fragment_create_event_button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/add_friend"
+            fab:fab_label="@string/fragment_create_event_button4"
             style="@style/MenuButtonsStyle" />
 
 
@@ -312,13 +330,6 @@
             fab:fab_label="@string/fragment_create_event_button3"
             style="@style/MenuButtonsStyle" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fragment_create_event_button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/add_friend"
-            fab:fab_label="@string/fragment_create_event_button4"
-            style="@style/MenuButtonsStyle" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fragment_create_event_button2"

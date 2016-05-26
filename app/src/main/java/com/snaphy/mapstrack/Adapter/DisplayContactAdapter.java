@@ -3,6 +3,7 @@ package com.snaphy.mapstrack.Adapter;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.snaphy.mapstrack.Helper.ContactMatcher;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 import org.simple.eventbus.EventBus;
 
@@ -91,6 +93,24 @@ public class DisplayContactAdapter extends BaseAdapter {
         else {
             viewHolder = (ViewHolder) view.getTag();
 
+        }
+
+        String customerId = (String) BackgroundService.getCustomer().getId();
+        String eventOwnerId = (String)track.getCustomer().getId();
+
+        Log.v(Constants.TAG,"Customer Id = " + customerId);
+        Log.v(Constants.TAG,"Event Owner Id "+ eventOwnerId);
+
+        if(resId == R.id.fragment_event_info_button4) {
+            if(!customerId.equals(eventOwnerId)) {
+                viewHolder.imageButton.setVisibility(View.GONE);
+            }
+        }
+
+        if(resId == R.id.fragment_location_info_button5) {
+            if(!customerId.equals(eventOwnerId)) {
+                viewHolder.imageButton.setVisibility(View.GONE);
+            }
         }
 
         //Map<String, Object> friendObj = friendsList.get(position);

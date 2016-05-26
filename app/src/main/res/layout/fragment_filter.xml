@@ -106,7 +106,7 @@
             android:layout_marginTop="40dp">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Nearby Events"
                 android:background="@android:color/transparent"
@@ -120,12 +120,17 @@
 
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="My Locations"
                 android:background="@android:color/transparent"
                 android:layout_weight="1"
-                android:id="@+id/fragment_filter_button4" />
+                android:textAllCaps="false"
+                android:id="@+id/fragment_filter_button4"
+                android:drawableTop="@mipmap/filter_nearby_location"
+                android:drawablePadding="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
 
 
         </LinearLayout>

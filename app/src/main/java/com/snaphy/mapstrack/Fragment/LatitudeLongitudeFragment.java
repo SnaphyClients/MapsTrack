@@ -82,6 +82,8 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         return fragment;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

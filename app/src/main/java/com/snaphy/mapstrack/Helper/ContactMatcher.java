@@ -127,6 +127,7 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
                         }
                     }
                 }
+                data.moveToFirst();
             } catch (Exception e) {
                 Log.v(Constants.TAG, e.toString());
             }

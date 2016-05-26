@@ -201,6 +201,10 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_location_info_button1) void editLocation() {
+        if(track.getId() == null){
+            Toast.makeText(mainActivity, "Please wait! Location saving is still in progress", Toast.LENGTH_SHORT).show();
+            return;
+        }
         floatingActionMenu.close(true);
         mainActivity.replaceFragment(R.id.fragment_location_info_button1, null);
         EventBus.getDefault().post(track, Constants.SHOW_LOCATION_EDIT);

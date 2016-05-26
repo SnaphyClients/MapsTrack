@@ -92,7 +92,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     private String mSearchString;
     // Defines the array to hold values that replace the ?
     private String[] mSelectionArgs = { mSearchString };
-    String order = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC";
+    String order = "upper("+ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + ") ASC";
 
     MainActivity mainActivity;
 
