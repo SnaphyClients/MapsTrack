@@ -26,6 +26,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
 import com.orhanobut.dialogplus.ListHolder;
+import com.orhanobut.dialogplus.OnBackPressListener;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
@@ -73,6 +74,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     static LocationInfoFragment fragment;
     boolean isLocationOwner = false;
     Track track;
+    DialogPlus dialog;
 
     public LocationInfoFragment() {
         // Required empty public constructor
@@ -157,6 +159,17 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
 
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
+
 
     public CharSequence drawTextViewDesign(String constant, String data) {
         SpannableString spannableString =  new SpannableString(constant);
@@ -205,7 +218,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
             Toast.makeText(mainActivity, "Please wait! Location saving is still in progress", Toast.LENGTH_SHORT).show();
             return;
         }
-        floatingActionMenu.close(true);
+        floatingActionMenu.open(false);
         mainActivity.replaceFragment(R.id.fragment_location_info_button1, null);
         EventBus.getDefault().post(track, Constants.SHOW_LOCATION_EDIT);
 
@@ -259,9 +272,19 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_location_info_button6) void addFriends() {
-        floatingActionMenu.close(true);
+        floatingActionMenu.open(false);
         mainActivity.replaceFragment(R.id.fragment_location_info_button6, null);
         EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Subscriber ( tag = Constants.HIDE_MENU_OPTIONS_LOCATIONS )
+    public void hideMenuOptions(String empty) {
+        floatingActionMenu.close(true);
     }
 
 
@@ -281,7 +304,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
-        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
+        dialog = DialogPlus.newDialog(mainActivity)
                 .setContentHolder(holder)
                 .setAdapter(adapter)
                 . setOnItemClickListener(new OnItemClickListener() {
@@ -293,13 +316,19 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
                 .setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(DialogPlus dialog) {
-
+                        dialog.dismiss();
                     }
                 })
                 .setOnCancelListener(new OnCancelListener() {
                     @Override
                     public void onCancel(DialogPlus dialog) {
-
+                        dialog.dismiss();
+                    }
+                })
+                .setOnBackPressListener(new OnBackPressListener() {
+                    @Override
+                    public void onBackPressed(DialogPlus dialog) {
+                        dialog.dismiss();
                     }
                 })
                 .setCancelable(true)

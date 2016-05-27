@@ -117,5 +117,8 @@ public final class Constants {
     public static final String SEND_ADDRESS_HAS_BEEN_FOUND = "SendAddressHasBeenFound";
     public static final String CREATE_EVENT_FROM_LOCATION_FRAGMENT = "CreateEventFromLocation";
 
+    public static final String HIDE_MENU_OPTIONS = "HideMenuOptions";
+    public static final String HIDE_MENU_OPTIONS_LOCATIONS = "HideMenuOptionsLocations";
+
 
 }

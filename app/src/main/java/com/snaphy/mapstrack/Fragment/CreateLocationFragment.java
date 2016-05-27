@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
 import com.orhanobut.dialogplus.ListHolder;
+import com.orhanobut.dialogplus.OnBackPressListener;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
@@ -77,6 +79,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_create_location_floating_button1) com.github.clans.fab.FloatingActionMenu parentFloatingMenu;
 
     MainActivity mainActivity;
+    DialogPlus dialog;
 
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     ArrayList<SelectContactModel> selectContactModelArrayList = new ArrayList<SelectContactModel>();
@@ -145,7 +148,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
      * @param adapter
      */
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
-        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
+        dialog = DialogPlus.newDialog(mainActivity)
                 .setContentHolder(holder)
                 .setAdapter(adapter)
                 . setOnItemClickListener(new OnItemClickListener() {
@@ -157,13 +160,19 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                 .setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(DialogPlus dialog) {
-
+                        dialog.dismiss();
                     }
                 })
                 .setOnCancelListener(new OnCancelListener() {
                     @Override
                     public void onCancel(DialogPlus dialog) {
-
+                        dialog.dismiss();
+                    }
+                })
+                .setOnBackPressListener(new OnBackPressListener() {
+                    @Override
+                    public void onBackPressed(DialogPlus dialog) {
+                        dialog.dismiss();
                     }
                 })
                 .setCancelable(true)
@@ -214,6 +223,23 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         }else{
             disableFriendList(false);
         }
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    EventBus.getDefault().post("", Constants.HIDE_MENU_OPTIONS_LOCATIONS);
+                    mainActivity.onBackPressed();
+
+                    return true;
+
+                }
+
+                return false;
+            }
+        });
         checkCreateOrEditedMode();
     }
 
@@ -280,6 +306,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EventBus.getDefault().post("", Constants.HIDE_MENU_OPTIONS_LOCATIONS);
                 mainActivity.onBackPressed();
             }
         });
@@ -393,7 +420,6 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                     }
 
                     EventBus.getDefault().post(true, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
-
                     mainActivity.onBackPressed();
                     saveInProgress = false;
                 }
@@ -418,6 +444,16 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         progress.show();
     }
 
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().post("", Constants.HIDE_MENU_OPTIONS);
+        if(dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
 
     private boolean isPublic(){
         int getCheckedButtonId = radioGroup.getCheckedRadioButtonId();

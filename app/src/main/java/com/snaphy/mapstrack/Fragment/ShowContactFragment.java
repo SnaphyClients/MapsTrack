@@ -352,6 +352,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
             mainActivity.saveTrack(track);
         }
         Toast.makeText(mainActivity, "Friends list updated!", Toast.LENGTH_SHORT).show();
+        EventBus.getDefault().post("", Constants.HIDE_MENU_OPTIONS);
         //Now go back..
         mainActivity.onBackPressed();
     }

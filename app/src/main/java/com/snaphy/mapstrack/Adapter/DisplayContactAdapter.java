@@ -3,7 +3,6 @@ package com.snaphy.mapstrack.Adapter;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,10 +95,20 @@ public class DisplayContactAdapter extends BaseAdapter {
         }
 
         String customerId = (String) BackgroundService.getCustomer().getId();
-        String eventOwnerId = (String)track.getCustomer().getId();
-
-        Log.v(Constants.TAG,"Customer Id = " + customerId);
-        Log.v(Constants.TAG,"Event Owner Id "+ eventOwnerId);
+        String eventOwnerId;
+        if(track != null) {
+            if(track.getCustomer() != null) {
+                if (track.getCustomer().getId() != null) {
+                    eventOwnerId = (String) track.getCustomer().getId();
+                } else {
+                    eventOwnerId = "";
+                }
+            } else {
+                eventOwnerId = "";
+            }
+        } else {
+            eventOwnerId = "";
+        }
 
         if(resId == R.id.fragment_event_info_button4) {
             if(!customerId.equals(eventOwnerId)) {

@@ -41,6 +41,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.Holder;
 import com.orhanobut.dialogplus.ListHolder;
+import com.orhanobut.dialogplus.OnBackPressListener;
 import com.orhanobut.dialogplus.OnCancelListener;
 import com.orhanobut.dialogplus.OnDismissListener;
 import com.orhanobut.dialogplus.OnItemClickListener;
@@ -133,6 +134,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     boolean makeEventFromLocation = false;
 
     ProgressDialog progress;
+    DialogPlus dialog;
 
     /* Temp Variables */
     String tempEventName;
@@ -423,7 +425,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
-        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
+        dialog = DialogPlus.newDialog(mainActivity)
                 .setContentHolder(holder)
                 .setAdapter(adapter)
                 . setOnItemClickListener(new OnItemClickListener() {
@@ -435,13 +437,19 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 .setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(DialogPlus dialog) {
-
+                        dialog.dismiss();
                     }
                 })
                 .setOnCancelListener(new OnCancelListener() {
                     @Override
                     public void onCancel(DialogPlus dialog) {
-
+                        dialog.dismiss();
+                    }
+                })
+                .setOnBackPressListener(new OnBackPressListener() {
+                    @Override
+                    public void onBackPressed(DialogPlus dialog) {
+                        dialog.dismiss();
                     }
                 })
                 .setCancelable(true)
@@ -666,6 +674,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick (R.id.fragment_create_event_button5) void openMap() {
+        parentFloatingButton.close(true);
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -770,6 +779,16 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
     @Subscriber ( tag = Constants.SET_LATITUDE_LONGITUDE)
     public void setLatLong(LatLng latLong) {
         currentLatLng = latLong;
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
     }
 
     @Override

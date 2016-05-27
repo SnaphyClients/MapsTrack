@@ -79,6 +79,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     Track track;
     ArrayList<DisplayContactModel> displayContactModelArrayList = new ArrayList<DisplayContactModel>();
     static EventInfoFragment fragment;
+    DialogPlus dialog;
 
 
     public EventInfoFragment() {
@@ -96,13 +97,14 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        floatingMenu.close(true);
         EventBus.getDefault().register(fragment);
         this.getView().setFocusableInTouchMode(true);
         this.getView().requestFocus();
         this.getView().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     EventBus.getDefault().post(false, Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
                     mainActivity.onBackPressed();
                     return true;
@@ -138,6 +140,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.SHOW_EVENT_INFO)
     private void showEventInfo(Track track) {
+        floatingMenu.close(true);
         this.track = track;
         if(!track.getName().isEmpty()) {
             eventName.setText(track.getName());
@@ -293,7 +296,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_event_info_button5) void addFriends() {
-        floatingMenu.close(true);
+        floatingMenu.open(false);
         mainActivity.replaceFragment(R.id.fragment_event_info_button5, null);
         EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
 
@@ -317,12 +320,13 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @Subscriber ( tag = Constants.UPDATE_CONTACT_NUMBER )
     public void updateContactNumber(Track track) {
+        floatingMenu.close(true);
         showEventInfo(track);
     }
 
 
     private void showOnlyContentDialog(Holder holder, BaseAdapter adapter) {
-        final DialogPlus dialog = DialogPlus.newDialog(mainActivity)
+        dialog = DialogPlus.newDialog(mainActivity)
                 .setContentHolder(holder)
                 .setAdapter(adapter)
                 . setOnItemClickListener(new OnItemClickListener() {
@@ -334,13 +338,13 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
                 .setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(DialogPlus dialog) {
-
+                        dialog.dismiss();
                     }
                 })
                 .setOnCancelListener(new OnCancelListener() {
                     @Override
                     public void onCancel(DialogPlus dialog) {
-
+                        dialog.dismiss();
                     }
                 })
                 .setOnBackPressListener(new OnBackPressListener() {
@@ -354,7 +358,24 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
                 .create();
         dialog.show();
     }
-    
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        floatingMenu.close(true);
+    }
+
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -412,6 +433,11 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         }else{
             addFriendsEventButton.setVisibility(View.GONE);
         }
+    }
+
+    @Subscriber ( tag = Constants.HIDE_MENU_OPTIONS )
+    public void hideMenuOptions(String empty) {
+        floatingMenu.close(true);
     }
 
 }
