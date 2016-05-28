@@ -1,4 +1,4 @@
-package com.snaphy.mapstrack.Services;
+package com.snaphy.mapstrack;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -11,9 +11,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
-import com.snaphy.mapstrack.Constants;
-import com.snaphy.mapstrack.MainActivity;
-import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.GcmBroadcastReceiver;
 
 import java.util.regex.Matcher;
 
@@ -104,6 +102,7 @@ public class GcmIntentService extends IntentService  {
                         .setColor(color);
 
         mBuilder.setContentIntent(contentIntent);
+        mBuilder.setAutoCancel(true);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
@@ -133,6 +132,7 @@ public class GcmIntentService extends IntentService  {
                         .setColor(color);
 
         mBuilder.setContentIntent(contentIntent);
+        mBuilder.setAutoCancel(true);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
     }
