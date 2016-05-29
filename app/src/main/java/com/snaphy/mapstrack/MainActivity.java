@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction("Fragment : MainActivity, Method : checkLogin"+t.toString())
+                            .setAction("Fragment : MainActivity, Method : checkLogin "+t.toString())
                             .build());
                     //CLOSE PROGRESS DIALOG
                     progress.dismiss();
@@ -1928,6 +1928,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             //First clear the where of track collection..
             if(TrackCollection.getEventFilter() != null){
                 TrackCollection.getEventFilter().put("where", where);
+                where.put("status","allow");
                 where.put("customerId", BackgroundService.getCustomer().getId());
             }
         }

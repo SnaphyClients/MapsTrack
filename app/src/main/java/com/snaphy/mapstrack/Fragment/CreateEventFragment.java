@@ -351,7 +351,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
             if(track.getEventDate() != null) {
                 try{
+                    Log.v(Constants.TAG, "Event Date = " + track.getEventDate());
                     dateEdittext.setText(mainActivity.parseDate(track.getEventDate()));
+                    String[] tokens = track.getEventDate().split("-");
+                    String day  = tokens[2].substring(0,2);
+                    selectedDay = Integer.parseInt(day);
+                    selectedMonth = Integer.parseInt(tokens[1]);
+                    selectedYear = Integer.parseInt(tokens[0]);
                 }
                 catch (Exception e){
                     dateEdittext.setText(track.getEventDate());
@@ -923,9 +929,14 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 Log.v(Constants.TAG, tokens[0]+ Integer.parseInt(tokens[1])+ Integer.parseInt(tokens[2])+" = 1");
                 Log.v(Constants.TAG, Integer.parseInt(tokens[0]) +"");
                 Log.v(Constants.TAG, "Year = " + selectedYear);
-                if(selectedYear >= Integer.parseInt(tokens[0])) {
-                    if(selectedMonth >= Integer.parseInt(tokens[1])) {
-                        if(selectedDay >= Integer.parseInt(tokens[2])) {
+                if(selectedYear > Integer.parseInt(tokens[0])) {
+                    track.setEventDate(date);
+                } else {
+                    if(selectedMonth > Integer.parseInt(tokens[1]) && selectedYear >= Integer.parseInt(tokens[0])) {
+                        track.setEventDate(date);
+                    }
+                    else {
+                        if(selectedDay >= Integer.parseInt(tokens[2]) && selectedMonth >= Integer.parseInt(tokens[1]) && selectedYear >= Integer.parseInt(tokens[0])) {
                             track.setEventDate(date);
                         }
                         else {
@@ -934,15 +945,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                             return;
                         }
                     }
-                    else {
-                        Toast.makeText(mainActivity,"Event date is Invalid", Toast.LENGTH_SHORT).show();
-                        callback.onError(t);
-                        return;
-                    }
-                } else {
-                    Toast.makeText(mainActivity,"Event date is Invalid", Toast.LENGTH_SHORT).show();
-                    callback.onError(t);
-                    return;
                 }
 
 

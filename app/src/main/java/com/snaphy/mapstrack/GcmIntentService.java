@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
-import com.snaphy.mapstrack.Services.GcmBroadcastReceiver;
 
 import java.util.regex.Matcher;
 

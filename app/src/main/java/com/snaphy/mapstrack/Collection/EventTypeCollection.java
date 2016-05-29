@@ -25,6 +25,7 @@ public class EventTypeCollection {
         } else {
             EventTypeRepository eventTypeRepository = BackgroundService.getLoopBackAdapter().createRepository(EventTypeRepository.class);
             Map<String, Object> filter = new HashMap<>();
+            filter.put("order", "name ASC");
             eventTypeRepository.find(filter, new ListCallback<EventType>() {
                 @Override
                 public void onSuccess(List<EventType> objects) {

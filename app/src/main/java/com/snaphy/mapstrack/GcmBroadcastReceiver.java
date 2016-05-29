@@ -1,12 +1,10 @@
-package com.snaphy.mapstrack.Services;
+package com.snaphy.mapstrack;
 
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
-
-import com.snaphy.mapstrack.GcmIntentService;
 
 /**
  * Created by Ravi-Gupta on 3/9/2016.
