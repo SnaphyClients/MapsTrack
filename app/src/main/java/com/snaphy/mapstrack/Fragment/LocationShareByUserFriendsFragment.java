@@ -165,7 +165,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
                     public void onError(Throwable t) {
                         mainActivity.tracker.send(new HitBuilders.EventBuilder()
                                 .setCategory("Exception")
-                                .setAction(t.toString())
+                                .setAction("Fragment : LocationShareByUserFriendsFragment, Method : showFriendsSharedLocation "+t.toString())
                                 .build());
                         sharedFriends.clear();
                         setLocation(sharedFriends);

@@ -479,7 +479,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : CreateEventFragment, Method : setSpinner "+t.toString())
                         .build());
                 Log.v(Constants.TAG, t.toString());
             }
@@ -651,7 +651,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                     public void onError(Throwable t) {
                         mainActivity.tracker.send(new HitBuilders.EventBuilder()
                                 .setCategory("Exception")
-                                .setAction(t.toString())
+                                .setAction("Fragment : CreateEventFragment, Method : onImagePicked "+t.toString())
                                 .build());
                         Log.e(Constants.TAG, t.toString());
                         Toast.makeText(mainActivity, "Image uploading failed", Toast.LENGTH_SHORT).show();
@@ -757,7 +757,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 progress.dismiss();
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : CreateEventFragment, Method : publishEvent "+t.toString())
                         .build());
                 saveInProgress = false;
             }

@@ -256,7 +256,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                     public void onError(Throwable t) {
                         mainActivity.tracker.send(new HitBuilders.EventBuilder()
                                 .setCategory("Exception")
-                                .setAction(t.toString())
+                                .setAction("Fragment : ShowContactFragment, Method : addCustomerToSharedList "+t.toString())
                                 .build());
                         Log.e(Constants.TAG, t.toString() + " in ShowContactFragment");
                     }

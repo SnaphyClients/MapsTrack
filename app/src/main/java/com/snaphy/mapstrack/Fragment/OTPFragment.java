@@ -154,7 +154,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction(t.toString())
+                            .setAction("Fragment : OTPFragment, Method : loginWithCode "+t.toString())
                             .build());
                     if (progress != null) {
                         progress.dismiss();
@@ -207,7 +207,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction(t.toString())
+                            .setAction("Fragment : OTPFragment, Method : requestOTPServe "+t.toString())
                             .build());
                     if(progress != null) {
                         progress.dismiss();

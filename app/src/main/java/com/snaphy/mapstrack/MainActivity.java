@@ -55,9 +55,12 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
@@ -165,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     boolean isBound = false;
     static ProgressDialog progressMain;
     int count = 0;
+    GoogleApiClient googleApiClient;
     public static LocalInstallation getInstallation() {
         return installation;
     }
@@ -337,6 +341,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     }else{
                         // you have to login first
                         BackgroundService.setCustomer(null);
+                        googleLogout();
                         //Register anonymous for push service..
                         moveToLogin();
                     }
@@ -347,16 +352,18 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction(t.toString())
+                            .setAction("Fragment : MainActivity, Method : checkLogin"+t.toString())
                             .build());
                     //CLOSE PROGRESS DIALOG
                     progress.dismiss();
                     // you have to login first
                     BackgroundService.setCustomer(null);
+                    googleLogout();
                     //Register anonymous for push service..
                     //moveToLogin();
                     //Retry Login
                     if(t.toString().equals("org.apache.http.client.HttpResponseException: Unauthorized")) {
+                        Snackbar.make(parentLayout, "Unable to connect to server", Snackbar.LENGTH_LONG).show();
                         moveToLogin();
                     } else {
                         replaceFragment(R.layout.fragment_retry_login, null);
@@ -368,6 +375,37 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
 
     }
+
+    public void googleLogout() {
+        if(BackgroundService.getGoogleApiClient() != null) {
+            if (BackgroundService.getGoogleApiClient().isConnected()) {
+                Auth.GoogleSignInApi.signOut(BackgroundService.getGoogleApiClient()).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                Log.v(Constants.TAG, status.toString());
+                            }
+                        });
+            }
+        } else {
+            /*gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(Constants.CLIENT_ID)
+                    .build();*/
+            googleApiClient = new GoogleApiClient.Builder(mainActivity)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API)
+                    .build();
+            if (googleApiClient.isConnected()) {
+                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                Log.v(Constants.TAG, status.toString());
+                            }
+                        });
+            }
+        }
+    }
+
 
 
     public void moveToLogin(){
@@ -1015,7 +1053,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             public void onError(final Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : MainActivity, Method : saveInstallation"+t.toString())
                         .build());
                 Log.e(Constants.TAG, "Error saving Installation.", t);
 
@@ -1297,7 +1335,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : MainActivity, Method : fetchUrl"+t.toString())
                         .build());
                 Log.v(Constants.TAG, "Could not fetch url. Please try again later..");
             }
@@ -1345,7 +1383,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction(t.toString())
+                            .setAction("Fragment : MainActivity, Method : uploadWithCallback"+t.toString())
                             .build());
                     callback.onError(t);
                 }
@@ -1397,7 +1435,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction(t.toString())
+                            .setAction("Fragment : MainActivity, Method : uploadImageToContainer"+t.toString())
                             .build());
                     Log.e(Constants.TAG, t.toString());
                     ImageModel imageModel = new ImageModel();
@@ -1428,7 +1466,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : MainActivity, Method : updateCustomer"+t.toString())
                         .build());
                 Log.e(Constants.TAG, t.toString());
                 Log.v(Constants.TAG, "Error in update Customer Method");
@@ -1657,7 +1695,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : MainActivity, Method : deleteTrack"+t.toString())
                         .build());
                 Log.e(Constants.TAG, t.toString());
             }
@@ -1681,7 +1719,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction(t.toString())
+                            .setAction("Fragment : MainActivity, Method : displayEventType"+t.toString())
                             .build());
                     Log.e(Constants.TAG, t.toString());
                     textView.setVisibility(View.GONE);
@@ -1720,7 +1758,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction(t.toString())
+                            .setAction("Fragment : MainActivity, Method : saveTrack"+t.toString())
                             .build());
                     Log.e(Constants.TAG, t.toString());
                 }
@@ -1736,7 +1774,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction(t.toString())
+                            .setAction("Fragment : MainActivity, Method : saveTrack2"+t.toString())
                             .build());
                     Log.e(Constants.TAG, t.toString());
                 }
@@ -1766,7 +1804,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : MainActivity, Method : saveTrack(2Arguments)"+t.toString())
                         .build());
                 Log.e(Constants.TAG, t.toString());
             }

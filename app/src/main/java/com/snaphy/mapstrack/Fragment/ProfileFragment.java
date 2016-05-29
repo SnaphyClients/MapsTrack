@@ -130,7 +130,7 @@ public class ProfileFragment extends Fragment {
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : ProfileFragment, Method : logoutButton "+t.toString())
                         .build());
                 //TODO CLOSE LOADING BAR
                 Log.e(Constants.TAG, t.toString());

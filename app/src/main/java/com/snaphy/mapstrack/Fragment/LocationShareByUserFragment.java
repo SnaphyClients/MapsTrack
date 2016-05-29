@@ -242,7 +242,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
                     public void onError(Throwable t) {
                         mainActivity.tracker.send(new HitBuilders.EventBuilder()
                                 .setCategory("Exception")
-                                .setAction(t.toString())
+                                .setAction("Fragment : LocationShareByUserFragment, Method : shareWithUser "+t.toString())
                                 .build());
                         sharedLocation.clear();
                         Log.e(Constants.TAG, t.toString());

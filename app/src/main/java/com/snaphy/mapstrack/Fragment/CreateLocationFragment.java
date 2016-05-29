@@ -430,7 +430,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                 progress.dismiss();
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : CreateLocationFragment, Method : publishLocation "+t.toString())
                         .build());
                 saveInProgress = false;
             }

@@ -110,7 +110,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : MainFragment, Method : showSuggestion "+t.toString())
                         .build());
                 Log.e(Constants.TAG, t.toString());
             }

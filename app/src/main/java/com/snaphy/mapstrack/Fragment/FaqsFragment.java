@@ -100,7 +100,7 @@ public class FaqsFragment extends android.support.v4.app.Fragment {
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction(t.toString())
+                        .setAction("Fragment : FAQsFragment, Method : setFaqText "+t.toString())
                         .build());
                 Log.e(Constants.TAG, t + "");
                 mainActivity.stopProgressBar(progressBar);
