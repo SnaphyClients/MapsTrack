@@ -97,7 +97,6 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        floatingMenu.close(true);
         EventBus.getDefault().register(fragment);
         this.getView().setFocusableInTouchMode(true);
         this.getView().requestFocus();
@@ -304,7 +303,6 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_event_info_button4) void openContacts() {
-        floatingMenu.close(true);
         if(track.getFriends() != null) {
             if (track.getFriends().size() == 0) {
                 Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();
@@ -320,8 +318,16 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @Subscriber ( tag = Constants.UPDATE_CONTACT_NUMBER )
     public void updateContactNumber(Track track) {
-        floatingMenu.close(true);
         showEventInfo(track);
+    }
+
+    @Subscriber ( tag = Constants.CLOSE_DIALOG_AFTER_DELETING_LAST_CONTACT)
+    public void closeDialog(String empty) {
+        if(dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
     }
 
 
@@ -372,7 +378,6 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        floatingMenu.close(true);
     }
 
 

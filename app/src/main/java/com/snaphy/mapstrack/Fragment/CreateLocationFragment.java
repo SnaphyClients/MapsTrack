@@ -371,6 +371,15 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         }
     }
 
+    @Subscriber ( tag = Constants.CLOSE_DIALOG_AFTER_DELETING_LAST_CONTACT)
+    public void closeDialog(String empty) {
+        if(dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
     /**
      * When publish event button is clicked
      */
@@ -381,7 +390,6 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         validateData(new ObjectCallback<Track>() {
             @Override
             public void onSuccess(Track object) {
-                progress.dismiss();
                 saveInProgress = true;
                 if (saveInProgress) {
                     //Now create the event first ..
@@ -392,18 +400,18 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                     }
 
 
-                    if (track.getId() != null) {
+                   /* if (track.getId() != null) {
                         Toast.makeText(mainActivity, "Location updated successfully", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(mainActivity, "Location created successfully", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
 
                     if (track.getId() != null) {
                         trackObj.put("id", track.getId());
                     }
 
                     //Now save the event..
-                    track = mainActivity.saveTrack(trackObj);
+                    track = mainActivity.saveTrack(trackObj, progress);
                     track.addRelation(BackgroundService.getCustomer());
 
                     EventBus.getDefault().post(track, Constants.SHOW_LOCATION_INFO);

@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="45dp"
         android:layout_marginBottom="25dp"
         android:src="@mipmap/add"
         android:id="@+id/fragment_location_share_by_user_floating_button1"

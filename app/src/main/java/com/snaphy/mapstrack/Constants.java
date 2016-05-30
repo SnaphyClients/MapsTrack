@@ -120,5 +120,7 @@ public final class Constants {
     public static final String HIDE_MENU_OPTIONS = "HideMenuOptions";
     public static final String HIDE_MENU_OPTIONS_LOCATIONS = "HideMenuOptionsLocations";
 
+    public static final String CLOSE_DIALOG_AFTER_DELETING_LAST_CONTACT = "CloseDialogAfterDeletingLastContact";
+
 
 }

@@ -122,6 +122,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -1383,7 +1385,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction("Fragment : MainActivity, Method : uploadWithCallback"+t.toString())
+                            .setAction("Fragment : MainActivity, Method : uploadWithCallback" + t.toString())
                             .build());
                     callback.onError(t);
                 }
@@ -1611,7 +1613,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             }
         });
 
-        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
@@ -1679,7 +1681,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         BackgroundService.setAddress(address);
         mainActivity.startService();
         progressMain.dismiss();
-        Log.v(Constants.TAG,"From EventBus");
+        Log.v(Constants.TAG, "From EventBus");
     }
 
 
@@ -1710,8 +1712,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }else {
             track.get__eventType(false, getLoopBackAdapter(), new ObjectCallback<EventType>() {
                 @Override
-                public void onSuccess(EventType object)
-                {
+                public void onSuccess(EventType object) {
                     addEventTypeToView(object, textView);
                 }
 
@@ -1719,7 +1720,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction("Fragment : MainActivity, Method : displayEventType"+t.toString())
+                            .setAction("Fragment : MainActivity, Method : displayEventType" + t.toString())
                             .build());
                     Log.e(Constants.TAG, t.toString());
                     textView.setVisibility(View.GONE);
@@ -1743,7 +1744,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
-    public void saveTrack(final Track track){
+    public void saveTrack(final Track track, final ProgressDialog progress){
         Map<String,Object> trackObj = (Map<String,Object>)track.convertMap();
 
         if(track.getId() != null){
@@ -1752,42 +1753,60 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             saveTrack.updateAttributes((String) track.getId(), trackObj, new ObjectCallback<Track>() {
                 @Override
                 public void onSuccess(Track object) {
+                    if(progress!= null){
+                        progress.dismiss();
+                    }
+                    /*Toast.makeText(that, "Successfully created", Toast.LENGTH_SHORT).show();*/
                 }
 
                 @Override
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction("Fragment : MainActivity, Method : saveTrack"+t.toString())
+                            .setAction("Fragment : MainActivity, Method : saveTrack" + t.toString())
                             .build());
                     Log.e(Constants.TAG, t.toString());
+                    if(progress!= null){
+                        progress.dismiss();
+                    }
+                    /*Toast.makeText(that, "Data cannot be saved at this moment", Toast.LENGTH_SHORT).show();*/
                 }
             });
         }else{
             track.save(new VoidCallback() {
                 @Override
                 public void onSuccess() {
-
+                    if(progress!= null){
+                        progress.dismiss();
+                    }
+                    /*Toast.makeText(that, "Successfully created", Toast.LENGTH_SHORT).show();*/
                 }
 
                 @Override
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction("Fragment : MainActivity, Method : saveTrack2"+t.toString())
+                            .setAction("Fragment : MainActivity, Method : saveTrack2" + t.toString())
                             .build());
                     Log.e(Constants.TAG, t.toString());
+                    if(progress!= null){
+                        progress.dismiss();
+                    }
+                    /*Toast.makeText(that, "Data cannot be saved at this moment", Toast.LENGTH_SHORT).show();*/
                 }
             });
         }
     }
 
 
-    public Track saveTrack(Map<String, Object> trackObj){
+    public Track saveTrack(Map<String, Object> trackObj,final ProgressDialog progress){
         TrackRepository saveTrack = getLoopBackAdapter().createRepository(TrackRepository.class);
-
+        final boolean saveData;
         if(trackObj.get("id") == null){
             trackObj.remove("id");
+            saveData = true;
+        }else{
+            saveData = false;
         }
 
         final Track tempTrack = saveTrack.createObject(trackObj);
@@ -1798,10 +1817,25 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             public void onSuccess(Track object) {
 
                 tempTrack.setId(object.getId());
+                if (saveData){
+                    if(progress != null){
+                        progress.dismiss();
+                    }
+                    Toast.makeText(that, "Successfully created", Toast.LENGTH_SHORT).show();
+                }else{
+                    if(progress != null){
+                        progress.dismiss();
+                    }
+                    Toast.makeText(that, "Successfully updated", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onError(Throwable t) {
+                if(progress != null){
+                    progress.dismiss();
+                }
+                Toast.makeText(that, "Data cannot be saved at this moment", Toast.LENGTH_SHORT).show();
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
                         .setAction("Fragment : MainActivity, Method : saveTrack(2Arguments)"+t.toString())
@@ -1863,7 +1897,16 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         Log.v(Constants.TAG, date_.toString());
         String orderDay = date_.toString().substring(8, 10);
         String orderMonth = date_.toString().substring(4, 7);
-        String orderYear = date_.toString().substring(24, 28);
+
+        Pattern p = Pattern.compile("\\b\\d{4}\\b");
+        Matcher m = p.matcher(date_.toString());
+        String orderYear = "";
+        while (m.find()) {
+            orderYear = m.group().toString();
+        }
+
+        //String orderYear = date_.toString().substring(30, 34);
+
         String actualDate = orderDay + " " + orderMonth.toUpperCase()+ " "+ orderYear;
         Log.v(Constants.TAG, actualDate);
         return actualDate;

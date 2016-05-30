@@ -696,8 +696,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         validateData(new ObjectCallback<Track>() {
             @Override
             public void onSuccess(Track object) {
-                progress.dismiss();
                 saveInProgress = true;
+
                 if (saveInProgress) {
                     //Now create the event first ..
 
@@ -712,18 +712,18 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                         trackObj.put("eventTypeId", selectedEventType.getId());
                     }
 
-                    if (track.getId() != null) {
+                    /*if (track.getId() != null) {
                         Toast.makeText(mainActivity, "Event updated successfully", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(mainActivity, "Event created successfully", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
 
                     if (track.getId() != null) {
                         trackObj.put("id", track.getId());
                     }
 
                     //Now save the event..
-                    track = mainActivity.saveTrack(trackObj);
+                    track = mainActivity.saveTrack(trackObj, progress);
 
                     track.addRelation(BackgroundService.getCustomer());
                     track.addRelation(selectedEventType);
@@ -763,11 +763,20 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 progress.dismiss();
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction("Fragment : CreateEventFragment, Method : publishEvent "+t.toString())
+                        .setAction("Fragment : CreateEventFragment, Method : publishEvent " + t.toString())
                         .build());
                 saveInProgress = false;
             }
         });
+    }
+
+    @Subscriber ( tag = Constants.CLOSE_DIALOG_AFTER_DELETING_LAST_CONTACT)
+    public void closeDialog(String empty) {
+        if(dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
     }
 
     public void setProgress(ProgressDialog progress) {

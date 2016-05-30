@@ -1,5 +1,6 @@
 package com.snaphy.mapstrack.Adapter;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -37,6 +38,7 @@ public class DisplayContactAdapter extends BaseAdapter {
     MainActivity mainActivity;
     DisplayContactAdapter that;
     int resId;
+    ProgressDialog progress;
 
     public DisplayContactAdapter(MainActivity mainActivity, Track track, int id) {
         that = this;
@@ -228,6 +230,9 @@ public class DisplayContactAdapter extends BaseAdapter {
                 if(track.getFriends().size() != 0){
                     if(track.getFriends().size() > position){
                         //TODO CHECK FOR CHANCES OF ERROR .. WRONG CONTACT REMOVAL..
+                        if(track.getFriends().size() == 1) {
+                            EventBus.getDefault().post("", Constants.CLOSE_DIALOG_AFTER_DELETING_LAST_CONTACT);
+                        }
                         sharedFriendList.remove(position);
                         track.getFriends().remove(position);
                         if(resId == R.id.fragment_event_info_button4) {
@@ -237,8 +242,11 @@ public class DisplayContactAdapter extends BaseAdapter {
                         if(resId == R.id.fragment_location_info_button5) {
                             EventBus.getDefault().post(track, Constants.UPDATE_CONTACT_NUMBER_IN_LOCATION);
                         }
+                        progress = new ProgressDialog(mainActivity);
+                        setProgress(progress);
                         //Now save data..
-                        mainActivity.saveTrack(track);
+                        mainActivity.saveTrack(track, progress);
+                        progress.dismiss();
                     } else {
                         Toast.makeText(mainActivity,"Unable to remove contact", Toast.LENGTH_SHORT).show();
                     }
@@ -251,5 +259,11 @@ public class DisplayContactAdapter extends BaseAdapter {
         } else {
             Toast.makeText(mainActivity,"Unable to remove contact", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void setProgress(ProgressDialog progress) {
+        progress.setIndeterminate(true);
+        progress.setMessage("Loading...");
+        progress.show();
     }
 }

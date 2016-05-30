@@ -158,6 +158,15 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
         showLocationInfo(track);
     }
 
+    @Subscriber ( tag = Constants.CLOSE_DIALOG_AFTER_DELETING_LAST_CONTACT)
+    public void closeDialog(String empty) {
+        if(dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
 
     @Override
     public void onStop(){
@@ -289,7 +298,6 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
 
     @OnClick(R.id.fragment_location_info_button5) void openContacts() {
-        floatingActionMenu.close(true);
         if(track.getFriends() != null) {
             if (track.getFriends().size() == 0) {
                 Toast.makeText(mainActivity, "No Contacts Present", Toast.LENGTH_SHORT).show();

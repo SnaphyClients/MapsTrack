@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,7 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.LastUpdatedLocation;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.androidsdk.snaphy.snaphyandroidsdk.repository.LastUpdatedLocationRepository;
 import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Adapter.ShowContactAdapter;
 import com.snaphy.mapstrack.Constants;
@@ -28,6 +31,7 @@ import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.RecyclerItemClickListener;
 import com.snaphy.mapstrack.Services.BackgroundService;
+import com.strongloop.android.loopback.callbacks.ObjectCallback;
 import com.strongloop.android.loopback.callbacks.VoidCallback;
 
 import org.simple.eventbus.EventBus;
@@ -61,6 +65,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     ShowContactAdapter showContactAdapter;
     Cursor globalCursor;
     Track track;
+    ProgressDialog progress;
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
             {
@@ -233,7 +238,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
 
     private void addCustomerToSharedList(){
-        List<Map<String, Object>>  friendList = new ArrayList<>();
+        final List<Map<String, Object>>  friendList = new ArrayList<>();
         List<ContactModel> contactModels  = new ArrayList<>();
         for(String key: contactModelMap.keySet()){
             Map<String, Object> number = new HashMap<>();
@@ -243,25 +248,31 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         }
 
         if(BackgroundService.getCustomer() != null){
-            if(BackgroundService.getCustomer().getLastUpdatedLocations() != null){
-                //Set new friend list..
-                BackgroundService.getCustomer().getLastUpdatedLocations().setSharedLocation(friendList);
-                BackgroundService.getCustomer().getLastUpdatedLocations().save(new VoidCallback() {
-                    @Override
-                    public void onSuccess() {
-
+            BackgroundService.getCustomer().get__lastUpdatedLocations(false, mainActivity.getLoopBackAdapter(), new ObjectCallback<LastUpdatedLocation>() {
+                @Override
+                public void onSuccess(LastUpdatedLocation object) {
+                    if(object != null){
+                        BackgroundService.getCustomer().setLastUpdatedLocations(object);
+                        //Add friends list..
+                        saveFriendsTrackingYou(friendList);
+                    }else{
+                        LastUpdatedLocationRepository lastUpdatedLocationRepository = mainActivity.getLoopBackAdapter().createRepository(LastUpdatedLocationRepository.class);
+                        Map<String, Object> dummyObject = new HashMap<>();
+                        LastUpdatedLocation lastUpdatedLocation = lastUpdatedLocationRepository.createObject(dummyObject);
+                        BackgroundService.getCustomer().setLastUpdatedLocations(lastUpdatedLocation);
                     }
+                }
 
-                    @Override
-                    public void onError(Throwable t) {
-                        mainActivity.tracker.send(new HitBuilders.EventBuilder()
-                                .setCategory("Exception")
-                                .setAction("Fragment : ShowContactFragment, Method : addCustomerToSharedList "+t.toString())
-                                .build());
-                        Log.e(Constants.TAG, t.toString() + " in ShowContactFragment");
-                    }
-                });
-            }
+                @Override
+                public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction("Fragment : ShowContactFragment, Method : get__lastUpdatedLocations "+t.toString())
+                            .build());
+                    Log.e(Constants.TAG, t.toString() + " in ShowContactFragment");
+                }
+            });
+
         }
 
         EventBus.getDefault().post(contactModels, Constants.UPDATE_SHARED_FRIENDS_BY_USER_LIST);
@@ -269,6 +280,30 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         Toast.makeText(mainActivity, "Shared location list updated!", Toast.LENGTH_SHORT).show();
         //Now go back..
         mainActivity.onBackPressed();
+    }
+
+
+
+    public void saveFriendsTrackingYou(List<Map<String, Object>>  friendList){
+        if(BackgroundService.getCustomer().getLastUpdatedLocations() != null){
+            //Set new friend list..
+            BackgroundService.getCustomer().getLastUpdatedLocations().setSharedLocation(friendList);
+            BackgroundService.getCustomer().getLastUpdatedLocations().save(new VoidCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.i(Constants.TAG, "Successfully shared location of friends.");
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction("Fragment : ShowContactFragment, Method : addCustomerToSharedList "+t.toString())
+                            .build());
+                    Log.e(Constants.TAG, t.toString() + " in ShowContactFragment");
+                }
+            });
+        }
     }
 
 
@@ -336,9 +371,17 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         void onFragmentInteraction(Uri uri);
     }
 
+    public void setProgress(ProgressDialog progress) {
+        progress.setIndeterminate(true);
+        progress.setMessage("Loading...");
+        progress.show();
+    }
+
 
     private void updateFriendsList(Track track){
         List<Map<String, Object>>  friendList = new ArrayList<>();
+        progress = new ProgressDialog(mainActivity);
+        setProgress(progress);
         for(String key: contactModelMap.keySet()){
             Map<String, Object> number = new HashMap<>();
             number.put("number", key);
@@ -349,9 +392,10 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         track.setFriends(friendList);
         if(track.getId() != null){
             //Now  save to server..
-            mainActivity.saveTrack(track);
+            mainActivity.saveTrack(track, progress);
         }
         Toast.makeText(mainActivity, "Friends list updated!", Toast.LENGTH_SHORT).show();
+        progress.dismiss();
         EventBus.getDefault().post("", Constants.HIDE_MENU_OPTIONS);
         //Now go back..
         mainActivity.onBackPressed();
