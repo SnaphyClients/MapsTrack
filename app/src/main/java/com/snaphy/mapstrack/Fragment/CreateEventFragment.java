@@ -230,6 +230,38 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 return false;
             }
         });
+        if(tempEventName != null) {
+            if (!tempEventName.isEmpty()) {
+                eventName.setText(tempEventName);
+            }
+        }
+
+        if(tempAddress != null) {
+            if (!tempAddress.isEmpty()) {
+                eventLocation.setText(tempAddress);
+            }
+        }
+
+        if(tempDescription != null) {
+            if (!tempDescription.isEmpty()) {
+                eventDescription.setText(tempDescription);
+            }
+        }
+
+        if(tempDate != null) {
+            if (!tempDate.isEmpty()) {
+                dateEdittext.setText(tempDate);
+            }
+        }
+
+        if(tempLocation != null) {
+            currentLatLng = tempLocation;
+        }
+
+        if(tempEventType != null) {
+            materialSpinner.setText(tempEventType.getName().toString());
+        }
+
         checkCreateOrEditedMode();
     }
 
@@ -361,6 +393,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 }
                 catch (Exception e){
                     dateEdittext.setText(track.getEventDate());
+                    String[] tokens = track.getEventDate().split("-");
+                    String day  = tokens[2].substring(0,2);
+                    selectedDay = Integer.parseInt(day);
+                    selectedMonth = Integer.parseInt(tokens[1]);
+                    selectedYear = Integer.parseInt(tokens[0]);
                 }
             }
 
@@ -374,6 +411,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
             if(track.getEventType() != null) {
                 selectedEventType = track.getEventType();
+                tempEventType = selectedEventType;
                 // SET EVENT TYPE
                 materialSpinner.setText(track.getEventType().getName().toString());
             }
@@ -919,6 +957,21 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             return;
         }
 
+        if (selectedEventType == null) {
+            Toast.makeText(mainActivity, "Event type is required", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }
+
+
+        if(currentLatLng == null){
+            Toast.makeText(mainActivity, "You must set your location.", Toast.LENGTH_SHORT).show();
+            callback.onError(t);
+            return;
+        }else{
+            track.setGeolocation(currentLatLng.latitude, currentLatLng.longitude);
+        }
+
 
         if (date != null) {
             if(date.isEmpty()){
@@ -927,13 +980,11 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 return;
             }else{
                 //To check if date is less than current date
-
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 //get current date time with Date()
                 Date currentDate = new Date();
                 String currentDateString = dateFormat.format(currentDate);
-                Log.v(Constants.TAG,currentDateString);
-
+                //Log.v(Constants.TAG,currentDateString);
                 String[] tokens = currentDateString.split("-");
                 Log.v(Constants.TAG, tokens[0]+ Integer.parseInt(tokens[1])+ Integer.parseInt(tokens[2])+" = 1");
                 Log.v(Constants.TAG, Integer.parseInt(tokens[0]) +"");
@@ -964,20 +1015,6 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             return;
         }
 
-        if (selectedEventType == null) {
-            Toast.makeText(mainActivity, "Event type is required", Toast.LENGTH_SHORT).show();
-            callback.onError(t);
-            return;
-        }
-
-
-        if(currentLatLng == null){
-            Toast.makeText(mainActivity, "You must set your location.", Toast.LENGTH_SHORT).show();
-            callback.onError(t);
-            return;
-        }else{
-            track.setGeolocation(currentLatLng.latitude, currentLatLng.longitude);
-        }
 
         callback.onSuccess(track);
     }

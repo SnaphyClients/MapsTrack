@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 
+import java.util.Random;
 import java.util.regex.Matcher;
 
 /**
@@ -19,7 +20,7 @@ import java.util.regex.Matcher;
  */
 public class GcmIntentService extends IntentService  {
 
-    public static final int NOTIFICATION_ID = 1;
+    public int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
     private static String verificationCode;
@@ -102,7 +103,9 @@ public class GcmIntentService extends IntentService  {
 
         mBuilder.setContentIntent(contentIntent);
         mBuilder.setAutoCancel(true);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        Random random = new Random();
+        int randomNumber = random.nextInt(9999 - 1000) + 1000;
+        mNotificationManager.notify(randomNumber, mBuilder.build());
     }
 
     // Put the message into a notification and post it.
@@ -132,7 +135,9 @@ public class GcmIntentService extends IntentService  {
 
         mBuilder.setContentIntent(contentIntent);
         mBuilder.setAutoCancel(true);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        Random random = new Random();
+        int randomNumber = random.nextInt(9999 - 1000) + 1000;
+        mNotificationManager.notify(randomNumber, mBuilder.build());
 
     }
 
