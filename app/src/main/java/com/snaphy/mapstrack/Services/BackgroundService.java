@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Customer;
+import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
@@ -28,6 +29,55 @@ public class BackgroundService extends Service {
     ShareLocationCollection shareLocationCollection;
     EventTypeCollection eventTypeCollection;
     static MyRestAdapter restAdapter;
+    static EventType eventType;
+
+    public static LatLng getEventLocation() {
+        return eventLocation;
+    }
+
+    public static void setEventLocation(LatLng eventLocation) {
+        BackgroundService.eventLocation = eventLocation;
+    }
+
+    public static EventType getEventType() {
+        return eventType;
+    }
+
+    public static void setEventType(EventType eventType) {
+        BackgroundService.eventType = eventType;
+    }
+
+    static LatLng eventLocation;
+
+    public static int getDay() {
+        return day;
+    }
+
+    public static void setDay(int day) {
+        BackgroundService.day = day;
+    }
+
+    public static int getMonth() {
+        return month;
+    }
+
+    public static void setMonth(int month) {
+        BackgroundService.month = month;
+    }
+
+    public static int getYear() {
+        return year;
+    }
+
+    public static void setYear(int year) {
+        BackgroundService.year = year;
+    }
+
+    static int day;
+    static int month;
+    static int year;
+
+
 
 
     public static LatLng getCurrentLocation() {

@@ -329,6 +329,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
         if(currentLatLng != null) {
             tempLocation = currentLatLng;
+            BackgroundService.setEventLocation(currentLatLng);
         }
 
     }
@@ -384,20 +385,17 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
             if(track.getEventDate() != null) {
                 try{
                     Log.v(Constants.TAG, "Event Date = " + track.getEventDate());
+
                     dateEdittext.setText(mainActivity.parseDate(track.getEventDate()));
                     String[] tokens = track.getEventDate().split("-");
                     String day  = tokens[2].substring(0,2);
-                    selectedDay = Integer.parseInt(day);
-                    selectedMonth = Integer.parseInt(tokens[1]);
-                    selectedYear = Integer.parseInt(tokens[0]);
+
+                    BackgroundService.setDay(Integer.parseInt(day));
+                    BackgroundService.setMonth(Integer.parseInt(tokens[1]));
+                    BackgroundService.setYear(Integer.parseInt(tokens[0]));
                 }
                 catch (Exception e){
                     dateEdittext.setText(track.getEventDate());
-                    String[] tokens = track.getEventDate().split("-");
-                    String day  = tokens[2].substring(0,2);
-                    selectedDay = Integer.parseInt(day);
-                    selectedMonth = Integer.parseInt(tokens[1]);
-                    selectedYear = Integer.parseInt(tokens[0]);
                 }
             }
 
@@ -591,9 +589,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                     @Override
                     public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
                         //handler the result here
-                        selectedDay = day;
-                        selectedMonth = month;
-                        selectedYear = year;
+                        BackgroundService.setDay(day);
+                        BackgroundService.setMonth(month);
+                        BackgroundService.setYear(year);
+
                         Log.v(Constants.TAG, "Date Picker = "+ " Year = "+ year+ "Month = "+ month);
                         dateEdittext.setText(dateDesc);
                     }
@@ -988,15 +987,15 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                 String[] tokens = currentDateString.split("-");
                 Log.v(Constants.TAG, tokens[0]+ Integer.parseInt(tokens[1])+ Integer.parseInt(tokens[2])+" = 1");
                 Log.v(Constants.TAG, Integer.parseInt(tokens[0]) +"");
-                Log.v(Constants.TAG, "Year = " + selectedYear);
-                if(selectedYear > Integer.parseInt(tokens[0])) {
+
+                if(BackgroundService.getYear() > Integer.parseInt(tokens[0])) {
                     track.setEventDate(date);
                 } else {
-                    if(selectedMonth > Integer.parseInt(tokens[1]) && selectedYear >= Integer.parseInt(tokens[0])) {
+                    if(BackgroundService.getMonth() > Integer.parseInt(tokens[1]) && BackgroundService.getYear() >= Integer.parseInt(tokens[0])) {
                         track.setEventDate(date);
                     }
                     else {
-                        if(selectedDay >= Integer.parseInt(tokens[2]) && selectedMonth >= Integer.parseInt(tokens[1]) && selectedYear >= Integer.parseInt(tokens[0])) {
+                        if(BackgroundService.getDay() >= Integer.parseInt(tokens[2]) && BackgroundService.getMonth() >= Integer.parseInt(tokens[1]) && BackgroundService.getYear() >= Integer.parseInt(tokens[0])) {
                             track.setEventDate(date);
                         }
                         else {
