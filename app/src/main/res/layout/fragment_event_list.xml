@@ -2,7 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.snaphy.mapstrack.Fragment.EventListFragment">
+    tools:context="com.snaphy.mapstrack.Fragment.EventListFragment"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_event_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightTextColor"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,12 +24,33 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/fragment_event_list_button1"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="@string/fragment_event_list_button1"
             android:textColor="@color/darkGrey"/>
+
+        <Button
+            android:id="@+id/fragment_event_list_button2"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="@string/fragment_event_list_button2"
+            android:textColor="@color/darkGrey"/>
+
+
+        <Button
+            android:id="@+id/fragment_event_list_button3"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="@string/fragment_event_list_button3"
+            android:textColor="@color/darkGrey"/>
+
 
     </LinearLayout>
 
