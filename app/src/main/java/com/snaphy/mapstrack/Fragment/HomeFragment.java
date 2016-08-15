@@ -2,34 +2,28 @@ package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Adapter.HomeEventAdapter;
+import com.snaphy.mapstrack.Adapter.HomeFragmentTabAdapter;
 import com.snaphy.mapstrack.Adapter.HomeLocationAdapter;
 import com.snaphy.mapstrack.Collection.TrackCollection;
-import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
-import com.snaphy.mapstrack.RecyclerItemClickListener;
 
 import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 
@@ -42,14 +36,19 @@ import butterknife.ButterKnife;
  */
 public class HomeFragment extends android.support.v4.app.Fragment implements View.OnClickListener{
 
+    // Tab Layout
+    @Bind(R.id.fragment_home_tab_layout) TabLayout tabLayout;
+    @Bind(R.id.fragment_home_view_pager) ViewPager viewPager;
+    //Tab Layout
+
     private OnFragmentInteractionListener mListener;
-    @Bind(R.id.fragment_home_recycler_view1) RecyclerView recyclerView1;
+   /* @Bind(R.id.fragment_home_recycler_view1) RecyclerView recyclerView1;
     @Bind(R.id.fragment_home_recycler_view2) RecyclerView recyclerView2;
     @Bind(R.id.fragment_home_textview1) TextView eventText;
     @Bind(R.id.fragment_home_textview2) TextView locationText;
     @Bind(R.id.fragment_home_image_filter1) ImageView imageViewFilter;
     @Bind(R.id.fragment_cart_floating_button1) android.support.design.widget.FloatingActionButton floatingActionButton1;
-    @Bind(R.id.fragment_cart_floating_button2) android.support.design.widget.FloatingActionButton floatingActionButton2;
+    @Bind(R.id.fragment_cart_floating_button2) android.support.design.widget.FloatingActionButton floatingActionButton2;*/
     SharedPreferences app_preferences;
 
     HomeEventAdapter homeEventAdapter;
@@ -111,7 +110,14 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
         ButterKnife.bind(this, view);
         TrackCollection.progressBar = (fr.castorflex.android.smoothprogressbar.SmoothProgressBar) view.findViewById(R.id.fragment_home_progressBar);
         mainActivity.stopProgressBar(TrackCollection.progressBar);
-        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Hobo.ttf");
+
+        viewPager.setAdapter(new HomeFragmentTabAdapter(getChildFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setOffscreenPageLimit(0);
+        setTextInTabLayout();
+
+
+       /* Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Hobo.ttf");
         eventText.setTypeface(typeface);
         locationText.setTypeface(typeface);
 
@@ -166,9 +172,18 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
         locationFloatingButtonClickListener();
 
         recyclerViewLoadMoreEventData();
-        recyclerViewLoadMoreLocationData();
+        recyclerViewLoadMoreLocationData();*/
 
         return view;
+    }
+
+    /**
+     * Set Text for Tab Layout
+     */
+    public void setTextInTabLayout() {
+        tabLayout.getTabAt(0).setText("Events");
+        tabLayout.getTabAt(1).setText("Locations");
+        tabLayout.getTabAt(2).setText("Track Friends");
     }
 
     @Override
@@ -179,7 +194,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
         app_preferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
         SharedPreferences.Editor editor = app_preferences.edit();
         isFirstTime = app_preferences.getBoolean("isFirstTime", true);
-        if (isFirstTime) {
+        /*if (isFirstTime) {
             editor.putBoolean("isFirstTime", false);
             editor.commit();
 
@@ -196,14 +211,14 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
 
         }else{
 
-        }
+        }*/
     }
 
 
     /********************************************************Subscribers for event and locations**************************/
 
 
-    @Subscriber (tag = Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
+    /*@Subscriber (tag = Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
     public void notifyEventList(boolean reset) {
         if(TrackCollection.getTrackCurrentFilterSelect() != null) {
             previousTotal = 0;
@@ -234,12 +249,12 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
         homeEventAdapter.notifyDataSetChanged();
     }
 
-    /********************************************************Subscribers for event and locations**************************/
+    *//********************************************************Subscribers for event and locations**************************//*
 
 
-    /**
+    *//**
      * Fire when create event button is clicked
-     */
+     *//*
     private void locationFloatingButtonClickListener() {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,9 +265,9 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
 
     }
 
-    /**
+    *//**
      * Fire when create location button is clicked
-     */
+     *//*
     private void eventFloatingButtonClickListener() {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -331,7 +346,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
                 }
             }
         });
-    }
+    }*/
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -362,7 +377,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
 
     @Override
     public void onClick(View v) {
-        switch (counter) {
+       /* switch (counter) {
             case 0:
                 //showcaseView.setShowcase(new ViewTarget(floatingActionButton1), true);
                 showcaseView.hide();
@@ -423,7 +438,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
                 break;
 
         }
-        counter ++;
+        counter ++;*/
     }
 
 

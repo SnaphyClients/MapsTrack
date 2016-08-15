@@ -72,11 +72,13 @@ import com.snaphy.mapstrack.Fragment.CreateEventFragment;
 import com.snaphy.mapstrack.Fragment.CreateLocationFragment;
 import com.snaphy.mapstrack.Fragment.EditProfileFragment;
 import com.snaphy.mapstrack.Fragment.EventInfoFragment;
+import com.snaphy.mapstrack.Fragment.EventListFragment;
 import com.snaphy.mapstrack.Fragment.FaqsFragment;
 import com.snaphy.mapstrack.Fragment.FilterFragment;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
 import com.snaphy.mapstrack.Fragment.LatitudeLongitudeFragment;
 import com.snaphy.mapstrack.Fragment.LocationInfoFragment;
+import com.snaphy.mapstrack.Fragment.LocationListFragment;
 import com.snaphy.mapstrack.Fragment.LocationShareByUserFragment;
 import com.snaphy.mapstrack.Fragment.LocationShareByUserFriendsFragment;
 import com.snaphy.mapstrack.Fragment.LoginFragment;
@@ -146,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         LatitudeLongitudeFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
         OTPFragment.OnFragmentInteractionListener, FilterFragment.OnFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        RetryLoginFragment.OnFragmentInteractionListener
+        RetryLoginFragment.OnFragmentInteractionListener, EventListFragment.OnFragmentInteractionListener,
+        LocationListFragment.OnFragmentInteractionListener
 {
 
     protected Location mLastLocation;
