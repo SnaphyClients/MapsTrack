@@ -77,7 +77,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         setHasOptionsMenu(true);
         viewPager.setAdapter(new HomeTabLayoutAdapter(mainActivity.getSupportFragmentManager()));
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         tabLayout.setupWithViewPager(viewPager);
         searchSetting();
         setIconInTabLayout();
@@ -188,7 +188,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
      */
     public void setIconInTabLayout() {
         tabLayout.getTabAt(0).setIcon(R.mipmap.selected_home);
-        tabLayout.getTabAt(3).setIcon(R.mipmap.share);
+        /*tabLayout.getTabAt(3).setIcon(R.mipmap.share);*/
         tabLayout.getTabAt(1).setIcon(R.mipmap.profile);
         tabLayout.getTabAt(2).setIcon(R.mipmap.setting);
 
@@ -214,9 +214,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
                 tabLayout.getTabAt(2).setIcon(R.mipmap.selected_setting);
                 break;
 
-            case 3 :
+           /* case 3 :
                 tabLayout.getTabAt(3).setIcon(R.mipmap.selected_share);
-                break;
+                break;*/
 
             default:
                 tabLayout.getTabAt(0).setIcon(R.mipmap.selected_home);
@@ -242,9 +242,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
                 tabLayout.getTabAt(2).setIcon(R.mipmap.setting);
                 break;
 
-            case 3 :
+           /* case 3 :
                 tabLayout.getTabAt(3).setIcon(R.mipmap.share);
-                break;
+                break;*/
 
         }
     }
@@ -340,10 +340,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_filter){
+       /* if(id == R.id.action_filter){
             mainActivity.replaceFragment(R.layout.fragment_filter, null);
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

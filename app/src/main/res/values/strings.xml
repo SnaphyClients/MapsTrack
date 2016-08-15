@@ -119,4 +119,10 @@
     <string name="layout_location_info_button2">Open Map</string>
     <string name="layout_location_info_button3">Delete Location</string>
     <string name="layout_location_info_button4">Create event using this location</string>
+
+    <!--Event List-->
+    <string name="fragment_event_list_button1">My Events</string>
+    <string name="fragment_event_list_button2">Shared</string>
+    <string name="fragment_event_list_button3">Nearby</string>
+
 </resources>

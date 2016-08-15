@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.snaphy.mapstrack.Fragment.HomeFragment;
 import com.snaphy.mapstrack.Fragment.ProfileFragment;
 import com.snaphy.mapstrack.Fragment.SettingFragment;
-import com.snaphy.mapstrack.Fragment.ShareFragment;
 
 /**
  * Created by Ravi-Gupta on 11/24/2015.
@@ -36,8 +35,8 @@ public class HomeTabLayoutAdapter extends FragmentPagerAdapter {
                 return new ProfileFragment();
             case 2 :
                 return new SettingFragment();
-            case 3 :
-                return new ShareFragment();
+           /* case 3 :
+                return new ShareFragment();*/
             default:
                 return new HomeFragment();
         }
@@ -49,7 +48,7 @@ public class HomeTabLayoutAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     /**
