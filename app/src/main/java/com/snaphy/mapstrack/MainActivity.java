@@ -1700,7 +1700,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction("Fragment : MainActivity, Method : deleteTrack"+t.toString())
+                        .setAction("Fragment : MainActivity, Method : deleteTrack" + t.toString())
                         .build());
                 Log.e(Constants.TAG, t.toString());
             }
@@ -1744,6 +1744,56 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }else{
             textView.setVisibility(View.GONE);
         }
+    }
+
+    public void displayEventTypeName(final TextView textView, Track track){
+        if(track.getEventType() != null){
+            EventType type = track.getEventType();
+            addEventTypeToViewName(type,textView);
+        }else {
+            track.get__eventType(false, getLoopBackAdapter(), new ObjectCallback<EventType>() {
+                @Override
+                public void onSuccess(EventType object) {
+                    addEventTypeToViewName(object, textView);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Exception")
+                            .setAction("Fragment : MainActivity, Method : displayEventType" + t.toString())
+                            .build());
+                    Log.e(Constants.TAG, t.toString());
+                    textView.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+
+    private void addEventTypeToViewName(EventType type, TextView textView){
+        if(type.getName() != null){
+            if(!type.getName().isEmpty()){
+                CharSequence eType = drawTextViewDesign("", type.getName());
+                textView.setText(eType);
+            }else{
+                textView.setVisibility(View.GONE);
+            }
+        }else{
+            textView.setVisibility(View.GONE);
+        }
+    }
+
+    public double CalculationByDistance(double initialLat, double initialLong,
+                                        double finalLat, double finalLong) {
+        Location locationA = new Location("point A");
+        locationA.setLatitude(initialLat);
+        locationA.setLongitude(initialLong);
+        Location locationB = new Location("point B");
+        locationB.setLatitude(finalLat);
+        locationB.setLongitude(finalLong);
+        double distance = locationA.distanceTo(locationB) ;
+        return distance;
     }
 
 

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.snaphy.mapstrack.Fragment.EventListFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_event_list_recycler_view"
@@ -14,10 +15,11 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/black"
+        android:layout_height="1dp"
+        android:background="#EEE"
         android:id="@+id/view"
-        android:layout_alignTop="@+id/layout"/>
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +35,7 @@
             android:layout_weight="1"
             android:background="@android:color/white"
             android:text="@string/fragment_event_list_button1"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/darkGrey"
             android:textStyle="bold" />
 
         <Button
@@ -57,5 +59,15 @@
 
 
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/add"
+        android:id="@+id/fragment_event_list_floating_button1"
+        app:backgroundTint="@color/colorPrimary"/>
 
 </RelativeLayout>

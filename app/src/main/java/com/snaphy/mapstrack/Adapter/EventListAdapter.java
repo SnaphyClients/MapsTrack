@@ -3,14 +3,17 @@ package com.snaphy.mapstrack.Adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 import java.util.List;
 
@@ -64,15 +67,37 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         eventDate.setTypeface(typeface2);
 
 
-        eventDistance.setText("3");
-        eventDistanceMetric.setText("km");
+        if(track.getGeolocationLatitide() != 0) {
+            if (track.getGeolocationLongitude() != 0) {
+                double distance = mainActivity.CalculationByDistance(BackgroundService.getCurrentLocation().latitude, BackgroundService.getCurrentLocation().longitude,
+                        track.getGeolocationLatitide(), track.getGeolocationLongitude());
+                int distanceInKm = (int)distance/1000;
+                if(distanceInKm == 0){
+                    distanceInKm = 1;
+                    eventDistance.setText(distanceInKm+"");
+                    eventDistanceMetric.setText("km");
+                } else if (distanceInKm > 99) {
+                    distanceInKm = 99;
+                    eventDistance.setText(distanceInKm+"");
+                    eventDistanceMetric.setText("+ km");
+                } else {
+                    eventDistance.setText(distanceInKm+"");
+                    eventDistanceMetric.setText("km");
+                }
+
+            }
+        }
+
+
+
 
         if(track.getEventDate() != null) {
             eventTime.setText("9 AM");
+            Log.v(Constants.TAG, eventDate.getText().toString());
         }
 
         if(track.getEventDate() != null) {
-            eventDate.setText("15 Aug");
+            eventDate.setText(mainActivity.parseDate(track.getEventDate()));
         }
 
         if(track.getName() != null) {
@@ -89,10 +114,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             eventAddress.setText(track.getAddress());
         }
 
-        if(track.getEventType() != null) {
-            if(track.getEventType().getName() != null) {
-                eventType.setText(track.getEventType().getName());
-            }
+            if(track.getType() != null){
+                if(!track.getType().isEmpty()) {
+                    mainActivity.displayEventTypeName(eventType, track);
+                    //eventType.setText(eType);
+                }
         }
 
     }

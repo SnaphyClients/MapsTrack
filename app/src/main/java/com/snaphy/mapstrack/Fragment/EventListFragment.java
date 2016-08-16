@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,15 +10,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.Adapter.EventListAdapter;
 import com.snaphy.mapstrack.Collection.TrackCollection;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.DividerItemDecoration;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.RecyclerItemClickListener;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,9 +40,19 @@ public class EventListFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     @Bind(R.id.fragment_event_list_recycler_view) RecyclerView recyclerView;
+    @Bind(R.id.fragment_event_list_button1) Button myEventButton;
+    @Bind(R.id.fragment_event_list_button2) Button sharedEventButton;
+    @Bind(R.id.fragment_event_list_button3) Button nearbyEventButton;
     LinearLayoutManager layoutManager;
     EventListAdapter eventListAdapter;
     MainActivity mainActivity;
+
+    /*Infinite Loading dataset*/
+    private int previousTotal = 0;
+    private boolean loading = true;
+    private int visibleThreshold = 3;
+    int firstVisibleItem, visibleItemCount, totalItemCount;
+    /*Infinite Loading data set*/
 
     public EventListFragment() {
         // Required empty public constructor
@@ -48,6 +67,8 @@ public class EventListFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -70,7 +91,110 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         recyclerView.setAdapter(eventListAdapter);
         eventListAdapter.notifyDataSetChanged();
 
+        setSelectedFilter();
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (TrackCollection.eventList != null) {
+                            Track track = TrackCollection.eventList.get(position);
+                            mainActivity.replaceFragment(R.layout.fragment_event_info, null);
+                            EventBus.getDefault().post(track, Constants.SHOW_EVENT_INFO);
+                        }
+                    }
+                })
+        );
+
+        recyclerViewLoadMoreEventData();
+
         return view;
+    }
+
+    public void recyclerViewLoadMoreEventData() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                visibleItemCount = recyclerView.getChildCount();
+                totalItemCount = layoutManager.getItemCount();
+                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+
+                if (loading) {
+                    if (totalItemCount > previousTotal) {
+                        loading = false;
+                        previousTotal = totalItemCount;
+                    }
+                }
+                if (!loading && (totalItemCount - visibleItemCount)
+                        <= (firstVisibleItem + visibleThreshold)) {
+                    EventBus.getDefault().post(TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT);
+                    loading = true;
+                }
+            }
+        });
+    }
+
+    @Subscriber(tag = Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
+    public void notifyEventList(boolean reset) {
+        if(TrackCollection.getTrackCurrentFilterSelect() != null) {
+            previousTotal = 0;
+            loading = true;
+            visibleThreshold = 3;
+            firstVisibleItem = 0;
+            visibleItemCount = 0;
+            totalItemCount = 0;
+        }
+        eventListAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick(R.id.fragment_event_list_floating_button1) void openCreateEvent() {
+        mainActivity.replaceFragment(R.layout.fragment_create_event, null);
+    }
+
+    @OnClick(R.id.fragment_event_list_button1) void myEventFilter() {
+        mainActivity.showMyEventFilter();
+        EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+    }
+
+    @OnClick(R.id.fragment_event_list_button2) void sharedEventFilter() {
+        mainActivity.setOnlySharedEventsFilter();
+        EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+    }
+
+    @OnClick(R.id.fragment_event_list_button3) void nearbyEventFilter() {
+        mainActivity.setNearByEventFilter();
+        EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+    }
+
+    public void setSelectedFilter() {
+        if(TrackCollection.getTrackCurrentFilterSelect() != null) {
+            if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.MY_EVENTS)) {
+
+                myEventButton.setTextColor(Color.parseColor("#ed6174"));
+                sharedEventButton.setTextColor(Color.parseColor("#777777"));
+                nearbyEventButton.setTextColor(Color.parseColor("#777777"));
+
+            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.NEAR_BY)) {
+
+                myEventButton.setTextColor(Color.parseColor("#777777"));
+                sharedEventButton.setTextColor(Color.parseColor("#777777"));
+                nearbyEventButton.setTextColor(Color.parseColor("#ed6174"));
+
+            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.SHARED_EVENTS)) {
+
+                myEventButton.setTextColor(Color.parseColor("#777777"));
+                sharedEventButton.setTextColor(Color.parseColor("#ed6174"));
+                nearbyEventButton.setTextColor(Color.parseColor("#777777"));
+
+            }
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
