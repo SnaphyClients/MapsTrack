@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.snaphy.mapstrack.Adapter.EventListAdapter;
 import com.snaphy.mapstrack.Collection.TrackCollection;
+import com.snaphy.mapstrack.DividerItemDecoration;
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
 import butterknife.Bind;
@@ -31,6 +33,7 @@ public class EventListFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_list_recycler_view) RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     EventListAdapter eventListAdapter;
+    MainActivity mainActivity;
 
     public EventListFragment() {
         // Required empty public constructor
@@ -58,12 +61,11 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(layoutManager);
-/*
-        recyclerView.addItemDecoration(new DividerItemDecoration.Builder(this).color(Color.RED).sizeResId(R.dimen.divider).marginResId(R.dimen.leftmargin, R.dimen.rightmargin).build());
-*/
+        recyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity().getApplicationContext()
+        ));
 
-
-        eventListAdapter = new EventListAdapter(TrackCollection.getEventList());
+        eventListAdapter = new EventListAdapter(TrackCollection.getEventList(), mainActivity);
 
         recyclerView.setAdapter(eventListAdapter);
         eventListAdapter.notifyDataSetChanged();
@@ -81,6 +83,7 @@ public class EventListFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mainActivity = (MainActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

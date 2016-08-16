@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
 import java.util.List;
@@ -21,8 +23,10 @@ import butterknife.ButterKnife;
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
     List<Track> eventList;
-    public EventListAdapter(List<Track> eventList) {
+    MainActivity mainActivity;
+    public EventListAdapter(List<Track> eventList, MainActivity mainActivity) {
         this.eventList = eventList;
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -49,6 +53,15 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         TextView eventCreator = holder.eventCreator;
         TextView eventAddress = holder.eventAddress;
         TextView eventType = holder.eventType;
+
+        Typeface typeface = Typeface.createFromAsset(mainActivity.getAssets(), "fonts/gothic.ttf");
+        Typeface typeface2 = Typeface.createFromAsset(mainActivity.getAssets(), "fonts/gothic_bold.ttf");
+        eventDistance.setTypeface(typeface);
+        eventDistanceMetric.setTypeface(typeface);
+        eventTime.setTypeface(typeface);
+        eventName.setTypeface(typeface2);
+        eventType.setTypeface(typeface);
+        eventDate.setTypeface(typeface2);
 
 
         eventDistance.setText("3");

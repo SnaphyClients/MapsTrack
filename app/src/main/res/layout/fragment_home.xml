@@ -11,11 +11,12 @@
         android:id="@+id/fragment_home_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="fixed"
+        app:tabMode="scrollable"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/white"
         android:background="?attr/colorPrimary"
         app:tabTextColor="@color/background"
+        app:tabIndicatorHeight="3dp"
         app:tabSelectedTextColor="@color/white"/>
 
     <android.support.v4.view.ViewPager
