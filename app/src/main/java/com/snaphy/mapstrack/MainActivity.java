@@ -1774,8 +1774,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     private void addEventTypeToViewName(EventType type, TextView textView){
         if(type.getName() != null){
             if(!type.getName().isEmpty()){
-                CharSequence eType = drawTextViewDesign("", type.getName());
-                textView.setText(eType);
+                textView.setText(type.getName());
             }else{
                 textView.setVisibility(View.GONE);
             }

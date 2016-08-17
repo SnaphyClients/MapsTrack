@@ -125,6 +125,11 @@
     <string name="fragment_event_list_button2">Shared</string>
     <string name="fragment_event_list_button3">Nearby</string>
 
+    <!--Location List-->
+    <string name="fragment_location_list_button1">My Location</string>
+    <string name="fragment_location_list_button2">Shared</string>
+    <string name="fragment_location_list_button3">Nearby</string>
+
     <string-array name="CountryCodes" >
         <item>93,AF</item>
         <item>355,AL</item>

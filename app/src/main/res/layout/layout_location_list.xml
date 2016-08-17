@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:textAlignment="center">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/layout_location_list_textview1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/layout_location_list_textview2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="km"
+                android:textSize="15dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/layout_location_list_textview1"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="25dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="25dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/layout_location_list_textview3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AnuragBirthday"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:paddingRight="5dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:id="@+id/layout_location_list_textview4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="by Anu"
+                android:textSize="13dp"
+                android:textColor="#AAAAAA"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/layout_location_list_textview5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1134, First Floor, Noida,126587, UP"
+            android:paddingTop="3dp"
+            android:textSize="13dp"
+            android:textColor="#aaaaaa"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -161,16 +161,28 @@ public class EventListFragment extends android.support.v4.app.Fragment {
     @OnClick(R.id.fragment_event_list_button1) void myEventFilter() {
         mainActivity.showMyEventFilter();
         EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+
+        myEventButton.setTextColor(Color.parseColor("#ed6174"));
+        sharedEventButton.setTextColor(Color.parseColor("#777777"));
+        nearbyEventButton.setTextColor(Color.parseColor("#777777"));
     }
 
     @OnClick(R.id.fragment_event_list_button2) void sharedEventFilter() {
         mainActivity.setOnlySharedEventsFilter();
         EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+
+        myEventButton.setTextColor(Color.parseColor("#777777"));
+        sharedEventButton.setTextColor(Color.parseColor("#ed6174"));
+        nearbyEventButton.setTextColor(Color.parseColor("#777777"));
     }
 
     @OnClick(R.id.fragment_event_list_button3) void nearbyEventFilter() {
         mainActivity.setNearByEventFilter();
         EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+
+        myEventButton.setTextColor(Color.parseColor("#777777"));
+        sharedEventButton.setTextColor(Color.parseColor("#777777"));
+        nearbyEventButton.setTextColor(Color.parseColor("#ed6174"));
     }
 
     public void setSelectedFilter() {
