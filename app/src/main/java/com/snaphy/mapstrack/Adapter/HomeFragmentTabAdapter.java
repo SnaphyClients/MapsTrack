@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.snaphy.mapstrack.Fragment.EventListFragment;
 import com.snaphy.mapstrack.Fragment.LocationListFragment;
-import com.snaphy.mapstrack.Fragment.LocationShareByUserFragment;
+import com.snaphy.mapstrack.Fragment.ShareFragment;
 
 /**
  * Created by Ravi-Gupta on 8/15/2016.
@@ -25,7 +25,7 @@ public class HomeFragmentTabAdapter extends FragmentStatePagerAdapter {
             case 1 :
                 return new LocationListFragment();
             case 2:
-                return new LocationShareByUserFragment();
+                return new ShareFragment();
             default:
                 return new EventListFragment();
         }

@@ -57,8 +57,8 @@ public class ShareFragment extends android.support.v4.app.Fragment {
      * Set Text for Tab Layout
      */
     public void setTextInTabLayout() {
-        tabLayout.getTabAt(0).setText("Friends Tracking U");
-        tabLayout.getTabAt(1).setText("Track Friends");
+        tabLayout.getTabAt(0).setText("LOCATOR");
+        tabLayout.getTabAt(1).setText("FOLLOWER");
     }
 
     // TODO: Rename method, update argument and hook method into UI event

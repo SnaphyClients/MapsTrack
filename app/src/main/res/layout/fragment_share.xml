@@ -7,22 +7,33 @@
     android:clickable="true"
     android:background="@color/background">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/fragment_share_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabMode="fixed"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@color/white"
-        android:background="?attr/colorPrimary"
-        app:tabTextColor="@color/background"
-        app:tabSelectedTextColor="@color/white"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_share_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/fragment_share_tab_layout">
+        android:layout_height="wrap_content">
     </android.support.v4.view.ViewPager>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EEE"
+        android:id="@+id/view"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/fragment_share_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/white"
+        android:background="@color/white"
+        app:tabTextColor="#777777"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabIndicatorHeight="0dp"
+        app:tabBackground="@color/white"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
