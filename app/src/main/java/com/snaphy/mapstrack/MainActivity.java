@@ -127,8 +127,6 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-
 /*import com.google.android.gms.analytics.Tracker;*/
 
 //import com.google.android.gms.analytics.Tracker;
@@ -934,18 +932,16 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
 
-    public void startProgressBar(SmoothProgressBar progressBar) {
+    public void startProgressBar(com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar) {
         if(progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
-            progressBar.progressiveStart();
         }
         //OR Use Progress Dialog
     }
 
-    public void stopProgressBar(SmoothProgressBar progressBar) {
+    public void stopProgressBar(com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar) {
         if(progressBar != null) {
             progressBar.setVisibility(View.GONE);
-            progressBar.progressiveStop();
         }
         //OR Use Progress Dialog
     }

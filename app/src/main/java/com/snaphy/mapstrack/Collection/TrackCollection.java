@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-
 /**
  * Created by Ravi-Gupta on 3/10/2016.
  */
@@ -36,7 +34,7 @@ public class TrackCollection {
 
     public static Map<String, Boolean>  trackCurrentFilterSelect = new HashMap<>();
 
-    public static SmoothProgressBar progressBar;
+    public static com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
 
 
     static public Map<String, Object> getEventFilter() {
@@ -95,7 +93,7 @@ public class TrackCollection {
     }
 
 
-    public void initialize(final String type, final boolean reset, final SmoothProgressBar progressBar){
+    public void initialize(final String type, final boolean reset, final com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar){
 
         Map<String, Object> filter;
         //Now add type to filter..
@@ -215,37 +213,37 @@ public class TrackCollection {
 
 
     @Subscriber ( tag = Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT)
-    public void requestMoreEvents(SmoothProgressBar progressBar) {
+    public void requestMoreEvents(com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar) {
         initialize("event", false, progressBar);
     }
 
     @Subscriber ( tag = Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT)
-    public void initEvents(SmoothProgressBar progressBar){
+    public void initEvents(com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar){
         initialize("event",true, progressBar);
     }
 
     @Subscriber ( tag = Constants.RESET_LOCATION_FROM_FILTER_FRAGMENT)
-    public void initLocations(SmoothProgressBar progressBar){
+    public void initLocations(com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar){
         initialize("location",true, progressBar);
     }
 
     @Subscriber ( tag = Constants.REQUEST_LOAD_MORE_LOCATION_FROM_HOME_FRAGMENT)
-    public void requestMoreLocation(SmoothProgressBar progressBar) {
+    public void requestMoreLocation(com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar) {
         initialize("location", false, progressBar);
     }
 
-    public void startProgressBar(SmoothProgressBar progressBar) {
+    public void startProgressBar(com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar) {
         if(progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
-            progressBar.progressiveStart();
+            /*progressBar.progressiveStart();*/
         }
         //OR Use Progress Dialog
     }
 
-    public void stopProgressBar(SmoothProgressBar progressBar) {
+    public void stopProgressBar(com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar) {
         if(progressBar != null) {
             progressBar.setVisibility(View.GONE);
-            progressBar.progressiveStop();
+            /*progressBar.progressiveStop();*/
         }
         //OR Use Progress Dialog
     }

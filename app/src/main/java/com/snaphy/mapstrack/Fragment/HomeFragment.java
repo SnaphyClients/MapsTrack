@@ -108,7 +108,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        TrackCollection.progressBar = (fr.castorflex.android.smoothprogressbar.SmoothProgressBar) view.findViewById(R.id.fragment_home_progressBar);
+        TrackCollection.progressBar = (com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar) view.findViewById(R.id.fragment_home_progressBar);
         mainActivity.stopProgressBar(TrackCollection.progressBar);
 
         viewPager.setAdapter(new HomeFragmentTabAdapter(getChildFragmentManager()));

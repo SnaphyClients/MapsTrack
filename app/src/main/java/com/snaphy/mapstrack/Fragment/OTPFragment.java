@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +60,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_otp_verification_button3) TextView goButton;
     @Bind(R.id.fragment_otp_verification_button2)
     Button resendCode;
-    @Bind(R.id.fragment_otp_verification_progressBar) SmoothProgressBar progressBar;
+    @Bind(R.id.fragment_otp_verification_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     ProgressDialog progress;
 
 

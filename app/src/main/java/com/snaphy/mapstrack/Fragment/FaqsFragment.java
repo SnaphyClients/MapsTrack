@@ -27,7 +27,6 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * This fragment contains the methods to display frequently asked questions in the app
@@ -38,7 +37,7 @@ public class FaqsFragment extends android.support.v4.app.Fragment {
     public static String TAG = "FaqFragment";
     @Bind(R.id.fragment_faq_imagebutton1) ImageButton backArrow;
     @Bind(R.id.fragment_faq_textview1)TextView textView;
-    @Bind(R.id.fragment_faq_progressBar) SmoothProgressBar progressBar;
+    @Bind(R.id.fragment_faq_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     MainActivity mainActivity;
     View rootview;
     CompanyInfoRepository companyInfoRepository;

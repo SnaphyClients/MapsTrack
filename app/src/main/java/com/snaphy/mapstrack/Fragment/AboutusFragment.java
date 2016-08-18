@@ -27,7 +27,6 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * This fragment is located in settings frgament and used to display app info
@@ -38,7 +37,7 @@ public class AboutusFragment extends android.support.v4.app.Fragment {
     public static String TAG = "AboutusFragment";
     @Bind(R.id.fragment_about_us_imagebutton1) ImageButton backArrow;
     @Bind(R.id.fragment_about_us_textview1)TextView textView;
-    @Bind(R.id.fragment_about_us_progressBar) SmoothProgressBar progressBar;
+    @Bind(R.id.fragment_about_us_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     MainActivity mainActivity;
     View rootview;
     CompanyInfoRepository companyInfoRepository;

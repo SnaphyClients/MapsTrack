@@ -27,7 +27,6 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * All terms and conditions are controlled in this fragment
@@ -38,7 +37,7 @@ public class TermsFragment extends android.support.v4.app.Fragment {
     public static String TAG = "TermsFragment";
     @Bind(R.id.fragment_terms_imagebutton1) ImageButton backArrow;
     @Bind(R.id.fragment_terms_textview1)TextView textView;
-    @Bind(R.id.fragment_terms_progressBar) SmoothProgressBar progressBar;
+    @Bind(R.id.fragment_terms_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     View rootview;
     MainActivity mainActivity;
     CompanyInfoRepository companyInfoRepository;

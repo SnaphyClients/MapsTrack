@@ -122,15 +122,22 @@
 
     </LinearLayout>-->
 
-    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+   <!-- <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
         xmlns:app="http://schemas.android.com/apk/res/com.snaphy.mapstrack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/GNowProgressBar"
         android:indeterminate="true"
         android:background="@android:color/transparent"
-        android:id="@+id/fragment_home_progressBar"
         android:layout_below="@+id/toolbar"
-        android:minHeight="4dp" />
+        android:minHeight="4dp" />-->
+
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/fragment_home_progressBar"
+        android:layout_centerInParent="true"
+        app:mlpb_progress_stoke_width="3dp"
+        app:mlpb_progress_color="#566da9"/>
 
 </RelativeLayout>
