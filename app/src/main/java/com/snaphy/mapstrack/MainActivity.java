@@ -1970,7 +1970,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public void setOnlySharedEventsFilter(){
-        setNearByLocationFilter();
         Map<String, Object> where = new HashMap<>();
         if(BackgroundService.getCustomer() != null){
             //First clear the where of track collection..
@@ -1986,9 +1985,24 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         TrackCollection.setFilterColor(Constants.SHARED_EVENTS);
     }
 
+    public void setOnlySharedLocationFilter(){
+        Map<String, Object> where = new HashMap<>();
+        if(BackgroundService.getCustomer() != null){
+            //First clear the where of track collection..
+            if(TrackCollection.getLocationFilter() != null){
+                TrackCollection.getLocationFilter().put("where", where);
+                if(BackgroundService.getCustomer().getPhoneNumber() != null){
+                    where.put("friends.number", BackgroundService.getCustomer().getPhoneNumber());
+                }
+                //Now only allow status of allowed event to view..
+                where.put("status", "allow");
+            }
+        }
+        TrackCollection.setFilterColor(Constants.SHARED_LOCATION);
+    }
+
 
     public void setNearByEventFilter(){
-        setNearByLocationFilter();
         Map<String, Object> where = new HashMap<>();
         //Add nearby
         if(BackgroundService.getCurrentLocation() != null){
@@ -2010,35 +2024,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         TrackCollection.setFilterColor(Constants.NEAR_BY);
     }
 
-
-    public void showMyEventFilter(){
-        setNearByLocationFilter();
-        Map<String, Object> where = new HashMap<>();
-        //Add nearby
-        if(BackgroundService.getCustomer() != null){
-            //First clear the where of track collection..
-            if(TrackCollection.getEventFilter() != null){
-                TrackCollection.getEventFilter().put("where", where);
-                where.put("status","allow");
-                where.put("customerId", BackgroundService.getCustomer().getId());
-            }
-        }
-        TrackCollection.setFilterColor(Constants.MY_EVENTS);
-    }
-
-    public void showMyLocationFilter(){
-        Map<String, Object> where = new HashMap<>();
-        //Add nearby
-        if(BackgroundService.getCustomer() != null){
-            //First clear the where of track collection..
-            if(TrackCollection.getLocationFilter() != null){
-                TrackCollection.getLocationFilter().put("where", where);
-                where.put("customerId", BackgroundService.getCustomer().getId());
-            }
-        }
-        TrackCollection.setFilterColor(Constants.MY_LOCATION);
-    }
-
     public void setNearByLocationFilter() {
         Map<String, Object> where = new HashMap<>();
         //Add nearby
@@ -2058,7 +2043,38 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("isPublic", "public");
             }
         }
+        TrackCollection.setFilterColor(Constants.NEAR_BY_LOCATION);
     }
+
+
+    public void showMyEventFilter(){
+        Map<String, Object> where = new HashMap<>();
+        //Add nearby
+        if(BackgroundService.getCustomer() != null){
+            //First clear the where of track collection..
+            if(TrackCollection.getEventFilter() != null){
+                TrackCollection.getEventFilter().put("where", where);
+                where.put("status", "allow");
+                where.put("customerId", BackgroundService.getCustomer().getId());
+            }
+        }
+        TrackCollection.setFilterColor(Constants.MY_EVENTS);
+    }
+
+    public void showMyLocationFilter(){
+        Map<String, Object> where = new HashMap<>();
+        //Add nearby
+        if(BackgroundService.getCustomer() != null){
+            //First clear the where of track collection..
+            if(TrackCollection.getLocationFilter() != null){
+                TrackCollection.getLocationFilter().put("where", where);
+                where.put("customerId", BackgroundService.getCustomer().getId());
+            }
+        }
+        TrackCollection.setFilterColor(Constants.MY_LOCATION);
+    }
+
+
 
     public String changeToUpperCase(String source) {
         String cap = source.substring(0, 1).toUpperCase() + source.substring(1);

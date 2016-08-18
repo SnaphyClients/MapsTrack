@@ -103,6 +103,8 @@ public final class Constants {
     public static final String SHARED_EVENTS = "shared";
     public static final String MY_EVENTS = "myevents";
     public static final String MY_LOCATION = "myLocation";
+    public static final String SHARED_LOCATION = "sharedLocation";
+    public static final String NEAR_BY_LOCATION = "nearbyLocation";
 
     public static final String DISPLAY_CONTACTS_FROM_SHARED_USER_FRAGMENT = "displayContactFromSharedUserFragment";
 

@@ -41,9 +41,9 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
 
     @Bind(R.id.fragment_location_list_recycler_view) RecyclerView recyclerView;
-    @Bind(R.id.fragment_location_list_button1) Button myEventButton;
-    @Bind(R.id.fragment_location_list_button2) Button sharedEventButton;
-    @Bind(R.id.fragment_location_list_button3) Button nearbyEventButton;
+    @Bind(R.id.fragment_location_list_button1) Button myLocationButton;
+    @Bind(R.id.fragment_location_list_button2) Button sharedLocationButton;
+    @Bind(R.id.fragment_location_list_button3) Button nearbyLocationButton;
     LinearLayoutManager layoutManager;
     LocationListAdapter locationListAdapter;
     MainActivity mainActivity;
@@ -157,23 +157,23 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
 
     public void setSelectedFilter() {
         if(TrackCollection.getTrackCurrentFilterSelect() != null) {
-            if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.MY_EVENTS)) {
+            if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.MY_LOCATION)) {
 
-                myEventButton.setTextColor(Color.parseColor("#ed6174"));
-                sharedEventButton.setTextColor(Color.parseColor("#777777"));
-                nearbyEventButton.setTextColor(Color.parseColor("#777777"));
+                myLocationButton.setTextColor(Color.parseColor("#ed6174"));
+                sharedLocationButton.setTextColor(Color.parseColor("#777777"));
+                nearbyLocationButton.setTextColor(Color.parseColor("#777777"));
 
-            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.NEAR_BY)) {
+            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.NEAR_BY_LOCATION)) {
 
-                myEventButton.setTextColor(Color.parseColor("#777777"));
-                sharedEventButton.setTextColor(Color.parseColor("#777777"));
-                nearbyEventButton.setTextColor(Color.parseColor("#ed6174"));
+                myLocationButton.setTextColor(Color.parseColor("#777777"));
+                sharedLocationButton.setTextColor(Color.parseColor("#777777"));
+                nearbyLocationButton.setTextColor(Color.parseColor("#ed6174"));
 
-            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.SHARED_EVENTS)) {
+            } else if (TrackCollection.getTrackCurrentFilterSelect().get(Constants.SHARED_LOCATION)) {
 
-                myEventButton.setTextColor(Color.parseColor("#777777"));
-                sharedEventButton.setTextColor(Color.parseColor("#ed6174"));
-                nearbyEventButton.setTextColor(Color.parseColor("#777777"));
+                myLocationButton.setTextColor(Color.parseColor("#777777"));
+                sharedLocationButton.setTextColor(Color.parseColor("#ed6174"));
+                nearbyLocationButton.setTextColor(Color.parseColor("#777777"));
 
             }
         }
@@ -184,30 +184,30 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_location_list_button1) void myEventFilter() {
-        //mainActivity.showMyEventFilter();
-        //EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+        mainActivity.showMyLocationFilter();
+        EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_LOCATION_FROM_FILTER_FRAGMENT);
 
-        myEventButton.setTextColor(Color.parseColor("#ed6174"));
-        sharedEventButton.setTextColor(Color.parseColor("#777777"));
-        nearbyEventButton.setTextColor(Color.parseColor("#777777"));
+        myLocationButton.setTextColor(Color.parseColor("#ed6174"));
+        sharedLocationButton.setTextColor(Color.parseColor("#777777"));
+        nearbyLocationButton.setTextColor(Color.parseColor("#777777"));
     }
 
     @OnClick(R.id.fragment_location_list_button2) void sharedEventFilter() {
-        //mainActivity.setOnlySharedEventsFilter();
-        //EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+        mainActivity.setOnlySharedLocationFilter();
+        EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_LOCATION_FROM_FILTER_FRAGMENT);
 
-        myEventButton.setTextColor(Color.parseColor("#777777"));
-        sharedEventButton.setTextColor(Color.parseColor("#ed6174"));
-        nearbyEventButton.setTextColor(Color.parseColor("#777777"));
+        myLocationButton.setTextColor(Color.parseColor("#777777"));
+        sharedLocationButton.setTextColor(Color.parseColor("#ed6174"));
+        nearbyLocationButton.setTextColor(Color.parseColor("#777777"));
     }
 
     @OnClick(R.id.fragment_location_list_button3) void nearbyEventFilter() {
-        //mainActivity.setNearByEventFilter();
-        //EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
+        mainActivity.setNearByLocationFilter();
+        EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_LOCATION_FROM_FILTER_FRAGMENT);
 
-        myEventButton.setTextColor(Color.parseColor("#777777"));
-        sharedEventButton.setTextColor(Color.parseColor("#777777"));
-        nearbyEventButton.setTextColor(Color.parseColor("#ed6174"));
+        myLocationButton.setTextColor(Color.parseColor("#777777"));
+        sharedLocationButton.setTextColor(Color.parseColor("#777777"));
+        nearbyLocationButton.setTextColor(Color.parseColor("#ed6174"));
     }
 
 

@@ -78,6 +78,8 @@ public class TrackCollection {
         trackCurrentFilterSelect.put(Constants.NEAR_BY, false);
         trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, false);
         trackCurrentFilterSelect.put(Constants.MY_LOCATION, false);
+        trackCurrentFilterSelect.put(Constants.NEAR_BY_LOCATION, false);
+        trackCurrentFilterSelect.put(Constants.SHARED_LOCATION, false);
     }
 
     public void resetFilter(String type){
@@ -254,6 +256,8 @@ public class TrackCollection {
         trackCurrentFilterSelect.put(Constants.NEAR_BY, false);
         trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, false);
         trackCurrentFilterSelect.put(Constants.MY_LOCATION,false);
+        trackCurrentFilterSelect.put(Constants.NEAR_BY_LOCATION, false);
+        trackCurrentFilterSelect.put(Constants.SHARED_LOCATION, false);
 
         if (filterType.equals(Constants.MY_EVENTS)) {
             trackCurrentFilterSelect.put(Constants.MY_EVENTS, true);
@@ -269,6 +273,14 @@ public class TrackCollection {
 
         if (filterType.equals(Constants.MY_LOCATION)) {
             trackCurrentFilterSelect.put(Constants.MY_LOCATION, true);
+        }
+
+        if (filterType.equals(Constants.NEAR_BY_LOCATION)) {
+            trackCurrentFilterSelect.put(Constants.NEAR_BY_LOCATION, true);
+        }
+
+        if (filterType.equals(Constants.SHARED_LOCATION)) {
+            trackCurrentFilterSelect.put(Constants.SHARED_LOCATION, true);
         }
 
     }

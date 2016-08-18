@@ -14,6 +14,7 @@ import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.BackgroundService;
+import com.snaphy.mapstrack.WordUtils;
 
 import java.util.List;
 
@@ -101,17 +102,17 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         }
 
         if(track.getName() != null) {
-            eventName.setText(track.getName());
+            eventName.setText(WordUtils.capitalize(track.getName()));
         }
 
         if(track.getCustomer() != null) {
             if(track.getCustomer().getFirstName() != null) {
-                eventCreator.setText("by " + track.getCustomer().getFirstName());
+                eventCreator.setText("by " + WordUtils.capitalize(track.getCustomer().getFirstName()));
             }
         }
 
         if(track.getAddress() != null) {
-            eventAddress.setText(track.getAddress());
+            eventAddress.setText(WordUtils.capitalize(track.getAddress()));
         }
 
             if(track.getType() != null){
