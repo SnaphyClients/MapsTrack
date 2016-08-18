@@ -14,7 +14,7 @@
     <color name="moreDarkGrey">#555555</color>
     <color name="BlueGrey">#607D8B</color>
     <color name="orangeColor">#FF5722</color>
-    <color name="colorPrimaryBackgroundImage">#919CDE</color>
+    <color name="colorPrimaryBackgroundImage">#f4c7cd</color>
 
     <integer-array name="gplus_colors">
         <item>@color/gplus_color_1</item>

@@ -12,6 +12,7 @@ import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.BackgroundService;
+import com.snaphy.mapstrack.WordUtils;
 
 import java.util.List;
 
@@ -87,12 +88,12 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
 
         if(track.getCustomer() != null) {
             if(track.getCustomer().getFirstName() != null) {
-                locationCreator.setText("by " + track.getCustomer().getFirstName());
+                locationCreator.setText("by " + WordUtils.capitalize(track.getCustomer().getFirstName()));
             }
         }
 
         if(track.getAddress() != null) {
-            locationAddress.setText(track.getAddress());
+            locationAddress.setText(WordUtils.capitalize(track.getAddress()));
         }
 
 
