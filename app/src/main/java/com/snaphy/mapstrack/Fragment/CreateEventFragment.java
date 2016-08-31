@@ -788,6 +788,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                         mainActivity.onBackPressed();
                     }
                     mainActivity.onBackPressed();
+                    mainActivity.showMyEventFilter();
+                    EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
                     if (fromEdited) {
                         EventBus.getDefault().post(imageView.getDrawable(), Constants.UPDATE_IMAGE_FROM_EDITED_CREATE_EVENT);
                     }

@@ -113,7 +113,7 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Vie
 
         viewPager.setAdapter(new HomeFragmentTabAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setOffscreenPageLimit(0);
+        viewPager.setOffscreenPageLimit(1);
         setTextInTabLayout();
 
 

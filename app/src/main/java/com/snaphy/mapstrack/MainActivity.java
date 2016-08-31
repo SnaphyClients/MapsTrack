@@ -315,10 +315,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public void checkLogin(){
-        if(BackgroundService.getCustomerRepository() == null){
-            CustomerRepository customerRepository = getLoopBackAdapter().createRepository(CustomerRepository.class);
-            BackgroundService.setCustomerRepository(customerRepository);
-        }
+
+        CustomerRepository customerRepository = getLoopBackAdapter().createRepository(CustomerRepository.class);
+        BackgroundService.setCustomerRepository(customerRepository);
+
 
         // later in one of the Activity classes
         Customer current = BackgroundService.getCustomerRepository().getCachedCurrentUser();
@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     //Register anonymous for push service..
                     //moveToLogin();
                     //Retry Login
-                    if(t.toString().equals("org.apache.http.client.HttpResponseException: Unauthorized")) {
+                    if(t.getMessage().equals("Unauthorized")) {
                         Snackbar.make(parentLayout, "Unable to connect to server", Snackbar.LENGTH_LONG).show();
                         moveToLogin();
                     } else {
@@ -1704,7 +1704,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
-    public void displayEventType(final TextView textView, Track track){
+    public void displayEventType(final TextView textView, final Track track){
         if(track.getEventType() != null){
             EventType type = track.getEventType();
             addEventTypeToView(type,textView);
@@ -1712,6 +1712,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             track.get__eventType(false, getLoopBackAdapter(), new ObjectCallback<EventType>() {
                 @Override
                 public void onSuccess(EventType object) {
+                    if(object != null){
+                        track.setEventType(object);
+                        track.addRelation(object);
+
+                    }
                     addEventTypeToView(object, textView);
                 }
 
@@ -1742,7 +1747,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
     }
 
-    public void displayEventTypeName(final TextView textView, Track track){
+    public void displayEventTypeName(final TextView textView, final Track track){
+        textView.setText(null);
         if(track.getEventType() != null){
             EventType type = track.getEventType();
             addEventTypeToViewName(type,textView);
@@ -1750,6 +1756,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             track.get__eventType(false, getLoopBackAdapter(), new ObjectCallback<EventType>() {
                 @Override
                 public void onSuccess(EventType object) {
+                    track.setEventType(object);
+                    track.addRelation(object);
                     addEventTypeToViewName(object, textView);
                 }
 
@@ -1965,6 +1973,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     private void startService(){
         //Now set filter for showing only nearby events at start..
         setNearByEventFilter();
+        setNearByLocationFilter();
         startService(new Intent(getBaseContext(), BackgroundService.class));
     }
 

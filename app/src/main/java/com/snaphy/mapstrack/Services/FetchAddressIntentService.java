@@ -64,6 +64,10 @@ public class FetchAddressIntentService extends IntentService {
             errorMessage = getString(R.string.service_not_available);
             Log.e(Constants.TAG, errorMessage, ioException);
         }
+        catch (NullPointerException nullPointerException) {
+            errorMessage = "Null Pointer Exception";
+            Log.e(Constants.TAG, errorMessage, nullPointerException);
+        }
         catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
             errorMessage = getString(R.string.invalid_lat_long_used);

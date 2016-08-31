@@ -429,6 +429,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
                     EventBus.getDefault().post(true, Constants.NOTIFY_LOCATION_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION);
                     mainActivity.onBackPressed();
+                    mainActivity.showMyLocationFilter();
+                    EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_LOCATION_FROM_FILTER_FRAGMENT);
                     saveInProgress = false;
                 }
             }

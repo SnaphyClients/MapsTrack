@@ -92,8 +92,6 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
         recyclerView.setAdapter(locationListAdapter);
         locationListAdapter.notifyDataSetChanged();
 
-        setSelectedFilter();
-
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -110,6 +108,12 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
         recyclerViewLoadMoreEventData();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setSelectedFilter();
     }
 
     public void recyclerViewLoadMoreEventData() {
@@ -153,6 +157,7 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
             totalItemCount = 0;
         }
         locationListAdapter.notifyDataSetChanged();
+        setSelectedFilter();
     }
 
     public void setSelectedFilter() {

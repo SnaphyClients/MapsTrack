@@ -183,7 +183,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     public CharSequence drawTextViewDesign(String constant, String data) {
         SpannableString spannableString =  new SpannableString(constant);
         SpannableString spannableString2 =  new SpannableString(data);
-        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(63, 81, 181)),0,constant.length(),0);
+        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(209, 84, 101)),0,constant.length(),0);
         spannableString.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, constant.length(), 0);
         spannableString.setSpan(new RelativeSizeSpan(1.1f), 0, constant.length(), 0);
         CharSequence result = (TextUtils.concat(spannableString, " ", spannableString2));

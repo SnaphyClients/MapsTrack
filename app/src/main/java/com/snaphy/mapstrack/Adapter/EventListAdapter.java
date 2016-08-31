@@ -97,8 +97,17 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             Log.v(Constants.TAG, eventDate.getText().toString());
         }
 
-        if(track.getEventDate() != null) {
-            eventDate.setText(mainActivity.parseDate(track.getEventDate()));
+
+        if(track.getEventDate() != null){
+            if(!track.getEventDate().isEmpty()){
+                CharSequence eDate;
+                try {
+                    eDate = mainActivity.drawTextViewDesign("", mainActivity.parseDate(track.getEventDate()));
+                } catch (Exception e) {
+                    eDate = mainActivity.drawTextViewDesign("", track.getEventDate());
+                }
+                eventDate.setText(eDate);
+            }
         }
 
         if(track.getName() != null) {
@@ -115,11 +124,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             eventAddress.setText(WordUtils.capitalize(track.getAddress()));
         }
 
-            if(track.getType() != null){
-                if(!track.getType().isEmpty()) {
-                    mainActivity.displayEventTypeName(eventType, track);
-                    //eventType.setText(eType);
-                }
+        if(track.getType() != null){
+            if(!track.getType().isEmpty()) {
+                mainActivity.displayEventTypeName(eventType, track);
+                //eventType.setText(eType);
+            }
         }
 
     }

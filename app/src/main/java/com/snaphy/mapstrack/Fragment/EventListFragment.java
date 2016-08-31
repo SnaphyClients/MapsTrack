@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,9 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        recyclerView.setItemAnimator(null);
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 getActivity().getApplicationContext()
         ));
@@ -89,9 +93,7 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         eventListAdapter = new EventListAdapter(TrackCollection.getEventList(), mainActivity);
 
         recyclerView.setAdapter(eventListAdapter);
-        eventListAdapter.notifyDataSetChanged();
-
-        setSelectedFilter();
+        /*eventListAdapter.notifyDataSetChanged();*/
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
@@ -109,6 +111,13 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         recyclerViewLoadMoreEventData();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        nearbyEventFilter();
+        setSelectedFilter();
     }
 
     public void recyclerViewLoadMoreEventData() {
@@ -152,6 +161,7 @@ public class EventListFragment extends android.support.v4.app.Fragment {
             totalItemCount = 0;
         }
         eventListAdapter.notifyDataSetChanged();
+        setSelectedFilter();
     }
 
     @OnClick(R.id.fragment_event_list_floating_button1) void openCreateEvent() {

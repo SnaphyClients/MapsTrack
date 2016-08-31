@@ -44,7 +44,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/googleRed"
         android:textColor="@color/white"
-        android:text="with google+"
+        android:text="google+"
         android:textAllCaps="false"
         android:textSize="16sp"
         android:drawableLeft="@mipmap/publish"/>
