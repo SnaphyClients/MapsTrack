@@ -373,6 +373,15 @@
 
 </android.support.design.widget.CoordinatorLayout>
 
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/fragment_create_event_progressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        app:mlpb_progress_stoke_width="3dp"
+        app:mlpb_progress_color="#566da9"/>
+
 </RelativeLayout>
 
 

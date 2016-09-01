@@ -101,6 +101,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
     boolean saveInProgress = false;
     boolean isImageEdited = false;
 
+    @Bind(R.id.fragment_create_event_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
+
     int selectedDay;
     int selectedMonth;
     int selectedYear;
@@ -175,6 +177,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
+        mainActivity.stopProgressBar(progressBar);
         materialSpinner = (com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner) view.findViewById(R.id.fragment_create_event_spinner1);
         //placesAutocompleteTextView = (com.seatgeek.placesautocomplete.PlacesAutocompleteTextView) view.findViewById(R.id.fragment_create_event_edittext2);
         backButtonClickListener();
@@ -732,6 +735,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
             @Override
             public void onImagePicked(File imageFile, EasyImage.ImageSource source) {
                 //Handle the image
+                mainActivity.startProgressBar(progressBar);
                 editedImageFile = imageFile;
                 final String uri = Uri.fromFile(imageFile).toString();
                 final String decoded = Uri.decode(uri);
@@ -742,11 +746,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
                 mainActivity.uploadWithCallback(Constants.CONTAINER, editedImageFile, new ObjectCallback<ImageModel>() {
                     @Override
                     public void onSuccess(ImageModel object) {
+                        mainActivity.stopProgressBar(progressBar);
                         imageModel = object;
                     }
 
                     @Override
                     public void onError(Throwable t) {
+                        mainActivity.stopProgressBar(progressBar);
                         mainActivity.tracker.send(new HitBuilders.EventBuilder()
                                 .setCategory("Exception")
                                 .setAction("Fragment : CreateEventFragment, Method : onImagePicked "+t.toString())
