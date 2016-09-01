@@ -604,10 +604,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePickerDialog view, int year, int month, int day) {
-                        BackgroundService.setDay(day);
-                        BackgroundService.setMonth(month);
+                        String dayOfEvent = day < 10 ? "0"+day : ""+day;
+                        month  = month + 1;
+                        String monthOfEvent = month < 10 ? "0"+month : ""+month;
+                        BackgroundService.setDay(Integer.parseInt(dayOfEvent));
+                        BackgroundService.setMonth(Integer.parseInt(monthOfEvent));
                         BackgroundService.setYear(year);
-                        String dateDesc = day + "-" + month + "-"+ year;
+                        String dateDesc = year + "-" + monthOfEvent + "-"+ dayOfEvent;
                         dateEdittext.setText(dateDesc);
                     }
                 };
