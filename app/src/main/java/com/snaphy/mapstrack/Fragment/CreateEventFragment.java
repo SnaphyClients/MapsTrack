@@ -18,7 +18,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -33,7 +32,6 @@ import android.widget.Toast;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.EventType;
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
-import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -60,6 +58,9 @@ import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.BackgroundService;
 import com.strongloop.android.loopback.callbacks.ListCallback;
 import com.strongloop.android.loopback.callbacks.ObjectCallback;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -68,6 +69,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +88,7 @@ import pl.tajchert.nammu.PermissionCallback;
  * This Fragment is used to create new event by clicking on "Add(Plus)" button in the home fragment
  *
  */
-public class CreateEventFragment extends android.support.v4.app.Fragment {
+public class CreateEventFragment extends android.support.v4.app.Fragment{
 
     private OnFragmentInteractionListener mListener;
     public static String TAG = "CreateEventFragment";
@@ -106,6 +108,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
 
     @Bind(R.id.fragment_create_event_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_event_edittext3) EditText dateEdittext;
+    @Bind(R.id.fragment_create_event_edittext5) EditText timeEdittext;
     @Bind(R.id.fragment_create_event_edittext2) EditText eventLocation;
     @Bind(R.id.fragment_create_event_edittext1) EditText eventName;
     @Bind(R.id.fragment_create_event_edittext4) EditText eventDescription;
@@ -188,6 +191,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         dateFormat = new SimpleDateFormat();
         setSpinner();
         datePickerClickListener(view);
+        timePickerClickListener();
         dateEdittext.setKeyListener(null);
         //selectPosition();
         return view;
@@ -582,10 +586,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
         dateEdittext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                InputMethodManager im = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                im.hideSoftInputFromWindow(dateEdittext.getWindowToken(), 0);
-                DatePickerPopWin pickerPopWin = new DatePickerPopWin(mainActivity, 2000, 2100, new DatePickerPopWin.OnDatePickedListener() {
+
+               /* DatePickerPopWin pickerPopWin = new DatePickerPopWin(mainActivity, 2000, 2100, new DatePickerPopWin.OnDatePickedListener() {
                     @Override
                     public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
                         //handler the result here
@@ -597,10 +599,60 @@ public class CreateEventFragment extends android.support.v4.app.Fragment {
                         dateEdittext.setText(dateDesc);
                     }
                 });
-                pickerPopWin.showPopWin(mainActivity);
+                pickerPopWin.showPopWin(mainActivity);*/
+
+                DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int month, int day) {
+                        BackgroundService.setDay(day);
+                        BackgroundService.setMonth(month);
+                        BackgroundService.setYear(year);
+                        String dateDesc = day + "-" + month + "-"+ year;
+                        dateEdittext.setText(dateDesc);
+                    }
+                };
+
+                Calendar now = Calendar.getInstance();
+                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                        listener,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                datePickerDialog.show(getActivity().getFragmentManager(), "Time");
             }
         });
     }
+
+    // Time Picker
+    private void timePickerClickListener() {
+        timeEdittext.setText("");
+        timeEdittext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
+                        String minuteString = minute < 10 ? "0"+minute : ""+minute;
+                        String time = hourString+":"+minuteString;
+                        timeEdittext.setText(time);
+                    }
+                };
+
+                Calendar now = Calendar.getInstance();
+                TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                        listener,
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        true
+                );
+                timePickerDialog.show(getActivity().getFragmentManager(), "Time");
+            }
+        });
+    }
+
+
 
     @OnClick(R.id.fragment_event_info_imageview1) void openGalleryFromImageView() {
         parentFloatingButton.close(true);

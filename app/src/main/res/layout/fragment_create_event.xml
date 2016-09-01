@@ -170,7 +170,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:id="@+id/fragment_create_event_linear_layout4"
                     android:layout_below="@+id/fragment_create_event_linear_layout2"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp">
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_create_event_textInputLayout5"
+                        android:layout_weight="3">
+
+                        <EditText
+                            android:id="@+id/fragment_create_event_edittext5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:hint="Event Time"
+                            android:textSize="14sp"
+                            android:focusableInTouchMode="false"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/fragment_create_event_linear_layout4"
                     android:id="@+id/fragment_create_event_linear_layout3"
                     android:layout_marginTop="15dp"
                     android:layout_marginRight="10dp"

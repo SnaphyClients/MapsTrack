@@ -118,6 +118,8 @@ dependencies {
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'xyz.danoz:recyclerviewfastscroller:0.1.3'
     compile('com.lsjwzh:materialloadingprogressbar:0.5.8-RELEASE')
+    compile 'com.wdullaer:materialdatetimepicker:2.5.0'
+    compile 'com.turingtechnologies.materialscrollbar:lib:10.+'
 }
 
 apply plugin: 'com.google.gms.google-services'

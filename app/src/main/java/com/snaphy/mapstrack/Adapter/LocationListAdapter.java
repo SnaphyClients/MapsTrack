@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
+import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.BackgroundService;
@@ -69,14 +70,14 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
                 if(distanceInKm == 0){
                     distanceInKm = 1;
                     locationDistance.setText(distanceInKm+"");
-                    locationDistanceMetric.setText("km");
+                    locationDistanceMetric.setText(Constants.KM);
                 } else if (distanceInKm > 99) {
                     distanceInKm = 99;
                     locationDistance.setText(distanceInKm+"");
-                    locationDistanceMetric.setText("+ km");
+                    locationDistanceMetric.setText("+ "+Constants.KM);
                 } else {
                     locationDistance.setText(distanceInKm+"");
-                    locationDistanceMetric.setText("km");
+                    locationDistanceMetric.setText(Constants.KM);
                 }
 
             }
