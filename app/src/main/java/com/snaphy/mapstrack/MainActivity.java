@@ -1768,7 +1768,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                             .setAction("Fragment : MainActivity, Method : displayEventType" + t.toString())
                             .build());
                     Log.e(Constants.TAG, t.toString());
-                    textView.setVisibility(View.GONE);
                 }
             });
         }
@@ -1780,10 +1779,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             if(!type.getName().isEmpty()){
                 textView.setText(type.getName());
             }else{
-                textView.setVisibility(View.GONE);
             }
         }else{
-            textView.setVisibility(View.GONE);
         }
     }
 

@@ -131,20 +131,22 @@ public class EventListFragment extends android.support.v4.app.Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                visibleItemCount = recyclerView.getChildCount();
-                totalItemCount = layoutManager.getItemCount();
-                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                if (dy > 0) {
+                    visibleItemCount = recyclerView.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
 
-                if (loading) {
-                    if (totalItemCount > previousTotal) {
-                        loading = false;
-                        previousTotal = totalItemCount;
+                    if (loading) {
+                        if (totalItemCount > previousTotal) {
+                            loading = false;
+                            previousTotal = totalItemCount;
+                        }
                     }
-                }
-                if (!loading && (totalItemCount - visibleItemCount)
-                        <= (firstVisibleItem + visibleThreshold)) {
-                    EventBus.getDefault().post(TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT);
-                    loading = true;
+                    if (!loading && (totalItemCount - visibleItemCount)
+                            <= (firstVisibleItem + visibleThreshold)) {
+                        EventBus.getDefault().post(TrackCollection.progressBar, Constants.REQUEST_LOAD_MORE_EVENT_FROM_HOME_FRAGMENT);
+                        loading = true;
+                    }
                 }
             }
         });
@@ -152,14 +154,7 @@ public class EventListFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
     public void notifyEventList(boolean reset) {
-        if(TrackCollection.getTrackCurrentFilterSelect() != null) {
-            previousTotal = 0;
-            loading = true;
-            visibleThreshold = 3;
-            firstVisibleItem = 0;
-            visibleItemCount = 0;
-            totalItemCount = 0;
-        }
+
         eventListAdapter.notifyDataSetChanged();
         setSelectedFilter();
     }
@@ -175,6 +170,8 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         myEventButton.setTextColor(Color.parseColor("#ed6174"));
         sharedEventButton.setTextColor(Color.parseColor("#777777"));
         nearbyEventButton.setTextColor(Color.parseColor("#777777"));
+
+        resetLoadMoreData();
     }
 
     @OnClick(R.id.fragment_event_list_button2) void sharedEventFilter() {
@@ -184,6 +181,8 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         myEventButton.setTextColor(Color.parseColor("#777777"));
         sharedEventButton.setTextColor(Color.parseColor("#ed6174"));
         nearbyEventButton.setTextColor(Color.parseColor("#777777"));
+
+        resetLoadMoreData();
     }
 
     @OnClick(R.id.fragment_event_list_button3) void nearbyEventFilter() {
@@ -193,6 +192,19 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         myEventButton.setTextColor(Color.parseColor("#777777"));
         sharedEventButton.setTextColor(Color.parseColor("#777777"));
         nearbyEventButton.setTextColor(Color.parseColor("#ed6174"));
+
+        resetLoadMoreData();
+    }
+
+    public void resetLoadMoreData() {
+         if(TrackCollection.getTrackCurrentFilterSelect() != null) {
+            previousTotal = 0;
+            loading = true;
+            visibleThreshold = 3;
+            firstVisibleItem = 0;
+            visibleItemCount = 0;
+            totalItemCount = 0;
+        }
     }
 
     public void setSelectedFilter() {
