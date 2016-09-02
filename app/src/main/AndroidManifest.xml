@@ -51,6 +51,7 @@
             android:name="com.snaphy.mapstrack.Services.FetchAddressIntentService"
             android:exported="false"/>
         <service android:name="com.snaphy.mapstrack.Services.BackgroundService" />
+        <service android:name="com.alexfu.countdownview.core.TimerService"/>
 
         <receiver android:name=".Fragment.OTPFragment$IncomingSms" >
             <intent-filter>

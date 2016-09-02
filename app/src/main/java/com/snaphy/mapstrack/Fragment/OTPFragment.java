@@ -4,8 +4,10 @@ import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.telephony.SmsManager;
@@ -47,7 +49,7 @@ import butterknife.OnClick;
  * Use the {@link OTPFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OTPFragment extends android.support.v4.app.Fragment {
+public class OTPFragment extends android.support.v4.app.Fragment{
 
     private OnFragmentInteractionListener mListener;
     public static final String TAG = "OTPFragment";
@@ -58,8 +60,8 @@ public class OTPFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_otp_verification_edittext2) EditText mobileNumber;
     @Bind(R.id.fragment_otp_verification_textview6) TextView validationFailedTextView;
     @Bind(R.id.fragment_otp_verification_button3) TextView goButton;
-    @Bind(R.id.fragment_otp_verification_button2)
-    Button resendCode;
+    @Bind(R.id.fragment_otp_timer) TextView countDown;
+    @Bind(R.id.fragment_otp_verification_button2) Button resendCode;
     @Bind(R.id.fragment_otp_verification_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     ProgressDialog progress;
 
@@ -85,10 +87,32 @@ public class OTPFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_ot, container, false);
         ButterKnife.bind(this, view);
         rootview = view;
+        Typeface typeface = Typeface.createFromAsset(mainActivity.getAssets(), "fonts/gothic.ttf");
+        countDown.setTypeface(typeface);
         enterCodeEditText = (EditText) view.findViewById(R.id.fragment_otp_verification_edittext1);
         mainActivity.stopProgressBar(progressBar);
         addChangeListener();
         return view;
+    }
+
+    public void setCountDown() {
+        new CountDownTimer(30000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                countDown.setVisibility(View.VISIBLE);
+                countDown.setText("" + millisUntilFinished / 1000);
+                //here you can have your logic to set text to edittext
+            }
+
+            public void onFinish() {
+                if (progress != null) {
+                    progress.dismiss();
+                }
+                goButton.setEnabled(true);
+                countDown.setText("Try Again");
+            }
+
+        }.start();
     }
 
     public void addChangeListener() {
@@ -138,6 +162,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
                     if (progress != null) {
                         progress.dismiss();
                     }
+                    goButton.setEnabled(true);
                     if (response != null) {
                         Log.i(Constants.TAG, "Google = " + response.toString());
                         mainActivity.addUser(response);
@@ -153,11 +178,12 @@ public class OTPFragment extends android.support.v4.app.Fragment {
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction("Fragment : OTPFragment, Method : loginWithCode "+t.toString())
+                            .setAction("Fragment : OTPFragment, Method : loginWithCode " + t.toString())
                             .build());
                     if (progress != null) {
                         progress.dismiss();
                     }
+                    goButton.setEnabled(true);
                     Toast.makeText(mainActivity, "Invalid code", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -169,6 +195,8 @@ public class OTPFragment extends android.support.v4.app.Fragment {
             requestOtpServer(mobileNumber.getText().toString());
             progress = new ProgressDialog(mainActivity);
             setProgress(progress);
+            setCountDown();
+            goButton.setEnabled(false);
             View view1 = mainActivity.getCurrentFocus();
             if (view1 != null) {
                 InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -211,6 +239,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
                     if(progress != null) {
                         progress.dismiss();
                     }
+                    goButton.setEnabled(true);
                     Snackbar.make(rootview, "Your internet seems to be slow or not working. Please try again later", Snackbar.LENGTH_SHORT).show();
                     //TODO ADD RETRY BUTTON.. CALL THIS SAME METHOD..
                 }
@@ -250,6 +279,7 @@ public class OTPFragment extends android.support.v4.app.Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

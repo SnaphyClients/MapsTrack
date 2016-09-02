@@ -176,7 +176,7 @@
             android:textAllCaps="false"
             android:background="@android:color/transparent"
             android:layout_gravity="center"
-            android:textColor="#36B666"
+            android:textColor="@color/colorPrimary"
             android:visibility="gone"/>
 
 
@@ -191,5 +191,32 @@
             android:visibility="gone"/>
 
     </LinearLayout>
+
+    <!--<cn.iwgang.countdownview.CountdownView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_otp_timer"
+        app:isHideTimeBackground="true"
+        app:isShowSecond="true"
+        app:timeTextColor="#000000"
+        app:timeTextSize="22sp"
+        app:suffixGravity="bottom"
+        app:suffixTextColor="#000000"
+        app:suffixTextSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"/>-->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_otp_timer"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:textSize="55dp"
+        android:gravity="center"
+        android:visibility="gone" />
 
 </RelativeLayout>
