@@ -66,15 +66,16 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     Cursor globalCursor;
     Track track;
     ProgressDialog progress;
+
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
             {
-                    ContactsContract.CommonDataKinds.Phone._ID,
-                    ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY,
+                    ContactsContract.Contacts._ID,
+                    ContactsContract.Contacts.LOOKUP_KEY,
                     Build.VERSION.SDK_INT
                             >= Build.VERSION_CODES.HONEYCOMB ?
-                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY :
-                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                            ContactsContract.Contacts.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Phone.NUMBER
             };
 
@@ -85,19 +86,13 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     @SuppressLint("InlinedApi")
     private static final String SELECTION =
 
-    ContactsContract.CommonDataKinds.Email.ADDRESS + " LIKE ? " + "AND " +
-            /*
-             * Searches for a MIME type that matches
-             * the value of the constant
-             * Email.CONTENT_ITEM_TYPE. Note the
-             * single quotes surrounding Email.CONTENT_ITEM_TYPE.
-             */
-    ContactsContract.Data.MIMETYPE + " = '" + ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE + "'";
+            ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '"
+                    + ("1") + "'";;
     // Defines a variable for the search string
     private String mSearchString;
     // Defines the array to hold values that replace the ?
     private String[] mSelectionArgs = { mSearchString };
-    String order = "upper("+ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + ") ASC";
+    String order = "upper("+ContactsContract.Contacts.DISPLAY_NAME + ") ASC";
 
     MainActivity mainActivity;
 
@@ -340,7 +335,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                 getActivity(),
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 PROJECTION,
-                null,
+                SELECTION + " AND " + ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1",
                 null,
                 order);
     }

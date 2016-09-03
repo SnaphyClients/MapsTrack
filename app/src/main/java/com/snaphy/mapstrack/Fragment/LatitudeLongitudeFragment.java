@@ -237,10 +237,10 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        double curlat = gps.getLatitude();
-        double curlon = gps.getLongitude();
+       /* double curlat = gps.getLatitude();
+        double curlon = gps.getLongitude();*/
         globalGoogleMap = googleMap;
-        LatLng currentpos=new LatLng(curlat, curlon);
+        LatLng currentpos = selectedLatLng;/*new LatLng(curlat, curlon);*/
         int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION);
         int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
@@ -254,7 +254,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         googleMap.setTrafficEnabled(true);
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(curlat, curlon), 14));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, 14));
 
         marker=googleMap.addMarker(new MarkerOptions().position(currentpos)
                 .title("MapsTrack")

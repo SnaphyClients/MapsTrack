@@ -171,6 +171,10 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         sharedEventButton.setTextColor(Color.parseColor("#777777"));
         nearbyEventButton.setTextColor(Color.parseColor("#777777"));
 
+        myEventButton.setEnabled(false);
+        sharedEventButton.setEnabled(true);
+        nearbyEventButton.setEnabled(true);
+
         resetLoadMoreData();
     }
 
@@ -182,16 +186,25 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         sharedEventButton.setTextColor(Color.parseColor("#ed6174"));
         nearbyEventButton.setTextColor(Color.parseColor("#777777"));
 
+        myEventButton.setEnabled(true);
+        sharedEventButton.setEnabled(false);
+        nearbyEventButton.setEnabled(true);
+
         resetLoadMoreData();
     }
 
-    @OnClick(R.id.fragment_event_list_button3) void nearbyEventFilter() {
+    @OnClick(R.id.fragment_event_list_button3)
+    void nearbyEventFilter() {
         mainActivity.setNearByEventFilter();
         EventBus.getDefault().post(TrackCollection.progressBar, Constants.RESET_EVENTS_FROM_FILTER_FRAGMENT);
 
         myEventButton.setTextColor(Color.parseColor("#777777"));
         sharedEventButton.setTextColor(Color.parseColor("#777777"));
         nearbyEventButton.setTextColor(Color.parseColor("#ed6174"));
+
+        myEventButton.setEnabled(true);
+        sharedEventButton.setEnabled(true);
+        nearbyEventButton.setEnabled(false);
 
         resetLoadMoreData();
     }

@@ -96,7 +96,7 @@ public class OTPFragment extends android.support.v4.app.Fragment{
     }
 
     public void setCountDown() {
-        new CountDownTimer(30000, 1000) {
+        new CountDownTimer(45000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 countDown.setVisibility(View.VISIBLE);
@@ -163,6 +163,11 @@ public class OTPFragment extends android.support.v4.app.Fragment{
                         progress.dismiss();
                     }
                     goButton.setEnabled(true);
+                    View view1 = mainActivity.getCurrentFocus();
+                    if (view1 != null) {
+                        InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+                    }
                     if (response != null) {
                         Log.i(Constants.TAG, "Google = " + response.toString());
                         mainActivity.addUser(response);
@@ -182,6 +187,11 @@ public class OTPFragment extends android.support.v4.app.Fragment{
                             .build());
                     if (progress != null) {
                         progress.dismiss();
+                    }
+                    View view1 = mainActivity.getCurrentFocus();
+                    if (view1 != null) {
+                        InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
                     }
                     goButton.setEnabled(true);
                     Toast.makeText(mainActivity, "Invalid code", Toast.LENGTH_SHORT).show();

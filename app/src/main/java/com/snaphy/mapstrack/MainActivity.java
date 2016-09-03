@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -64,6 +65,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Database.MapsTrackDB;
 import com.snaphy.mapstrack.Fragment.AboutusFragment;
@@ -96,6 +98,7 @@ import com.snaphy.mapstrack.Model.CustomContainer;
 import com.snaphy.mapstrack.Model.CustomContainerRepository;
 import com.snaphy.mapstrack.Model.CustomFileRepository;
 import com.snaphy.mapstrack.Model.ImageModel;
+import com.snaphy.mapstrack.Services.AppLocationService;
 import com.snaphy.mapstrack.Services.BackgroundService;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
 import com.snaphy.mapstrack.Services.MyRestAdapter;
@@ -1457,7 +1460,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         //Remove the password field..
         data.remove("password");
         final MainActivity that = this;
-        BackgroundService.getCustomerRepository().updateAttributes((String)customer.getId(), data, new ObjectCallback<Customer>() {
+        BackgroundService.getCustomerRepository().updateAttributes((String) customer.getId(), data, new ObjectCallback<Customer>() {
             @Override
             public void onSuccess(Customer object) {
                 Log.v(Constants.TAG, "Customer Profile is Updated");
@@ -1467,7 +1470,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             public void onError(Throwable t) {
                 mainActivity.tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Exception")
-                        .setAction("Fragment : MainActivity, Method : updateCustomer"+t.toString())
+                        .setAction("Fragment : MainActivity, Method : updateCustomer" + t.toString())
                         .build());
                 Log.e(Constants.TAG, t.toString());
                 Log.v(Constants.TAG, "Error in update Customer Method");
@@ -1507,14 +1510,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         // which may be null in rare cases when a location is not available.
         int permissionCheck1 = ContextCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION);
         int permissionCheck2 = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
-        }
+        mLastLocation = findLastLocationUsingLocationUpdate();
 
         if (mLastLocation != null) {
             // Determine whether a Geocoder is available.
             //http://stackoverflow.com/questions/17519198/how-to-get-the-current-location-latitude-and-longitude-in-android
+            LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            BackgroundService.setCurrentLocation(latLng);
             latitude = mLastLocation.getLatitude();
             longitude = mLastLocation.getLongitude();
             if (!Geocoder.isPresent()) {
@@ -1523,11 +1525,49 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
             startIntentService();
         } else {
-            mLastLocation = getLastKnownLocation();
+            if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                        mGoogleApiClient);
+            }
             if(mLastLocation != null) {
+                LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                BackgroundService.setCurrentLocation(latLng);
                 startIntentService();
+            } else {
+                mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000,
+                        0, mLocationListener);
             }
         }
+    }
+
+
+    private Location findLastLocationUsingLocationUpdate() {
+        AppLocationService appLocationService;
+        appLocationService = new AppLocationService(this);
+        Location gpsLocation = appLocationService.getLocation(LocationManager.GPS_PROVIDER);
+        Location networkLocation = appLocationService.getLocation(LocationManager.NETWORK_PROVIDER);
+        Location location = null;
+        if (gpsLocation != null || networkLocation != null) {
+            if (gpsLocation != null) {
+                latitude = gpsLocation.getLatitude();
+                longitude = gpsLocation.getLongitude();
+                location = gpsLocation;
+            } else if(networkLocation != null){
+                latitude = networkLocation.getLatitude();
+                longitude = networkLocation.getLongitude();
+                location = networkLocation;
+            } else {
+                location = getLastKnownLocation();
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        } else {
+                location = LocationServices.FusedLocationApi.getLastLocation(
+                        mGoogleApiClient);
+        }
+        return location;
     }
 
     private Location getLastKnownLocation() {
@@ -1561,6 +1601,35 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            mLastLocation = location;
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            if(mLastLocation != null) {
+                LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                BackgroundService.setCurrentLocation(latLng);
+                startIntentService();
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     /**
      * This method is responsible to start the service ie..FetchAddressIntentService to fetch
@@ -1623,6 +1692,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         alertDialog.setCancelable(false);
         alertDialog.show();
     }
+
+   /* @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        if(mLastLocation != null) {
+            LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            BackgroundService.setCurrentLocation(latLng);
+            startIntentService();
+        }
+    }*/
+
 
 
     /**

@@ -191,11 +191,12 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     public void shareWithUser(){
         if(BackgroundService.getCustomer() != null){
             if(BackgroundService.getCustomer().getPhoneNumber() != null){
-                String phoneNumber = mainActivity.formatNumber(BackgroundService.getCustomer().getPhoneNumber());
+                /*String phoneNumber = mainActivity.formatNumber(BackgroundService.getCustomer().getPhoneNumber());*/
                 Map<String, Object> filter = new HashMap<>();
                 Map<String, Object> where = new HashMap<>();
                 where.put("customerId", BackgroundService.getCustomer().getId());
                 filter.put("where", where);
+
                 LastUpdatedLocationRepository lastUpdatedLocationRepository = mainActivity.getLoopBackAdapter().createRepository(LastUpdatedLocationRepository.class);
                 lastUpdatedLocationRepository.find(filter, new ListCallback<LastUpdatedLocation>() {
                     @Override

@@ -120,7 +120,6 @@ dependencies {
     compile('com.lsjwzh:materialloadingprogressbar:0.5.8-RELEASE')
     compile 'com.wdullaer:materialdatetimepicker:2.5.0'
     compile 'com.turingtechnologies.materialscrollbar:lib:10.+'
-    compile 'com.github.iwgang:countdownview:2.1.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

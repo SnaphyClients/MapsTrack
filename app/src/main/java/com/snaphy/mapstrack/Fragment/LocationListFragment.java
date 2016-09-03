@@ -195,6 +195,10 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
         myLocationButton.setTextColor(Color.parseColor("#ed6174"));
         sharedLocationButton.setTextColor(Color.parseColor("#777777"));
         nearbyLocationButton.setTextColor(Color.parseColor("#777777"));
+
+        myLocationButton.setEnabled(false);
+        sharedLocationButton.setEnabled(true);
+        nearbyLocationButton.setEnabled(true);
     }
 
     @OnClick(R.id.fragment_location_list_button2) void sharedEventFilter() {
@@ -204,6 +208,10 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
         myLocationButton.setTextColor(Color.parseColor("#777777"));
         sharedLocationButton.setTextColor(Color.parseColor("#ed6174"));
         nearbyLocationButton.setTextColor(Color.parseColor("#777777"));
+
+        myLocationButton.setEnabled(true);
+        sharedLocationButton.setEnabled(false);
+        nearbyLocationButton.setEnabled(true);
     }
 
     @OnClick(R.id.fragment_location_list_button3) void nearbyEventFilter() {
@@ -213,6 +221,10 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
         myLocationButton.setTextColor(Color.parseColor("#777777"));
         sharedLocationButton.setTextColor(Color.parseColor("#777777"));
         nearbyLocationButton.setTextColor(Color.parseColor("#ed6174"));
+
+        myLocationButton.setEnabled(true);
+        sharedLocationButton.setEnabled(true);
+        nearbyLocationButton.setEnabled(false);
     }
 
 
