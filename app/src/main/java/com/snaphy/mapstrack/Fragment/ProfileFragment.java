@@ -154,7 +154,13 @@ public class ProfileFragment extends Fragment {
         String nameArray[] = name.getText().toString().split(" ");
 
         if(!nameArray[0].isEmpty()) {
-            editProfileModel.setFirstName(nameArray[0]);
+            if(nameArray.length > 2){
+                if(!nameArray[1].isEmpty()){
+                    editProfileModel.setFirstName(nameArray[0]+" "+nameArray[1]);
+                }
+            } else {
+                editProfileModel.setFirstName(nameArray[0]);
+            }
             if(nameArray[nameArray.length-1] != null) {
                 if (!nameArray[nameArray.length - 1].isEmpty()) {
                     editProfileModel.setLastName(nameArray[nameArray.length - 1]);
