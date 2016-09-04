@@ -61,35 +61,37 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        if(cursor.moveToPosition(position)){
+        if(cursor.moveToPosition(position)) {
 
             int contactNameData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
             int contactNumberData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
-            final String contactNameDataString = cursor.getString(contactNameData);
-            String contactNumberDataString = cursor.getString(contactNumberData);
-            if(contactNumberDataString != null){
-                // Set item views based on the cursor model
-                TextView contactName = holder.contactName;
-                TextView contactNumber = holder.contactNumber;
-                CheckBox checkBox = holder.checkBox;
-                contactName.setText(contactNameDataString);
-                contactNumber.setText(contactNumberDataString);
-                checkBox.setClickable(false);
-                String formattedNumber = mainActivity.formatNumber(contactNumberDataString);
 
-                //Now match it with formatted number..
-                ContactModel contactModel = contactModels.get(formattedNumber);
-                if(contactModel != null){
-                    if(contactModel.isSelected()){
-                        checkBox.setChecked(true);
-                    }else {
+
+                final String contactNameDataString = cursor.getString(contactNameData);
+                String contactNumberDataString = cursor.getString(contactNumberData);
+                if (contactNumberDataString != null) {
+                    // Set item views based on the cursor model
+                    TextView contactName = holder.contactName;
+                    TextView contactNumber = holder.contactNumber;
+                    CheckBox checkBox = holder.checkBox;
+                    contactName.setText(contactNameDataString);
+                    contactNumber.setText(contactNumberDataString);
+                    checkBox.setClickable(false);
+                    String formattedNumber = mainActivity.formatNumber(contactNumberDataString);
+
+                    //Now match it with formatted number..
+                    ContactModel contactModel = contactModels.get(formattedNumber);
+                    if (contactModel != null) {
+                        if (contactModel.isSelected()) {
+                            checkBox.setChecked(true);
+                        } else {
+                            checkBox.setChecked(false);
+                        }
+                    } else {
                         checkBox.setChecked(false);
                     }
-                }else {
-                    checkBox.setChecked(false);
                 }
             }
-        }
     }
 
     /**

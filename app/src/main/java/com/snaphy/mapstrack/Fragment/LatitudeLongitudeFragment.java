@@ -109,6 +109,9 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         selectedLatLng = BackgroundService.getCurrentLocation();
         setAddress();
         setCurrentLocation(view);
+        if(CreateEventFragment.progressDialog != null) {
+            CreateEventFragment.progressDialog.dismiss();
+        }
         return view;
     }
 

@@ -274,7 +274,9 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // load data here
-            shareWithUser();
+            if(mainActivity != null) {
+                shareWithUser();
+            }
         }else{
             // fragment is no longer visible
         }

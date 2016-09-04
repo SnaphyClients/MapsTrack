@@ -1,5 +1,6 @@
 package com.snaphy.mapstrack.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -71,6 +72,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_info_button5) com.github.clans.fab.FloatingActionButton  addFriendsEventButton;
     @Bind(R.id.fragment_event_info_floating_menu1) com.github.clans.fab.FloatingActionMenu floatingMenu;
     @Bind(R.id.fragment_event_info_button4) Button moreButton;
+    static ProgressDialog progressDialog;
     ImageLoader imageLoader;
     LatLng latLng;
     boolean isEventOwner = false;
@@ -286,6 +288,8 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_event_info_button3) void openMap() {
         floatingMenu.close(true);
+        progressDialog = new ProgressDialog(mainActivity);
+        mainActivity.setProgress(EventInfoFragment.progressDialog);
         mainActivity.replaceFragment(R.id.fragment_event_info_button3, null);
         EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_EVENT);
        /* Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude);

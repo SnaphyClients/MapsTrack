@@ -101,6 +101,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -134,7 +135,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     private void setFriendsDestination(LatLng latLng) {
         EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.OPEN_MAP_FROM_LOCATION);
         destination = latLng;
-        Log.v(Constants.TAG, "Destination = "+ destination);
+        Log.v(Constants.TAG, "Destination = " + destination);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
     }
@@ -178,6 +179,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
 
         }
+
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnMyLocationChangeListener(this);
         googleMap.addMarker(new MarkerOptions().position(destination).title("End Point"));
@@ -232,6 +234,11 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
                             PolylineOptions polylineOptions = DirectionConverter.createPolyline(mainActivity, directionPositionList, 10, Color.rgb(69, 151, 255));
                             googleMap.addPolyline(polylineOptions);
 
+
+                            if(EventInfoFragment.progressDialog != null) {
+                                EventInfoFragment.progressDialog.dismiss();
+                            }
+
                         } else {
                             //Snackbar.make(getView(), "Direction Not Found", Snackbar.LENGTH_SHORT).show();
                         }
@@ -240,6 +247,10 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
                     @Override
                     public void onDirectionFailure(Throwable t) {
                         // Do something here
+
+                        if(EventInfoFragment.progressDialog != null) {
+                            EventInfoFragment.progressDialog.dismiss();
+                        }
                     }
                 });
 

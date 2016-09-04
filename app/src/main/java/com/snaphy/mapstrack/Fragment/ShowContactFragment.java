@@ -62,6 +62,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     private OnFragmentInteractionListener mListener;
     public static String TAG = "ShowContactFragment";
     @Bind(R.id.fragment_show_contact_recycler_view1) RecyclerView recyclerView;
+    @Bind(R.id.fragment_show_contact_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     ShowContactAdapter showContactAdapter;
     Cursor globalCursor;
     Track track;
@@ -70,13 +71,14 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
             {
-                    ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.LOOKUP_KEY,
+                    ContactsContract.CommonDataKinds.Phone._ID,
+                    ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY,
                     Build.VERSION.SDK_INT
                             >= Build.VERSION_CODES.HONEYCOMB ?
-                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
-                            ContactsContract.Contacts.DISPLAY_NAME,
+                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY :
+                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Phone.NUMBER
+
             };
 
     private static final int CONTACT_ID_INDEX = 0;
@@ -92,7 +94,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     private String mSearchString;
     // Defines the array to hold values that replace the ?
     private String[] mSelectionArgs = { mSearchString };
-    String order = "upper("+ContactsContract.Contacts.DISPLAY_NAME + ") ASC";
+    String order = "upper("+ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + ") ASC";
 
     MainActivity mainActivity;
 
@@ -342,6 +344,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mainActivity.stopProgressBar(progressBar);
         globalCursor = data;
         showContactAdapter = new ShowContactAdapter(mainActivity, contactModelMap, data);
         recyclerView.setAdapter(showContactAdapter);

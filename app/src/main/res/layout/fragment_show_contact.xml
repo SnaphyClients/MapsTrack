@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     tools:context="com.snaphy.mapstrack.Fragment.ShowContactFragment"
     android:background="@color/background"
-    android:clickable="true">
+    android:clickable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -69,6 +70,14 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_marginRight="18dp" />
+
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/fragment_show_contact_progressBar"
+        android:layout_centerInParent="true"
+        app:mlpb_progress_stoke_width="3dp"
+        app:mlpb_progress_color="#566da9"/>
 
 
 </RelativeLayout>

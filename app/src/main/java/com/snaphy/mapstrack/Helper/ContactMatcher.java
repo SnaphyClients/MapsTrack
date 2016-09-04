@@ -105,28 +105,29 @@ public class ContactMatcher implements  LoaderManager.LoaderCallbacks<Cursor>{
                 while (data.moveToNext()) {
                     int contactNameData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
                     int contactNumberData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                    final String contactNameDataString = data.getString(contactNameData);
-                    String contactNumberDataString = data.getString(contactNumberData);
 
-                    contactNumberDataString = mainActivity.formatNumber(contactNumberDataString);
+                        final String contactNameDataString = data.getString(contactNameData);
+                        String contactNumberDataString = data.getString(contactNumberData);
 
-                    //Now start matching..
-                    for (ContactModel contactModel : contactModels) {
-                        if (String.valueOf(contactModel.getContactNumber()) != null) {
-                            if (!String.valueOf(contactModel.getContactNumber()).isEmpty()) {
-                                String friendNumber = contactModel.getContactNumber().trim();
-                                friendNumber = mainActivity.formatNumber(friendNumber);
-                                if (friendNumber.equals(contactNumberDataString.toString().trim())) {
-                                    if (contactNameDataString != null) {
-                                        if (!contactNameDataString.isEmpty()) {
-                                            contactModel.setContactName(contactNameDataString);
+                        contactNumberDataString = mainActivity.formatNumber(contactNumberDataString);
+
+                        //Now start matching..
+                        for (ContactModel contactModel : contactModels) {
+                            if (String.valueOf(contactModel.getContactNumber()) != null) {
+                                if (!String.valueOf(contactModel.getContactNumber()).isEmpty()) {
+                                    String friendNumber = contactModel.getContactNumber().trim();
+                                    friendNumber = mainActivity.formatNumber(friendNumber);
+                                    if (friendNumber.equals(contactNumberDataString.toString().trim())) {
+                                        if (contactNameDataString != null) {
+                                            if (!contactNameDataString.isEmpty()) {
+                                                contactModel.setContactName(contactNameDataString);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
                 data.moveToFirst();
             } catch (Exception e) {
                 Log.v(Constants.TAG, e.toString());

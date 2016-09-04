@@ -137,6 +137,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
     List<EventType> eventTypeList;
     boolean fromEdited = false;
     boolean makeEventFromLocation = false;
+    static ProgressDialog progressDialog;
 
     ProgressDialog progress;
     DialogPlus dialog;
@@ -287,6 +288,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
                 InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
             }
+            progressDialog = new ProgressDialog(mainActivity);
+            mainActivity.setProgress(CreateEventFragment.progressDialog);
             mainActivity.replaceFragment(R.id.fragment_create_event_button5, null);
         } else {
             View view1 = mainActivity.getCurrentFocus();
