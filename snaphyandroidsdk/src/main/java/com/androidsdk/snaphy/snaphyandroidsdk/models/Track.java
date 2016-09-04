@@ -6,7 +6,6 @@ package com.androidsdk.snaphy.snaphyandroidsdk.models;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.EventTypeRepository;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
-import com.strongloop.android.loopback.Model;
 import com.strongloop.android.loopback.RestAdapter;
 import com.strongloop.android.loopback.callbacks.ObjectCallback;
 
@@ -43,7 +42,7 @@ public class Track extends Model {
     public void setTrackId(){
 
     }
-    
+
         
             
             

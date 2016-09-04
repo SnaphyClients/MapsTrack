@@ -148,6 +148,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
     String tempDescription;
     String tempAddress;
     String tempDate;
+    String tempTime;
     LatLng tempLocation;
     /* Temp Variables */
 
@@ -262,6 +263,13 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
             }
         }
 
+        if(tempTime != null) {
+            if(!tempTime.isEmpty()) {
+                timeEdittext.setText(tempTime);
+            }
+        }
+
+
         if(tempLocation != null) {
             currentLatLng = tempLocation;
         }
@@ -314,6 +322,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         eventName.setText("");
         eventDescription.setText("");
         dateEdittext.setText("");
+        timeEdittext.setText("");
         publicRadioButton.setChecked(true);
 
     }
@@ -335,6 +344,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
 
         if(!dateEdittext.getText().toString().isEmpty()) {
             tempDate = dateEdittext.getText().toString();
+        }
+
+        if(!timeEdittext.getText().toString().isEmpty()) {
+            tempTime = timeEdittext.getText().toString();
         }
 
         if(currentLatLng != null) {
@@ -407,6 +420,10 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
                 catch (Exception e){
                     dateEdittext.setText(track.getEventDate());
                 }
+            }
+
+            if(track.getEventTime() != null) {
+                timeEdittext.setText(track.getEventTime());
             }
 
             if(track.getIsPublic() != null) {
@@ -969,6 +986,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         String eventDesc = eventDescription.getText().toString();
         String addr = eventLocation.getText().toString();
         String date = dateEdittext.getText().toString();
+        String time = timeEdittext.getText().toString();
         String isPublic;
         int getCheckedButtonId = radioGroup.getCheckedRadioButtonId();
         if( getCheckedButtonId == R.id.fragment_create_event_radio_button1) {
@@ -981,6 +999,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         track.setIsPublic(isPublic);
 
         if (event != null) {
+            event = event.trim();
             if(event.isEmpty()){
                 Toast.makeText(mainActivity, "Event name is required", Toast.LENGTH_SHORT).show();
                 callback.onError(t);
@@ -1026,6 +1045,14 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
             Toast.makeText(mainActivity, "Event type is required", Toast.LENGTH_SHORT).show();
             callback.onError(t);
             return;
+        }
+
+        if(time != null) {
+            if(time.isEmpty()) {
+                // do nothing
+            } else {
+                track.setEventTime(time);
+            }
         }
 
 

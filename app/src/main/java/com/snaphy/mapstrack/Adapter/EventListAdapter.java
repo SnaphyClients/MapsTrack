@@ -92,9 +92,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
 
 
-        if(track.getEventDate() != null) {
-            eventTime.setText("9 AM");
-            Log.v(Constants.TAG, eventDate.getText().toString());
+        if(track.getEventTime() != null) {
+            eventTime.setText(track.getEventTime());
+            Log.v(Constants.TAG, track.getEventTime().toString());
         }
 
 

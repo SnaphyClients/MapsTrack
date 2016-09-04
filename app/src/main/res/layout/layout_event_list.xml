@@ -20,14 +20,14 @@
             android:id="@+id/layout_event_list_textview1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="22"
+            android:text=""
             android:textSize="40sp" />
 
         <TextView
             android:id="@+id/layout_event_list_textview2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="km"
+            android:text=""
             android:textSize="15dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/layout_event_list_textview1"/>
@@ -53,14 +53,14 @@
                 android:id="@+id/layout_event_list_textview3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="9 AM"
+                android:text=""
                 android:textSize="20dp"/>
 
             <TextView
                 android:id="@+id/layout_event_list_textview4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="15 Aug"
+                android:text=""
                 android:gravity="right"
                 android:textSize="16dp"
                 android:textStyle="bold"
@@ -78,7 +78,7 @@
                 android:id="@+id/layout_event_list_textview5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Anurag Birthday"
+                android:text=""
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:paddingRight="5dp"
@@ -88,7 +88,7 @@
                 android:id="@+id/layout_event_list_textview6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="by Anu"
+                android:text=""
                 android:textSize="13dp"
                 android:textColor="#AAAAAA"/>
 
@@ -98,7 +98,7 @@
             android:id="@+id/layout_event_list_textview7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1134, First Floor, Noida,126587, UP"
+            android:text=""
             android:paddingTop="3dp"
             android:textSize="13dp"
             android:textColor="#aaaaaa"/>
