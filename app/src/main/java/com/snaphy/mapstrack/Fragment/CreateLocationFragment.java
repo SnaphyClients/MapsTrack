@@ -541,6 +541,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         track.setIsPublic(isPublic);
 
         if (location != null) {
+            location = location.trim();
             if(location.isEmpty()){
                 Toast.makeText(mainActivity, "Location Id is required", Toast.LENGTH_SHORT).show();
                 callback.onError(t);
@@ -568,6 +569,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
 
         if (locationAdd != null) {
+            locationAdd = locationAdd.trim();
             if(locationAdd.isEmpty()){
                 Toast.makeText(mainActivity, "Address is required", Toast.LENGTH_SHORT).show();
                 callback.onError(t);

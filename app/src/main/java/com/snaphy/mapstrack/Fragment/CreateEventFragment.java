@@ -1014,6 +1014,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         }
 
         if (eventDesc != null) {
+            eventDesc = eventDesc.trim();
             if(eventDesc.isEmpty()){
                 //DO nothing..
                 /*Toast.makeText(mainActivity, "Event description is required", Toast.LENGTH_SHORT).show();
@@ -1028,6 +1029,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         }
 
         if (addr != null) {
+            addr = addr.trim();
             if(addr.isEmpty()){
                 Toast.makeText(mainActivity, "Address is required", Toast.LENGTH_SHORT).show();
                 callback.onError(t);
@@ -1048,6 +1050,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         }
 
         if(time != null) {
+            time = time.trim();
             if(time.isEmpty()) {
                 // do nothing
             } else {
@@ -1066,6 +1069,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
 
 
         if (date != null) {
+            date = date.trim();
             if(date.isEmpty()){
                 Toast.makeText(mainActivity, "Date is required", Toast.LENGTH_SHORT).show();
                 callback.onError(t);
