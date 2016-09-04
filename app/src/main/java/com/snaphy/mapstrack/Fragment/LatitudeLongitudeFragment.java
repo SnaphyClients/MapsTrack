@@ -1,6 +1,7 @@
 package com.snaphy.mapstrack.Fragment;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -70,8 +71,9 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     /*PlacesAutocompleteTextView placesAutocompleteTextView;*/
     TextView showCurrentLocationText;
     LatLng selectedLatLng;
-    @Bind(R.id.fragment_latitude_longitude_button1) ImageButton cancelAddressButton;
+    @Bind(R.id.fragment_latitude_longitude_button1) ImageButton editAddress;
     @Bind(R.id.fragment_latitude_longitude_back_button) ImageButton backButton;
+    ProgressDialog progressDialog;
 
     public LatitudeLongitudeFragment() {
         // Required empty public constructor
@@ -130,10 +132,15 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                             .build(mainActivity);
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+            dismissProgress();
         } catch (GooglePlayServicesRepairableException e) {
             // TODO: Handle the error.
+            editAddress.setEnabled(true);
+            dismissProgress();
         } catch (GooglePlayServicesNotAvailableException e) {
             // TODO: Handle the error.
+            editAddress.setEnabled(true);
+            dismissProgress();
         }
     }
 
@@ -142,22 +149,34 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                editAddress.setEnabled(true);
                 Place place = PlaceAutocomplete.getPlace(mainActivity, data);
                 Log.i(TAG, "Place: " + place.getName());
                 setNewMarkerLocation(place.getAddress().toString());
                 showCurrentLocationText.setText(place.getAddress().toString());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                editAddress.setEnabled(true);
                 Status status = PlaceAutocomplete.getStatus(mainActivity, data);
                 // TODO: Handle the error.
                 Log.i(TAG, status.getStatusMessage());
 
             } else if (resultCode == RESULT_CANCELED) {
+                editAddress.setEnabled(true);
                 // The user canceled the operation.
             }
         }
     }
 
+    public void dismissProgress() {
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
     @OnClick(R.id.fragment_latitude_longitude_button1) void editAddress() {
+        editAddress.setEnabled(false);
+        progressDialog = new ProgressDialog(mainActivity);
+        mainActivity.setProgress(progressDialog);
         findPlace();
     }
 

@@ -593,6 +593,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                parentFloatingButton.close(true);
                 clearFields();
                 mainActivity.onBackPressed();
             }
