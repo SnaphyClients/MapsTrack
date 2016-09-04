@@ -6,6 +6,7 @@ package com.androidsdk.snaphy.snaphyandroidsdk.models;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.CustomerRepository;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.EventTypeRepository;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.TrackRepository;
+import com.strongloop.android.loopback.Model;
 import com.strongloop.android.loopback.RestAdapter;
 import com.strongloop.android.loopback.callbacks.ObjectCallback;
 
@@ -384,6 +385,29 @@ public class Track extends Model {
                     this.eventDate = eventDate;
                     //Update hashMap value..
                     hashMap.put("eventDate", eventDate);
+                }
+
+            
+            
+            
+            
+
+        
+    
+        
+            
+            
+                private String eventTime;
+                /* Adding Getter and Setter methods */
+                public String getEventTime(){
+                    return eventTime;
+                }
+
+                /* Adding Getter and Setter methods */
+                public void setEventTime(String eventTime){
+                    this.eventTime = eventTime;
+                    //Update hashMap value..
+                    hashMap.put("eventTime", eventTime);
                 }
 
             
