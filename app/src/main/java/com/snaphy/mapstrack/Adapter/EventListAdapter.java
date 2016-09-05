@@ -3,7 +3,6 @@ package com.snaphy.mapstrack.Adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,8 +92,13 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
 
         if(track.getEventTime() != null) {
-            eventTime.setText(track.getEventTime());
-            Log.v(Constants.TAG, track.getEventTime().toString());
+            if(!track.getEventTime().isEmpty()) {
+                eventTime.setText(track.getEventTime()+"");
+            } else {
+                //
+            }
+        } else {
+            //
         }
 
 

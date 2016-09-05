@@ -79,7 +79,7 @@ public class DisplayContactAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         View view = convertView;
 
         if (view == null) {
@@ -131,6 +131,9 @@ public class DisplayContactAdapter extends BaseAdapter {
             if(contactModel.getContactNumber() != null){
                 if(!String.valueOf(contactModel.getContactNumber()).isEmpty()){
                     viewHolder.textview.setText(String.valueOf(contactModel.getContactNumber()));
+                    if(BackgroundService.getCustomer().getPhoneNumber().equals(contactModel.getContactNumber())) {
+                        viewHolder.imageButton.setVisibility(View.VISIBLE);
+                    }
                     viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

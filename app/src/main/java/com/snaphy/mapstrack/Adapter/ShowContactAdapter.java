@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
+import com.snaphy.mapstrack.Services.BackgroundService;
 
 import java.util.Map;
 
@@ -78,6 +79,14 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
                     contactNumber.setText(contactNumberDataString);
                     checkBox.setClickable(false);
                     String formattedNumber = mainActivity.formatNumber(contactNumberDataString);
+                    //Cannot share with your own number
+                    if(BackgroundService.getCustomer() != null) {
+                        if(BackgroundService.getCustomer().getPhoneNumber() != null) {
+                            if(formattedNumber.equals(BackgroundService.getCustomer().getPhoneNumber())) {
+                                checkBox.setEnabled(false);
+                            }
+                        }
+                    }
 
                     //Now match it with formatted number..
                     ContactModel contactModel = contactModels.get(formattedNumber);

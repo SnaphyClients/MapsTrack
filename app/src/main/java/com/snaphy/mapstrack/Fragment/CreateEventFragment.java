@@ -660,9 +660,37 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
                 TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-                        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
-                        String minuteString = minute < 10 ? "0"+minute : ""+minute;
-                        String time = hourString+":"+minuteString;
+                        String hourString = "";
+                        boolean AM = false;
+                        if (hourOfDay < 10) {
+                            hourString = "0" + hourOfDay;
+                            AM = true;
+                        } else if (hourOfDay > 10 && hourOfDay <= 11) {
+                            hourString = hourOfDay + "";
+                            AM = true;
+                        }
+                        if (hourOfDay > 12) {
+                            hourOfDay = hourOfDay - 12;
+                            if (hourOfDay < 10) {
+                                hourString = "0" + hourOfDay;
+                            }
+                            AM = false;
+                        }
+
+                        if (hourOfDay == 12) {
+                            hourString = hourOfDay + "";
+                            AM = false;
+                        }
+
+                        /*String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;*/
+                        String minuteString = minute < 10 ? "0" + minute : "" + minute;
+                        String time;
+                        if (AM) {
+                            time = hourString + ":" + minuteString + " AM";
+                        } else {
+                            time = hourString + ":" + minuteString + " PM";
+                        }
+
                         timeEdittext.setText(time);
                     }
                 };
@@ -672,7 +700,7 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
                         listener,
                         now.get(Calendar.HOUR_OF_DAY),
                         now.get(Calendar.MINUTE),
-                        true
+                        false
                 );
                 timePickerDialog.show(getActivity().getFragmentManager(), "Time");
             }
@@ -1053,7 +1081,9 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
         if(time != null) {
             time = time.trim();
             if(time.isEmpty()) {
-                // do nothing
+                Toast.makeText(mainActivity, "Event time is required", Toast.LENGTH_SHORT).show();
+                callback.onError(t);
+                return;
             } else {
                 track.setEventTime(time);
             }

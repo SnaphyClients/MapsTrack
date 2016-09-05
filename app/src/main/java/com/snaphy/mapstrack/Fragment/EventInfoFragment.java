@@ -65,6 +65,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_event_info_textview3) TextView eventDate;
     @Bind(R.id.fragment_event_info_textview4) TextView eventAddress;
     @Bind(R.id.fragment_event_info_textview5) TextView eventDescription;
+    @Bind(R.id.fragment_event_info_textview7) TextView eventTime;
     @Bind(R.id.fragment_event_info_textview6) TextView contact;
     @Bind(R.id.fragment_event_info_imageview1) ImageView imageView;
     @Bind(R.id.fragment_event_info_button1) com.github.clans.fab.FloatingActionButton  editEventButton;
@@ -194,6 +195,17 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
                 CharSequence eAddress = mainActivity.drawTextViewDesign("Event Address : ", mainActivity.changeToUpperCase(this.track.getAddress()));
                 eventAddress.setText(eAddress);
             }
+        }
+
+        if(track.getEventTime() != null) {
+            if(!track.getEventTime().isEmpty()) {
+                CharSequence eEventTime = mainActivity.drawTextViewDesign("Event Time : ", mainActivity.changeToUpperCase(this.track.getEventTime()));
+                eventTime.setText(eEventTime);
+            } else {
+                eventTime.setVisibility(View.GONE);
+            }
+        } else {
+            eventTime.setVisibility(View.GONE);
         }
 
         if(track.getDescription() != null){
