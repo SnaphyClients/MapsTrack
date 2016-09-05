@@ -197,12 +197,11 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     }
 
     public void setOnRedioCheckedListener() {
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
-                if(checkedId == R.id.fragment_create_location_radio_button1) {
+                if (checkedId == R.id.fragment_create_location_radio_button1) {
                     // It is public
                     disableFriendList(true);
                 } else {
@@ -230,6 +229,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    parentFloatingMenu.close(true);
                     EventBus.getDefault().post("", Constants.HIDE_MENU_OPTIONS_LOCATIONS);
                     mainActivity.onBackPressed();
 
@@ -306,6 +306,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                parentFloatingMenu.close(true);
                 EventBus.getDefault().post("", Constants.HIDE_MENU_OPTIONS_LOCATIONS);
                 mainActivity.onBackPressed();
             }
@@ -314,7 +315,9 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
 
     @Subscriber ( tag = Constants.SET_LATITUDE_LONGITUDE)
     public void setLatLong(LatLng latLong) {
-        currentLatLng = latLong;
+        if(latLong != null) {
+            currentLatLng = latLong;
+        }
     }
 
     @Subscriber ( tag = Constants.UPDATE_ADDRESS_FROM_MAP )
@@ -546,7 +549,12 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                 Toast.makeText(mainActivity, "Location Id is required", Toast.LENGTH_SHORT).show();
                 callback.onError(t);
                 return;
-            }else{
+            } else if(location.length() >= Constants.WORD_LIMIT ) {
+                Toast.makeText(mainActivity, "Location Id exceeds word limit", Toast.LENGTH_SHORT).show();
+                callback.onError(t);
+                return;
+            }
+            else{
                 if(checkForSpaces(location.toString())) {
                     Toast.makeText(mainActivity, "Location Id could not have white spaces", Toast.LENGTH_SHORT).show();
                     callback.onError(t);
@@ -587,7 +595,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
             Toast.makeText(mainActivity, "You must set your location.", Toast.LENGTH_SHORT).show();
             callback.onError(t);
             return;
-        }else{
+        }else {
             track.setGeolocation(currentLatLng.latitude, currentLatLng.longitude);
         }
 

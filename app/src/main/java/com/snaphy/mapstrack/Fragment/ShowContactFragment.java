@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -67,6 +68,9 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     Cursor globalCursor;
     Track track;
     ProgressDialog progress;
+
+    //List of all contacts which is going to be displayed..format Number(KEY) -> Name(VALUE)
+    Map<String, String> contactList = new HashMap<>();
 
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
@@ -136,7 +140,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if(globalCursor.moveToPosition(position)) {
+                        if (globalCursor.moveToPosition(position)) {
                             int contactNameData = globalCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
                             int contactNumberData = globalCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
                             String contactNumberDataString = globalCursor.getString(contactNumberData);
@@ -145,10 +149,10 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                             String formatNumber = mainActivity.formatNumber(contactNumberDataString);
                             ContactModel contactModel = contactModelMap.get(formatNumber);
 
-                            if(contactModel != null){
+                            if (contactModel != null) {
                                 //Remove the model..
                                 contactModelMap.remove(formatNumber);
-                            }else{
+                            } else {
                                 contactModel = new ContactModel();
                                 contactModel.setContactNumber(formatNumber);
                                 contactModel.setContactName(contactNameDataString);
@@ -358,7 +362,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @Override
     public void onDestroy() {
-        super.onResume();
+        super.onDestroy();
         if(globalCursor != null) {
             globalCursor.close();
             globalCursor = null;
@@ -369,17 +373,11 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
         void onFragmentInteraction(Uri uri);
     }
 
-    public void setProgress(ProgressDialog progress) {
-        progress.setIndeterminate(true);
-        progress.setMessage("Loading...");
-        progress.show();
-    }
 
 
     private void updateFriendsList(Track track){
         List<Map<String, Object>>  friendList = new ArrayList<>();
-        progress = new ProgressDialog(mainActivity);
-        setProgress(progress);
+
         for(String key: contactModelMap.keySet()){
             Map<String, Object> number = new HashMap<>();
             number.put("number", key);
@@ -392,11 +390,57 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
             //Now  save to server..
             mainActivity.saveTrack(track, progress);
         }
-        Toast.makeText(mainActivity, "Friends list updated!", Toast.LENGTH_SHORT).show();
-        progress.dismiss();
         EventBus.getDefault().post("", Constants.HIDE_MENU_OPTIONS);
         //Now go back..
         mainActivity.onBackPressed();
     }
+
+
+
+
+    private class FetchContact extends AsyncTask<String, Void, String> {
+
+        public Cursor data;
+
+        public FetchContact(Cursor data){
+            this.data = data;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                while (data.moveToNext()) {
+                    int contactNameData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
+                    int contactNumberData = data.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+                    final String contactNameDataString = data.getString(contactNameData);
+                    String contactNumberDataString = data.getString(contactNumberData);
+                    contactNumberDataString = mainActivity.formatNumber(contactNumberDataString);
+                    contactList.put(contactNameDataString, contactNameDataString);
+                }
+                data.moveToFirst();
+            } catch (Exception e) {
+                Log.e(Constants.TAG, e.toString());
+            }
+            finally {
+
+            }
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //STOP LOADING BAR..
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //START LOADING BAR..
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
+    }
+
 
 }

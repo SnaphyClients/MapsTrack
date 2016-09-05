@@ -90,6 +90,8 @@ public class BackgroundService extends Service {
 
     private static LatLng currentLocation;
 
+    private static LatLng selectedLocation;
+
     public static String getAddress() {
         return address;
     }
@@ -146,6 +148,14 @@ public class BackgroundService extends Service {
     }
 
     private static GoogleApiClient googleApiClient;
+
+    public static LatLng getSelectedLocation() {
+        return selectedLocation;
+    }
+
+    public static void setSelectedLocation(LatLng selectedLocation) {
+        BackgroundService.selectedLocation = selectedLocation;
+    }
 
     @Nullable
     @Override

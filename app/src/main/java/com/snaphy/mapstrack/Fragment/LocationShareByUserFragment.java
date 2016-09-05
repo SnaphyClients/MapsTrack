@@ -48,6 +48,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
 
     private OnFragmentInteractionListener mListener;
     @Bind(R.id.fragment_location_share_by_user_recycler_view1) RecyclerView recyclerView;
+    @Bind(R.id.fragment_location_share_by_user_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     ArrayList<ShareLocationModel> shareLocationModelArrayList = new ArrayList<ShareLocationModel>();
     LocationShareAdapterContacts locationShareAdapterContacts;
     public static String TAG = "LocationShareByUserFragment";
@@ -201,6 +202,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
                 lastUpdatedLocationRepository.find(filter, new ListCallback<LastUpdatedLocation>() {
                     @Override
                     public void onSuccess(List<LastUpdatedLocation> objects) {
+                        mainActivity.stopProgressBar(progressBar);
                         if(objects != null){
                             if(objects.size() != 0){
                                 LastUpdatedLocation lastUpdatedLocation = objects.get(0);
@@ -241,6 +243,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
 
                     @Override
                     public void onError(Throwable t) {
+                        mainActivity.stopProgressBar(progressBar);
                         mainActivity.tracker.send(new HitBuilders.EventBuilder()
                                 .setCategory("Exception")
                                 .setAction("Fragment : LocationShareByUserFragment, Method : shareWithUser "+t.toString())
@@ -251,10 +254,12 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
                     }
                 });
             }else{
+                mainActivity.stopProgressBar(progressBar);
                 sharedLocation.clear();
                 setLocation(sharedLocation);
             }
         }else{
+            mainActivity.stopProgressBar(progressBar);
             sharedLocation.clear();
             setLocation(sharedLocation);
         }

@@ -25,11 +25,11 @@ public class LocationShareTabAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0 :
-                return new LocationShareByUserFragment();
-            case 1 :
                 return new LocationShareByUserFriendsFragment();
-            default:
+            case 1 :
                 return new LocationShareByUserFragment();
+            default:
+                return new LocationShareByUserFriendsFragment();
         }
     }
 

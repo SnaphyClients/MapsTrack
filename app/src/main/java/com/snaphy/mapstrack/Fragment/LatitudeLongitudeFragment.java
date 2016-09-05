@@ -183,6 +183,7 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
     @OnClick ( R.id.fragment_lat_long_button1) void setMyLocation() {
         //DATA is in selected latlng
         if(selectedLatLng != null) {
+            BackgroundService.setSelectedLocation(selectedLatLng);
             EventBus.getDefault().post(selectedLatLng, Constants.SET_LATITUDE_LONGITUDE);
             EventBus.getDefault().post(showCurrentLocationText.getText().toString(), Constants.UPDATE_ADDRESS_FROM_MAP);
         }

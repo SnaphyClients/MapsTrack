@@ -9,6 +9,8 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +102,31 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_location_info, container, false);
         ButterKnife.bind(this, view);
+        onFloatingButtonClickListener();
         return view;
+    }
+
+    public void onFloatingButtonClickListener() {
+        floatingActionMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(Constants.TAG,"On Click is working 1");
+                if(floatingActionMenu.isOpened()) {
+                    Log.v(Constants.TAG," Button is in opened state 2");
+                } else  {
+                    Log.v(Constants.TAG," Button is in closed state 3");
+                }
+            }
+        });
+    }
+
+    @OnClick ( R.id.fragment_location_info_floating_button1) void onClick() {
+        Log.v(Constants.TAG,"On Click is working");
+        if(floatingActionMenu.isOpened()) {
+            Log.v(Constants.TAG," Button is in opened state");
+        } else  {
+            Log.v(Constants.TAG," Button is in closed state");
+        }
     }
 
     @Subscriber(tag = Constants.SHOW_LOCATION_INFO)
@@ -200,20 +226,25 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
                     isLocationOwner = true;
                     deleteLocation.setVisibility(View.VISIBLE);
                     editLocation.setVisibility(View.VISIBLE);
+                    floatingActionMenu.close(true);
                 }else{
                     isLocationOwner = false;
                     deleteLocation.setVisibility(View.GONE);
                     editLocation.setVisibility(View.GONE);
+                    floatingActionMenu.close(true);
                 }
             }else {
                 isLocationOwner = false;
                 deleteLocation.setVisibility(View.GONE);
                 editLocation.setVisibility(View.GONE);
+                floatingActionMenu.close(true);
             }
         }else{
             isLocationOwner = false;
             deleteLocation.setVisibility(View.GONE);
             editLocation.setVisibility(View.GONE);
+            floatingActionMenu.close(true);
+
         }
     }
 
@@ -233,12 +264,40 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity.tracker.setScreenName("Location Info Screen");
+        mainActivity.tracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    floatingActionMenu.close(true);
+                    mainActivity.onBackPressed();
+
+                    return true;
+
+                }
+
+                return false;
+            }
+        });
+
+    }
+
 
     public void disableFriendList(boolean disable){
         if(disable){
             addFriends.setVisibility(View.GONE);
+            floatingActionMenu.close(true);
         }else{
             addFriends.setVisibility(View.VISIBLE);
+            floatingActionMenu.close(true);
         }
     }
 

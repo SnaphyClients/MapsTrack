@@ -83,8 +83,10 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
             }
         }
 
-        if(track.getName() != null) {
-            locationName.setText(track.getName());
+        if(track.getLocationId() != null) {
+            locationName.setText(track.getLocationId());
+        } else {
+            locationName.setText("");
         }
 
         if(track.getCustomer() != null) {

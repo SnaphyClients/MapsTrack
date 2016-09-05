@@ -250,6 +250,9 @@ public class DisplayContactAdapter extends BaseAdapter {
                         //Now save data..
                         mainActivity.saveTrack(track, progress);
                         progress.dismiss();
+                        if(BackgroundService.getCustomer().getPhoneNumber().equals(number)) {
+                            mainActivity.onBackPressed();
+                        }
                     } else {
                         Toast.makeText(mainActivity,"Unable to remove contact", Toast.LENGTH_SHORT).show();
                     }

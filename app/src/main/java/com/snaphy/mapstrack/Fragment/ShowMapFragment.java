@@ -113,6 +113,8 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
         startActivity(mapIntent);
     }
 
+
+
     @Subscriber(tag = Constants.SEND_MAP_COORDINATES_EVENT)
     private void setDestination(LatLng latLng) {
         EventBus.getDefault().removeStickyEvent(latLng.getClass(), Constants.SEND_MAP_COORDINATES_EVENT);

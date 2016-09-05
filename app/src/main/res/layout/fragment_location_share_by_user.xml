@@ -24,4 +24,12 @@
         android:id="@+id/fragment_location_share_by_user_floating_button1"
         app:backgroundTint="@color/colorPrimary"/>
 
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/fragment_location_share_by_user_progressBar"
+        android:layout_centerInParent="true"
+        app:mlpb_progress_stoke_width="3dp"
+        app:mlpb_progress_color="#566da9"/>
+
 </RelativeLayout>

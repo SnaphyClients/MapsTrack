@@ -26,6 +26,8 @@ import butterknife.ButterKnife;
 public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.ViewHolder> {
 
     Map<String, ContactModel> contactModels;
+    //List of all contacts which is going to be displayed..format Number(KEY) -> Name(VALUE)
+    Map<String, String> contactList;
     MainActivity mainActivity;
     Cursor cursor;
 
@@ -79,11 +81,14 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
                     contactNumber.setText(contactNumberDataString);
                     checkBox.setClickable(false);
                     String formattedNumber = mainActivity.formatNumber(contactNumberDataString);
+
                     //Cannot share with your own number
                     if(BackgroundService.getCustomer() != null) {
                         if(BackgroundService.getCustomer().getPhoneNumber() != null) {
                             if(formattedNumber.equals(BackgroundService.getCustomer().getPhoneNumber())) {
-                                checkBox.setEnabled(false);
+                                checkBox.setVisibility(View.GONE);
+                            } else {
+                                checkBox.setVisibility(View.VISIBLE);
                             }
                         }
                     }

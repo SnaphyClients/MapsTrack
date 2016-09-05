@@ -1879,9 +1879,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     }
 
 
-    public void saveTrack(final Track track, final ProgressDialog progress){
+    public void saveTrack(final Track track, final ProgressDialog progress1){
         Map<String,Object> trackObj = (Map<String,Object>)track.convertMap();
-
+        final ProgressDialog progress = new ProgressDialog(mainActivity);
+        setProgress(progress);
         if(track.getId() != null){
             trackObj.put("id", track.getId());
             TrackRepository saveTrack = getLoopBackAdapter().createRepository(TrackRepository.class);
@@ -1891,6 +1892,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     if(progress!= null){
                         progress.dismiss();
                     }
+                    //Toast.makeText(mainActivity, "Friends list updated!", Toast.LENGTH_SHORT).show();
                     /*Toast.makeText(that, "Successfully created", Toast.LENGTH_SHORT).show();*/
                 }
 

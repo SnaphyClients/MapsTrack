@@ -47,6 +47,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
     private OnFragmentInteractionListener mListener;
     public static String TAG = "LocationShareByUserFriendsFragment";
     @Bind(R.id.fragment_location_share_by_user_friends_recycler_view1) RecyclerView recyclerView;
+    @Bind(R.id.fragment_location_share_by_user_friends_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     LocationShareAdapterContacts locationShareAdapterContacts;
     MainActivity mainActivity;
     List<ContactModel> sharedFriends = new ArrayList<>();
@@ -119,59 +120,63 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
 
     private void showFriendSharedLocation(){
         if(BackgroundService.getCustomer() != null){
-            if(BackgroundService.getCustomer().getPhoneNumber() != null){
-                String phoneNumber = mainActivity.formatNumber(BackgroundService.getCustomer().getPhoneNumber());
-                LastUpdatedLocationRepository lastUpdatedLocationRepository = mainActivity.getLoopBackAdapter().createRepository(LastUpdatedLocationRepository.class);
-                Map<String, Object> filter = new HashMap<>();
-                Map<String, Object> where = new HashMap<>();
-                where.put("sharedLocation.number", phoneNumber);
-                filter.put("where", where);
-                filter.put("include", "customer");
+            if(BackgroundService.getCustomer().getPhoneNumber() != null) {
+                if (mainActivity != null) {
+                    String phoneNumber = mainActivity.formatNumber(BackgroundService.getCustomer().getPhoneNumber());
+                    LastUpdatedLocationRepository lastUpdatedLocationRepository = mainActivity.getLoopBackAdapter().createRepository(LastUpdatedLocationRepository.class);
+                    Map<String, Object> filter = new HashMap<>();
+                    Map<String, Object> where = new HashMap<>();
+                    where.put("sharedLocation.number", phoneNumber);
+                    filter.put("where", where);
+                    filter.put("include", "customer");
 
-                lastUpdatedLocationRepository.find(filter, new ListCallback<LastUpdatedLocation>() {
-                    @Override
-                    public void onSuccess(List<LastUpdatedLocation> objects) {
-                        if(objects != null){
-                            if(objects.size() != 0){
-                                sharedFriends.clear();
-                                for(LastUpdatedLocation lastUpdatedLocation: objects){
-                                    if(lastUpdatedLocation != null){
-                                        ContactModel contactModel = new ContactModel();
-                                        contactModel.setLastUpdatedLocation(lastUpdatedLocation);
-                                        if(lastUpdatedLocation.getCustomer() != null){
-                                            if(lastUpdatedLocation.getCustomer().getPhoneNumber() !=null){
-                                                contactModel.setContactNumber(lastUpdatedLocation.getCustomer().getPhoneNumber());
-                                                sharedFriends.add(contactModel);
+                    lastUpdatedLocationRepository.find(filter, new ListCallback<LastUpdatedLocation>() {
+                        @Override
+                        public void onSuccess(List<LastUpdatedLocation> objects) {
+                            mainActivity.stopProgressBar(progressBar);
+                            if (objects != null) {
+                                if (objects.size() != 0) {
+                                    sharedFriends.clear();
+                                    for (LastUpdatedLocation lastUpdatedLocation : objects) {
+                                        if (lastUpdatedLocation != null) {
+                                            ContactModel contactModel = new ContactModel();
+                                            contactModel.setLastUpdatedLocation(lastUpdatedLocation);
+                                            if (lastUpdatedLocation.getCustomer() != null) {
+                                                if (lastUpdatedLocation.getCustomer().getPhoneNumber() != null) {
+                                                    contactModel.setContactNumber(lastUpdatedLocation.getCustomer().getPhoneNumber());
+                                                    sharedFriends.add(contactModel);
+                                                }
                                             }
                                         }
                                     }
-                                }
 
-                                if(sharedFriends.size() != 0){
+                                    if (sharedFriends.size() != 0) {
+                                        setLocation(sharedFriends);
+                                    }
+
+                                } else {
+                                    sharedFriends.clear();
                                     setLocation(sharedFriends);
                                 }
-
-                            }else{
+                            } else {
                                 sharedFriends.clear();
                                 setLocation(sharedFriends);
                             }
-                        }else{
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            mainActivity.stopProgressBar(progressBar);
+                            mainActivity.tracker.send(new HitBuilders.EventBuilder()
+                                    .setCategory("Exception")
+                                    .setAction("Fragment : LocationShareByUserFriendsFragment, Method : showFriendsSharedLocation " + t.toString())
+                                    .build());
                             sharedFriends.clear();
                             setLocation(sharedFriends);
+                            Log.e(Constants.TAG, t.toString());
                         }
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        mainActivity.tracker.send(new HitBuilders.EventBuilder()
-                                .setCategory("Exception")
-                                .setAction("Fragment : LocationShareByUserFriendsFragment, Method : showFriendsSharedLocation "+t.toString())
-                                .build());
-                        sharedFriends.clear();
-                        setLocation(sharedFriends);
-                        Log.e(Constants.TAG, t.toString());
-                    }
-                });
+                    });
+                }
             }
         }
 

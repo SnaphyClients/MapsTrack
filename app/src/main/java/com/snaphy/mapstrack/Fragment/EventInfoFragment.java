@@ -441,9 +441,11 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         if(value){
             editEventButton.setVisibility(View.GONE);
             deleteEventButton.setVisibility(View.GONE);
+            floatingMenu.close(true);
         }else {
             editEventButton.setVisibility(View.VISIBLE);
             deleteEventButton.setVisibility(View.VISIBLE);
+            floatingMenu.close(true);
         }
 
     }
@@ -451,8 +453,10 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
     public void showShareOption(boolean value) {
         if(value){
             addFriendsEventButton.setVisibility(View.VISIBLE);
+            floatingMenu.close(true);
         }else{
             addFriendsEventButton.setVisibility(View.GONE);
+            floatingMenu.close(true);
         }
     }
 
