@@ -1,8 +1,6 @@
 package com.snaphy.mapstrack.Adapter;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import com.snaphy.mapstrack.Model.ContactModel;
 import com.snaphy.mapstrack.R;
 import com.snaphy.mapstrack.Services.BackgroundService;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -27,13 +26,17 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
 
     Map<String, ContactModel> contactModels;
     //List of all contacts which is going to be displayed..format Number(KEY) -> Name(VALUE)
-    Map<String, String> contactList;
+    LinkedHashMap<String, String> contactList;
+    //Refer to http://stackoverflow.com/questions/18308376/using-hashmaps-in-custom-adapters-for-listview
+    //Get the key array of contactList hashMap
+    private String[] mKeys;
     MainActivity mainActivity;
-    Cursor cursor;
+    //Cursor cursor;
 
-    public ShowContactAdapter(MainActivity mainActivity, Map<String, ContactModel>  contactModels, Cursor cursor) {
+    public ShowContactAdapter(MainActivity mainActivity, Map<String, ContactModel>  contactModels, LinkedHashMap<String, String> contactList) {
         this.contactModels = contactModels;
-        this.cursor = cursor;
+        this.contactList = contactList;
+        mKeys = this.contactList.keySet().toArray(new String[contactList.size()]);
         this.mainActivity = mainActivity;
     }
 
@@ -64,14 +67,18 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        if(cursor.moveToPosition(position)) {
-
-            int contactNameData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
+        if(mKeys[position] != null ) {
+            String key = mKeys[position];
+            /*int contactNameData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
             int contactNumberData = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
 
                 final String contactNameDataString = cursor.getString(contactNameData);
-                String contactNumberDataString = cursor.getString(contactNumberData);
+
+                String contactNumberDataString = cursor.getString(contactNumberData);*/
+            final String contactNameDataString = contactList.get(key);
+            String contactNumberDataString = key;
+
                 if (contactNumberDataString != null) {
                     // Set item views based on the cursor model
                     TextView contactName = holder.contactName;
@@ -80,12 +87,12 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
                     contactName.setText(contactNameDataString);
                     contactNumber.setText(contactNumberDataString);
                     checkBox.setClickable(false);
-                    String formattedNumber = mainActivity.formatNumber(contactNumberDataString);
+                    //String formattedNumber = mainActivity.formatNumber(contactNumberDataString);
 
                     //Cannot share with your own number
                     if(BackgroundService.getCustomer() != null) {
                         if(BackgroundService.getCustomer().getPhoneNumber() != null) {
-                            if(formattedNumber.equals(BackgroundService.getCustomer().getPhoneNumber())) {
+                            if(contactNumberDataString.equals(BackgroundService.getCustomer().getPhoneNumber())) {
                                 checkBox.setVisibility(View.GONE);
                             } else {
                                 checkBox.setVisibility(View.VISIBLE);
@@ -94,7 +101,7 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
                     }
 
                     //Now match it with formatted number..
-                    ContactModel contactModel = contactModels.get(formattedNumber);
+                    ContactModel contactModel = contactModels.get(contactNumberDataString);
                     if (contactModel != null) {
                         if (contactModel.isSelected()) {
                             checkBox.setChecked(true);
@@ -113,8 +120,11 @@ public class ShowContactAdapter extends RecyclerView.Adapter<ShowContactAdapter.
      */
     @Override
     public int getItemCount() {
-        return cursor.getCount();
+        //return cursor.getCount();
+        return contactList.size();
     }
+
+
 
     /**
      * View Holder class used to display all the elements in recycler view

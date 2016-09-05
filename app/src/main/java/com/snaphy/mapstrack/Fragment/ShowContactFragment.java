@@ -40,6 +40,7 @@ import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,12 +66,14 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     @Bind(R.id.fragment_show_contact_recycler_view1) RecyclerView recyclerView;
     @Bind(R.id.fragment_show_contact_progressBar) com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar progressBar;
     ShowContactAdapter showContactAdapter;
-    Cursor globalCursor;
+    //Cursor globalCursor;
     Track track;
     ProgressDialog progress;
-
     //List of all contacts which is going to be displayed..format Number(KEY) -> Name(VALUE)
-    Map<String, String> contactList = new HashMap<>();
+    LinkedHashMap<String, String> contactList = new LinkedHashMap<>();
+    private String[] mKeys;
+
+
 
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
@@ -140,11 +143,11 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                 new RecyclerItemClickListener(mainActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if (globalCursor.moveToPosition(position)) {
-                            int contactNameData = globalCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY);
-                            int contactNumberData = globalCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                            String contactNumberDataString = globalCursor.getString(contactNumberData);
-                            final String contactNameDataString = globalCursor.getString(contactNameData);
+                        if (mKeys[position] != null) {
+
+                            String key = mKeys[position];
+                            String contactNumberDataString = key;
+                            final String contactNameDataString = contactList.get(key);
 
                             String formatNumber = mainActivity.formatNumber(contactNumberDataString);
                             ContactModel contactModel = contactModelMap.get(formatNumber);
@@ -348,10 +351,11 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mainActivity.stopProgressBar(progressBar);
-        globalCursor = data;
-        showContactAdapter = new ShowContactAdapter(mainActivity, contactModelMap, data);
-        recyclerView.setAdapter(showContactAdapter);
+        /*mainActivity.stopProgressBar(progressBar);*/
+        //globalCursor = data;
+        new FetchContact(data).execute();
+        //showContactAdapter = new ShowContactAdapter(mainActivity, contactModelMap, data);
+        //recyclerView.setAdapter(showContactAdapter);
     }
 
     @Override
@@ -363,10 +367,10 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(globalCursor != null) {
+        /*if(globalCursor != null) {
             globalCursor.close();
             globalCursor = null;
-        }
+        }*/
     }
 
     public interface OnFragmentInteractionListener{
@@ -402,6 +406,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
         public Cursor data;
 
+
         public FetchContact(Cursor data){
             this.data = data;
         }
@@ -416,7 +421,7 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
                     final String contactNameDataString = data.getString(contactNameData);
                     String contactNumberDataString = data.getString(contactNumberData);
                     contactNumberDataString = mainActivity.formatNumber(contactNumberDataString);
-                    contactList.put(contactNameDataString, contactNameDataString);
+                    contactList.put(contactNumberDataString, contactNameDataString);
                 }
                 data.moveToFirst();
             } catch (Exception e) {
@@ -430,7 +435,11 @@ public class ShowContactFragment extends android.support.v4.app.Fragment impleme
 
         @Override
         protected void onPostExecute(String result) {
+            mKeys = contactList.keySet().toArray(new String[contactList.size()]);
             //STOP LOADING BAR..
+            showContactAdapter = new ShowContactAdapter(mainActivity, contactModelMap, contactList);
+            recyclerView.setAdapter(showContactAdapter);
+            mainActivity.stopProgressBar(progressBar);
         }
 
         @Override
