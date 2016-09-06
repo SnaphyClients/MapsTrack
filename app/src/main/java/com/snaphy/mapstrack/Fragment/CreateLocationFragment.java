@@ -571,7 +571,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                 callback.onError(t);
                 return;
             } else if(location.length() >= Constants.WORD_LIMIT ) {
-                Toast.makeText(mainActivity, "Location Id exceeds word limit", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, "Location Id cannot have more than 20 characters", Toast.LENGTH_SHORT).show();
                 callback.onError(t);
                 return;
             }

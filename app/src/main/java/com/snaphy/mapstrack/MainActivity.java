@@ -360,21 +360,21 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 public void onError(Throwable t) {
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Exception")
-                            .setAction("Fragment : MainActivity, Method : checkLogin "+t.toString())
+                            .setAction("Fragment : MainActivity, Method : checkLogin " + t.toString())
                             .build());
                     //CLOSE PROGRESS DIALOG
                     progress.dismiss();
-                    // you have to login first
-                    BackgroundService.setCustomer(null);
-                    googleLogout();
-                    //Register anonymous for push service..
-                    //moveToLogin();
+
                     //Retry Login
                     if(t.getMessage().equals("Unauthorized")) {
-                        Snackbar.make(parentLayout, "Unable to connect to server", Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(parentLayout, "Unable to connect to server", Snackbar.LENGTH_LONG).show();
+                        // you have to login first
+                        BackgroundService.setCustomer(null);
+                        googleLogout();
                         moveToLogin();
                     } else {
-                        replaceFragment(R.layout.fragment_retry_login, null);
+                        /*replaceFragment(R.layout.fragment_retry_login, null);*/
+                        showDialog();
                     }
 
                 }
@@ -382,6 +382,30 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
         }
 
+    }
+
+    public void showDialog() {
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(mainActivity);
+        alertDialogBuilder.setMessage("Network problem, please try again");
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("RETRY", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                mainActivity.checkLogin();
+                arg0.dismiss();
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mainActivity.onBackPressed();
+            }
+        });
+
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     public void googleLogout() {

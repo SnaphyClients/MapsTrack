@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.Adapter.EventListAdapter;
@@ -47,6 +48,8 @@ public class EventListFragment extends android.support.v4.app.Fragment {
     LinearLayoutManager layoutManager;
     EventListAdapter eventListAdapter;
     MainActivity mainActivity;
+    @Bind(R.id.fragment_event_list_textview1)
+    TextView noEventText;
 
     /*Infinite Loading dataset*/
     private int previousTotal = 0;
@@ -154,7 +157,11 @@ public class EventListFragment extends android.support.v4.app.Fragment {
 
     @Subscriber(tag = Constants.NOTIFY_EVENT_DATA_IN_HOME_FRAGMENT_FROM_TRACK_COLLECTION)
     public void notifyEventList(boolean reset) {
-
+        if(TrackCollection.eventList.size() == 0) {
+            noEventText.setVisibility(View.VISIBLE);
+        } else {
+            noEventText.setVisibility(View.GONE);
+        }
         eventListAdapter.notifyDataSetChanged();
         setSelectedFilter();
     }
@@ -162,6 +169,11 @@ public class EventListFragment extends android.support.v4.app.Fragment {
     @Subscriber ( tag = Constants.UPDATE_SHARE_LIST_AFTER_FRIEND_HAS_BEEN_DELETED)
     public void updateShareList(String string) {
         sharedEventFilter();
+        if(TrackCollection.eventList.size() == 0) {
+            noEventText.setVisibility(View.VISIBLE);
+        }else {
+            noEventText.setVisibility(View.GONE);
+        }
         eventListAdapter.notifyDataSetChanged();
     }
 

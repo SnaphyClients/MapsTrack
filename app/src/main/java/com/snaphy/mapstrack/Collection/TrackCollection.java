@@ -26,7 +26,7 @@ public class TrackCollection {
 
     MyRestAdapter restAdapter;
 
-    private int limit = 8;
+    private int limit = 5;
 
     public static Map<String, Boolean> getTrackCurrentFilterSelect() {
         return trackCurrentFilterSelect;
@@ -126,6 +126,7 @@ public class TrackCollection {
         where.put("type", type);
         //Now add where.. filter..
         filter.put("where", where);
+        filter.put("order", "added DESC");
 
         if(reset) {
             resetFilter(type);

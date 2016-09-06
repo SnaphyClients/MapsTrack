@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.androidsdk.snaphy.snaphyandroidsdk.models.Track;
 import com.snaphy.mapstrack.Adapter.LocationListAdapter;
@@ -44,6 +45,8 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.fragment_location_list_button1) Button myLocationButton;
     @Bind(R.id.fragment_location_list_button2) Button sharedLocationButton;
     @Bind(R.id.fragment_location_list_button3) Button nearbyLocationButton;
+    @Bind(R.id.fragment_location_list_textview1)
+    TextView locationNotPresent;
     LinearLayoutManager layoutManager;
     LocationListAdapter locationListAdapter;
     MainActivity mainActivity;
@@ -113,6 +116,13 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
     @Subscriber ( tag = Constants.UPDATE_SHARE_LIST_AFTER_FRIEND_HAS_BEEN_DELETED)
     public void updateShareList(String string) {
         sharedEventFilter();
+
+        if(TrackCollection.locationList.size() == 0) {
+            locationNotPresent.setVisibility(View.VISIBLE);
+        } else {
+            locationNotPresent.setVisibility(View.GONE);
+        }
+
         locationListAdapter.notifyDataSetChanged();
     }
 
@@ -162,6 +172,14 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
             visibleItemCount = 0;
             totalItemCount = 0;
         }
+
+
+        if(TrackCollection.locationList.size() == 0) {
+            locationNotPresent.setVisibility(View.VISIBLE);
+        } else {
+            locationNotPresent.setVisibility(View.GONE);
+        }
+
         locationListAdapter.notifyDataSetChanged();
         setSelectedFilter();
     }
