@@ -159,6 +159,11 @@ public class EventListFragment extends android.support.v4.app.Fragment {
         setSelectedFilter();
     }
 
+    @Subscriber ( tag = Constants.UPDATE_SHARE_LIST_AFTER_FRIEND_HAS_BEEN_DELETED)
+    public void updateShareList(String string) {
+        eventListAdapter.notifyDataSetChanged();
+    }
+
     @OnClick(R.id.fragment_event_list_floating_button1) void openCreateEvent() {
         mainActivity.replaceFragment(R.layout.fragment_create_event, null);
     }

@@ -251,6 +251,7 @@ public class DisplayContactAdapter extends BaseAdapter {
                         mainActivity.saveTrack(track, progress);
                         progress.dismiss();
                         if(BackgroundService.getCustomer().getPhoneNumber().equals(number)) {
+                            EventBus.getDefault().post("",Constants.UPDATE_SHARE_LIST_AFTER_FRIEND_HAS_BEEN_DELETED);
                             mainActivity.onBackPressed();
                         }
                     } else {

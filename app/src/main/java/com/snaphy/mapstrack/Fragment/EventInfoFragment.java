@@ -136,8 +136,48 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_event_info, container, false);
         ButterKnife.bind(this, view);
         dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-
+        onFloatingButtonClickListener();
         return view;
+    }
+
+    public void onFloatingButtonClickListener() {
+        floatingMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(BackgroundService.getCustomer() != null){
+                    if(BackgroundService.getCustomer().getId() != null){
+                        if(track.getCustomer() != null){
+                            String customerId = (String)BackgroundService.getCustomer().getId();
+                            String eventOwnerId = (String)track.getCustomer().getId();
+                            if(customerId.equals(eventOwnerId)){
+                                isEventOwner = true;
+                                showShareOption(true);
+                                ifUserNotCustomer(false);
+                            }else{
+                                showShareOption(true);
+                                ifUserNotCustomer(true);
+                            }
+                        }else{
+                            showShareOption(false);
+                            ifUserNotCustomer(true);
+                            return;
+                        }
+
+                    }else{
+                        showShareOption(false);
+                        ifUserNotCustomer(true);
+                    }
+                }else{
+                    showShareOption(false);
+                    ifUserNotCustomer(true);
+                }
+                if (floatingMenu.isOpened()) {
+                    floatingMenu.close(false);
+                } else {
+                    floatingMenu.open(false);
+                }
+            }
+        });
     }
 
     @Subscriber(tag = Constants.SHOW_EVENT_INFO)
@@ -225,7 +265,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         }
 
 
-        if(BackgroundService.getCustomer() != null){
+        /*if(BackgroundService.getCustomer() != null){
             if(BackgroundService.getCustomer().getId() != null){
                 if(track.getCustomer() != null){
                     String customerId = (String)BackgroundService.getCustomer().getId();
@@ -251,7 +291,7 @@ public class EventInfoFragment extends android.support.v4.app.Fragment {
         }else{
             showShareOption(false);
             ifUserNotCustomer(true);
-        }
+        }*/
     }
 
 

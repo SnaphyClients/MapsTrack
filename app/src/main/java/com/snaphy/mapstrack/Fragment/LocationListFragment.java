@@ -110,6 +110,12 @@ public class LocationListFragment extends android.support.v4.app.Fragment {
         return view;
     }
 
+    @Subscriber ( tag = Constants.UPDATE_SHARE_LIST_AFTER_FRIEND_HAS_BEEN_DELETED)
+    public void updateShareList(String string) {
+        sharedEventFilter();
+        locationListAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onResume() {
         super.onResume();

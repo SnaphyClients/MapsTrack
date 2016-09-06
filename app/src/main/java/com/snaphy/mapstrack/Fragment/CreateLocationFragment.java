@@ -114,7 +114,21 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         ButterKnife.bind(this, view);
         backButtonClickListener();
         setOnRedioCheckedListener();
+        onFloatingButtonClickListener();
         return view;
+    }
+
+    public void onFloatingButtonClickListener() {
+        parentFloatingMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (parentFloatingMenu.isOpened()) {
+                    parentFloatingMenu.close(true);
+                } else {
+                    parentFloatingMenu.open(false);
+                }
+            }
+        });
     }
 
 
@@ -293,9 +307,11 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
         if(disable){
             showSelectedFriends.setVisibility(View.GONE);
             addFriends.setVisibility(View.GONE);
+            parentFloatingMenu.close(true);
         }else{
             showSelectedFriends.setVisibility(View.VISIBLE);
             addFriends.setVisibility(View.VISIBLE);
+            parentFloatingMenu.close(true);
         }
     }
 

@@ -156,7 +156,16 @@ public class ProfileFragment extends Fragment {
         if(!nameArray[0].isEmpty()) {
             if(nameArray.length > 2){
                 if(!nameArray[1].isEmpty()){
-                    editProfileModel.setFirstName(nameArray[0]+" "+nameArray[1]);
+                    if(nameArray.length > 3) {
+                        if(nameArray.length > 4) {
+                            editProfileModel.setFirstName(nameArray[0]+" "+nameArray[1]+ " "+nameArray[2]+ " "+nameArray[3]);
+
+                        } else {
+                            editProfileModel.setFirstName(nameArray[0] + " " + nameArray[1] + " " + nameArray[2]);
+                        }
+                    } else {
+                        editProfileModel.setFirstName(nameArray[0] + " " + nameArray[1]);
+                    }
                 }
             } else {
                 editProfileModel.setFirstName(nameArray[0]);
@@ -170,7 +179,7 @@ public class ProfileFragment extends Fragment {
 
         editProfileModel.setMobileNumber(phone.getText().toString());
 
-        if(profilePicture.getDrawable() != null) {
+        if (profilePicture.getDrawable() != null) {
             editProfileModel.setImage(profilePicture.getDrawable());
         }
         EventBus.getDefault().postSticky(editProfileModel, Constants.REQUEST_EDIT_PROFILE_FRAGMENT);

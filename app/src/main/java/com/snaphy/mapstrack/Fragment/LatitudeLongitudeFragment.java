@@ -111,9 +111,6 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         selectedLatLng = BackgroundService.getCurrentLocation();
         setAddress();
         setCurrentLocation(view);
-        if(CreateEventFragment.progressDialog != null) {
-            CreateEventFragment.progressDialog.dismiss();
-        }
         return view;
     }
 
@@ -278,6 +275,10 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
         googleMap.setTrafficEnabled(true);
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, 14));
+
+        if(CreateEventFragment.progressDialog != null) {
+            CreateEventFragment.progressDialog.dismiss();
+        }
 
         marker=googleMap.addMarker(new MarkerOptions().position(currentpos)
                 .title("MapsTrack")

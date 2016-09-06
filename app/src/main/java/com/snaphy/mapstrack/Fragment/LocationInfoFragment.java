@@ -9,7 +9,6 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,24 +109,21 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
         floatingActionMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v(Constants.TAG,"On Click is working 1");
-                if(floatingActionMenu.isOpened()) {
-                    Log.v(Constants.TAG," Button is in opened state 2");
-                } else  {
-                    Log.v(Constants.TAG," Button is in closed state 3");
+                showOption(track);
+                if(track.getIsPublic().equals("public")) {
+                    disableFriendList(true);
+                } else {
+                    disableFriendList(false);
+                }
+                if (floatingActionMenu.isOpened()) {
+                    floatingActionMenu.close(true);
+                } else {
+                    floatingActionMenu.open(false);
                 }
             }
         });
     }
 
-    @OnClick ( R.id.fragment_location_info_floating_button1) void onClick() {
-        Log.v(Constants.TAG,"On Click is working");
-        if(floatingActionMenu.isOpened()) {
-            Log.v(Constants.TAG," Button is in opened state");
-        } else  {
-            Log.v(Constants.TAG," Button is in closed state");
-        }
-    }
 
     @Subscriber(tag = Constants.SHOW_LOCATION_INFO)
     private void showLocationInfo(Track track) {
@@ -136,7 +132,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
             if(track.getLocationId() != null) {
                 if(!track.getLocationId().isEmpty()) {
                     locationNameId.setText(track.getLocationId().toString());
-                    CharSequence lName = drawTextViewDesign("Location Name : ",track.getLocationId().toString());
+                    CharSequence lName = drawTextViewDesign("Location Name : ", track.getLocationId().toString());
                     locationId.setText(lName);
                     mainActivity.tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("Location Id")
@@ -168,14 +164,14 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
                 contacts.setText(eContact);
             }
 
-            if(track.getIsPublic().equals("public")) {
+           /* if(track.getIsPublic().equals("public")) {
                 disableFriendList(true);
             } else {
                 disableFriendList(false);
-            }
+            }*/
 
             //Now hide options..
-            showOption(track);
+            /*showOption(track);*/
         }
     }
 
@@ -258,7 +254,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
             Toast.makeText(mainActivity, "Please wait! Location saving is still in progress", Toast.LENGTH_SHORT).show();
             return;
         }
-        floatingActionMenu.open(false);
+        floatingActionMenu.close(false);
         mainActivity.replaceFragment(R.id.fragment_location_info_button1, null);
         EventBus.getDefault().post(track, Constants.SHOW_LOCATION_EDIT);
 
@@ -340,7 +336,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     }
 
     @OnClick(R.id.fragment_location_info_button6) void addFriends() {
-        floatingActionMenu.open(false);
+        floatingActionMenu.close(false);
         mainActivity.replaceFragment(R.id.fragment_location_info_button6, null);
         EventBus.getDefault().postSticky(track, Constants.DISPLAY_CONTACT);
     }

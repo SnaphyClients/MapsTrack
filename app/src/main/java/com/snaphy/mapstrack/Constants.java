@@ -12,8 +12,8 @@ public final class Constants {
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
-    public static final int SET_LOCATION_UPDATE_TIMEOUT =  1000*60*5;
-    //public static final int SET_LOCATION_UPDATE_TIMEOUT =  5000;
+    //public static final int SET_LOCATION_UPDATE_TIMEOUT =  1000*60*5;
+    public static final int SET_LOCATION_UPDATE_TIMEOUT =  5000;
 
     //public static String baseUrl = "http://192.168.1.100:3000";
     public static String baseUrl = "http://104.236.76.111:3000";
@@ -125,6 +125,7 @@ public final class Constants {
     public static final String CLOSE_DIALOG_AFTER_DELETING_LAST_CONTACT = "CloseDialogAfterDeletingLastContact";
     public static final String KM = "Km";
     public static final int WORD_LIMIT = 20;
+    public static final String UPDATE_SHARE_LIST_AFTER_FRIEND_HAS_BEEN_DELETED = "UpdateShareListAfterFriendHasBeenDeleted";
 
 
 }
