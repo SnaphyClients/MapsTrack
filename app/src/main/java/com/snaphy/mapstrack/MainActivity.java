@@ -1997,28 +1997,29 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
 
 
     public String formatNumber(String contactNumberDataString){
-        String pattern = "\\+\\d{12,12}";
+        String pattern = "^\\+91(?!$)";
         String checkZero = "^0\\d+";
         // Now create matcher object.
 
         contactNumberDataString = contactNumberDataString.replaceAll("\\s","");
-        boolean match = contactNumberDataString.matches(pattern);
-        if (!match) {
-            boolean isZero = contactNumberDataString.matches(checkZero);
-            if(isZero){
-                String number = contactNumberDataString.substring(1);
-                if(number.length() > 9){
-                    number = "+91" + number;
-                    contactNumberDataString = number;
-                }
-            }else{
-                if(contactNumberDataString.length() > 9){
-                    contactNumberDataString = "+91" + contactNumberDataString;
-                }
-            }
+        //boolean match = contactNumberDataString.matches(pattern);
+        //if (!match) {
+        //boolean isZero = contactNumberDataString.matches(checkZero);
+        String withoutZeroNumber = contactNumberDataString.replaceFirst("^0+(?!$)", "");
+        //Now remove +91 from number..
+        String withoutIndianCode = withoutZeroNumber.replaceFirst(pattern, "");
+
+        String indianPattern = "^[789]\\d{9}$";
+        boolean match = withoutIndianCode.matches(indianPattern);
+        if(match){
+            //Add +91 in front..
+            contactNumberDataString = "+91" + withoutIndianCode;
         }
         return contactNumberDataString;
     }
+
+
+
 
     public String parseDate(String date){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
