@@ -220,10 +220,20 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
 
     @Subscriber ( tag = Constants.REQUEST_EDIT_PROFILE_FRAGMENT)
     public void fetchProfile(EditProfileModel editProfileModel) {
-        if(!editProfileModel.getFirstName().isEmpty()) {
+
+       /* if(!editProfileModel.getFirstName().isEmpty()) {
             firstName.setText(editProfileModel.getFirstName());
             if(!editProfileModel.getLastName().isEmpty()) {
                 lastName.setText(editProfileModel.getLastName());
+            }
+        }*/
+
+        if(BackgroundService.getCustomer() != null) {
+            if(!BackgroundService.getCustomer().getFirstName().isEmpty()) {
+                firstName.setText(BackgroundService.getCustomer().getFirstName().toString());
+                if(!BackgroundService.getCustomer().getLastName().isEmpty()) {
+                    lastName.setText(BackgroundService.getCustomer().getLastName().toString());
+                }
             }
         }
 
