@@ -101,6 +101,7 @@ import com.snaphy.mapstrack.Model.ImageModel;
 import com.snaphy.mapstrack.Services.AppLocationService;
 import com.snaphy.mapstrack.Services.BackgroundService;
 import com.snaphy.mapstrack.Services.FetchAddressIntentService;
+import com.snaphy.mapstrack.Services.LocationUpdaterService;
 import com.snaphy.mapstrack.Services.MyRestAdapter;
 import com.snaphy.mapstrack.Services.UnboundService;
 import com.strongloop.android.loopback.AccessToken;
@@ -242,7 +243,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 }).create().show();
             }
         }
-        TrackCollection.setFilterColor(Constants.NEAR_BY);
+        TrackCollection.setFilterColor(Constants.NEAR_BY, Constants.EVENT);
+        TrackCollection.setFilterColor(Constants.NEAR_BY_LOCATION, Constants.LOCATION);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -1517,6 +1519,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             //http://stackoverflow.com/questions/17519198/how-to-get-the-current-location-latitude-and-longitude-in-android
             LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             BackgroundService.setCurrentLocation(latLng);
+            LocationUpdaterService.setLocation(mLastLocation);
             latitude = mLastLocation.getLatitude();
             longitude = mLastLocation.getLongitude();
             if (!Geocoder.isPresent()) {
@@ -1532,12 +1535,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             if(mLastLocation != null) {
                 LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 BackgroundService.setCurrentLocation(latLng);
+                LocationUpdaterService.setLocation(mLastLocation);
                 startIntentService();
             } else {
                 mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000,
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                         0, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
             }
         }
     }
@@ -1558,20 +1563,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 latitude = networkLocation.getLatitude();
                 longitude = networkLocation.getLongitude();
                 location = networkLocation;
-            } else {
-                location = getLastKnownLocation();
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
             }
         } else {
-                location = LocationServices.FusedLocationApi.getLastLocation(
-                        mGoogleApiClient);
+                location = getLastKnownLocation();
+
         }
         return location;
     }
 
     private Location getLastKnownLocation() {
         mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+                0, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
         List<String> providers = mLocationManager.getProviders(true);
         Location bestLocation = null;
         for (String provider : providers) {
@@ -2073,7 +2077,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("status", "allow");
             }
         }
-        TrackCollection.setFilterColor(Constants.SHARED_EVENTS);
+        TrackCollection.setFilterColor(Constants.SHARED_EVENTS, Constants.EVENT);
     }
 
     public void setOnlySharedLocationFilter(){
@@ -2089,7 +2093,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("status", "allow");
             }
         }
-        TrackCollection.setFilterColor(Constants.SHARED_LOCATION);
+        TrackCollection.setFilterColor(Constants.SHARED_LOCATION, Constants.LOCATION);
     }
 
 
@@ -2112,7 +2116,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("isPublic", "public");
             }
         }
-        TrackCollection.setFilterColor(Constants.NEAR_BY);
+        TrackCollection.setFilterColor(Constants.NEAR_BY, Constants.EVENT);
     }
 
     public void setNearByLocationFilter() {
@@ -2134,7 +2138,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("isPublic", "public");
             }
         }
-        TrackCollection.setFilterColor(Constants.NEAR_BY_LOCATION);
+        TrackCollection.setFilterColor(Constants.NEAR_BY_LOCATION, Constants.LOCATION);
     }
 
 
@@ -2149,7 +2153,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("customerId", BackgroundService.getCustomer().getId());
             }
         }
-        TrackCollection.setFilterColor(Constants.MY_EVENTS);
+        TrackCollection.setFilterColor(Constants.MY_EVENTS, Constants.EVENT);
     }
 
     public void showMyLocationFilter(){
@@ -2162,7 +2166,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                 where.put("customerId", BackgroundService.getCustomer().getId());
             }
         }
-        TrackCollection.setFilterColor(Constants.MY_LOCATION);
+        TrackCollection.setFilterColor(Constants.MY_LOCATION, Constants.LOCATION);
     }
 
 

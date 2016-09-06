@@ -64,6 +64,7 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
     public static String TAG = "CreateLocationFragment";
     HashMap<String,Double> latLongHashMap = new HashMap<String, Double>();
     LatLng currentLatLng;
+    static ProgressDialog progressDialog;
 
     @Bind(R.id.fragment_create_location_imagebutton1) ImageButton backButton;
     @Bind(R.id.fragment_create_location_edittext2) EditText locationId;
@@ -363,6 +364,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
         }
+        progressDialog = new ProgressDialog(mainActivity);
+        mainActivity.setProgress(CreateLocationFragment.progressDialog);
         mainActivity.replaceFragment(R.id.fragment_create_location_button5, null);
     }
 
@@ -380,6 +383,8 @@ public class CreateLocationFragment extends android.support.v4.app.Fragment {
                 InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
             }
+            progressDialog = new ProgressDialog(mainActivity);
+            mainActivity.setProgress(CreateLocationFragment.progressDialog);
             mainActivity.replaceFragment(R.id.fragment_create_location_button5, null);
         } else {
             View view1 = mainActivity.getCurrentFocus();

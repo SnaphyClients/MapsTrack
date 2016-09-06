@@ -116,7 +116,7 @@ public class EventListFragment extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        nearbyEventFilter();
+        //nearbyEventFilter();
         setSelectedFilter();
     }
 
@@ -161,6 +161,7 @@ public class EventListFragment extends android.support.v4.app.Fragment {
 
     @Subscriber ( tag = Constants.UPDATE_SHARE_LIST_AFTER_FRIEND_HAS_BEEN_DELETED)
     public void updateShareList(String string) {
+        sharedEventFilter();
         eventListAdapter.notifyDataSetChanged();
     }
 

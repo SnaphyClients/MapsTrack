@@ -1,5 +1,6 @@
 package com.snaphy.mapstrack.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -74,6 +75,7 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
     MainActivity mainActivity;
     static LocationInfoFragment fragment;
     boolean isLocationOwner = false;
+    static ProgressDialog progressDialog;
     Track track;
     DialogPlus dialog;
 
@@ -315,6 +317,8 @@ public class LocationInfoFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.fragment_location_info_button2) void openMap() {
         floatingActionMenu.close(true);
+        progressDialog = new ProgressDialog(mainActivity);
+        mainActivity.setProgress(LocationInfoFragment.progressDialog);
         mainActivity.replaceFragment(R.id.fragment_location_info_button2, null);
         EventBus.getDefault().postSticky(latLng, Constants.SEND_MAP_COORDINATES_LOCATION);
     }

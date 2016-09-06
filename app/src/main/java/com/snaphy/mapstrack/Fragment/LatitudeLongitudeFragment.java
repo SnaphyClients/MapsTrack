@@ -280,6 +280,10 @@ public class LatitudeLongitudeFragment extends android.support.v4.app.Fragment i
             CreateEventFragment.progressDialog.dismiss();
         }
 
+        if(CreateLocationFragment.progressDialog != null) {
+            CreateLocationFragment.progressDialog.dismiss();
+        }
+
         marker=googleMap.addMarker(new MarkerOptions().position(currentpos)
                 .title("MapsTrack")
                 .snippet("Long press and move marker at your location")

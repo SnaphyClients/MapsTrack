@@ -828,6 +828,8 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
 
     @OnClick (R.id.fragment_create_event_button5) void openMap() {
         parentFloatingButton.close(true);
+        progressDialog = new ProgressDialog(mainActivity);
+        mainActivity.setProgress(CreateEventFragment.progressDialog);
         View view1 = mainActivity.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);

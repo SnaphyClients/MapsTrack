@@ -251,13 +251,22 @@ public class TrackCollection {
     }
 
 
-    public static void setFilterColor(String filterType){
-        trackCurrentFilterSelect.put(Constants.MY_EVENTS, false);
-        trackCurrentFilterSelect.put(Constants.NEAR_BY, false);
-        trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, false);
-        trackCurrentFilterSelect.put(Constants.MY_LOCATION,false);
-        trackCurrentFilterSelect.put(Constants.NEAR_BY_LOCATION, false);
-        trackCurrentFilterSelect.put(Constants.SHARED_LOCATION, false);
+
+
+    public static void setFilterColor(String filterType, String trackType){
+
+        if(trackType.equals(Constants.EVENT)) {
+            trackCurrentFilterSelect.put(Constants.MY_EVENTS, false);
+            trackCurrentFilterSelect.put(Constants.NEAR_BY, false);
+            trackCurrentFilterSelect.put(Constants.SHARED_EVENTS, false);
+        }
+
+        if(trackType.equals(Constants.LOCATION)) {
+            trackCurrentFilterSelect.put(Constants.MY_LOCATION,false);
+            trackCurrentFilterSelect.put(Constants.NEAR_BY_LOCATION, false);
+            trackCurrentFilterSelect.put(Constants.SHARED_LOCATION, false);
+
+        }
 
         if (filterType.equals(Constants.MY_EVENTS)) {
             trackCurrentFilterSelect.put(Constants.MY_EVENTS, true);

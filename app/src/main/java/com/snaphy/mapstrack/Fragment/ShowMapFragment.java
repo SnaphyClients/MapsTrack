@@ -241,6 +241,10 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
                                 EventInfoFragment.progressDialog.dismiss();
                             }
 
+                            if(LocationInfoFragment.progressDialog != null){
+                                LocationInfoFragment.progressDialog.dismiss();
+                            }
+
                         } else {
                             //Snackbar.make(getView(), "Direction Not Found", Snackbar.LENGTH_SHORT).show();
                         }
@@ -252,6 +256,10 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
                         if(EventInfoFragment.progressDialog != null) {
                             EventInfoFragment.progressDialog.dismiss();
+                        }
+
+                        if(LocationInfoFragment.progressDialog != null){
+                            LocationInfoFragment.progressDialog.dismiss();
                         }
                     }
                 });

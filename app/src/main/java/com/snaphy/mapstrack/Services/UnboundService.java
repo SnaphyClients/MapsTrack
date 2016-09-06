@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.snaphy.mapstrack.Constants;
 
@@ -38,6 +39,7 @@ public class UnboundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         /* Retrieve a PendingIntent that will perform a broadcast */
+        Log.v(Constants.TAG,"Unbound service is running");
         return START_STICKY;
     }
 

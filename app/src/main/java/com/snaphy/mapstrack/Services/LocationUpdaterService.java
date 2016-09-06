@@ -34,6 +34,7 @@ public class LocationUpdaterService extends Service implements android.location.
         LocationUpdaterService.restAdapter = restAdapter;
     }
 
+    int count = 0;
     static MyRestAdapter restAdapter;
 
     public static Customer getCustomer() {
@@ -45,6 +46,16 @@ public class LocationUpdaterService extends Service implements android.location.
     }
 
     private static Customer customer;
+
+    private static Location location;
+
+    public static Location getLocation() {
+        return location;
+    }
+
+    public static void setLocation(Location location) {
+        LocationUpdaterService.location = location;
+    }
 
     private enum State {
         IDLE, WORKING;
@@ -85,6 +96,8 @@ public class LocationUpdaterService extends Service implements android.location.
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.v(Constants.TAG,"Location Updater Service is running" + count);
+        count++;
         LocationUpdaterService.setRestAdapter(getLoopBackAdapter());
         checkLogin();
         /*if (state == State.IDLE) {*/
@@ -97,11 +110,17 @@ public class LocationUpdaterService extends Service implements android.location.
             if (permissionCheck1 == PackageManager.PERMISSION_GRANTED || permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
                 // you will want to listen for updates only once
                 locationManager.requestLocationUpdates(
-                        LocationManager.NETWORK_PROVIDER, 4000, 0, this);
+                        LocationManager.NETWORK_PROVIDER, 0, 0, this);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        4000, 0, this);
+                        0, 0, this);
+
 
             }
+
+        if(LocationUpdaterService.getLocation() != null){
+            Log.v(Constants.TAG, "Location Updater Service is running here also 3");
+            sendToServer(LocationUpdaterService.getLocation());
+        }
 
        /* }*/
         return START_STICKY;
