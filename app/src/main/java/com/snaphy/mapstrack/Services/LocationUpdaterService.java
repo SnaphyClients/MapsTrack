@@ -96,8 +96,8 @@ public class LocationUpdaterService extends Service implements android.location.
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v(Constants.TAG,"Location Updater Service is running" + count);
-        count++;
+        /*Log.v(Constants.TAG,"Location Updater Service is running" + count);*/
+        /*count++;*/
         LocationUpdaterService.setRestAdapter(getLoopBackAdapter());
         checkLogin();
         /*if (state == State.IDLE) {*/
@@ -118,7 +118,7 @@ public class LocationUpdaterService extends Service implements android.location.
             }
 
         if(LocationUpdaterService.getLocation() != null){
-            Log.v(Constants.TAG, "Location Updater Service is running here also 3");
+            /*Log.v(Constants.TAG, "Location Updater Service is running here also 3");*/
             sendToServer(LocationUpdaterService.getLocation());
         }
 

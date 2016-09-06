@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.snaphy.mapstrack.Constants;
 
@@ -24,7 +23,7 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Constants.SET_LOCATION_UPDATE_TIMEOUT, pendingIntent);
 
-            Toast.makeText(context, "Alarm Set", Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(context, "Alarm Set", Toast.LENGTH_SHORT).show();*/
         }
     }
 }
