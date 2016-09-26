@@ -15,6 +15,7 @@ import com.androidsdk.snaphy.snaphyandroidsdk.models.LastUpdatedLocation;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.LastUpdatedLocationRepository;
 import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Adapter.LocationShareAdapterContacts;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Helper.ContactMatcher;
 import com.snaphy.mapstrack.MainActivity;
@@ -51,6 +52,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
     LocationShareAdapterContacts locationShareAdapterContacts;
     MainActivity mainActivity;
     List<ContactModel> sharedFriends = new ArrayList<>();
+    private boolean isViewShown = false;
     public LocationShareByUserFriendsFragment() {
         // Required empty public constructor
     }
@@ -76,6 +78,9 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        if (!isViewShown) {
+            showFriendSharedLocation();
+        }
         return view;
     }
 
@@ -103,6 +108,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
     public void onAttach(Context context) {
         super.onAttach(context);
         mainActivity = (MainActivity) getActivity();
+        mainActivity.stopProgressBar(TrackCollection.progressBar);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -207,11 +213,14 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            // load data here
-            showFriendSharedLocation();
-        }else{
-            // fragment is no longer visible
+
+        if (getView() != null) {
+            isViewShown = true;
+            if(mainActivity != null) {
+                showFriendSharedLocation();
+            }
+        } else {
+            isViewShown = false;
         }
     }
 }

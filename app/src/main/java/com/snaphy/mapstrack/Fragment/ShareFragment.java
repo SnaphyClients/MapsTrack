@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.snaphy.mapstrack.Adapter.LocationShareTabAdapter;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.MainActivity;
 import com.snaphy.mapstrack.R;
 
@@ -72,6 +73,7 @@ public class ShareFragment extends android.support.v4.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mainActivity = (MainActivity) getActivity();
+        mainActivity.stopProgressBar(TrackCollection.progressBar);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

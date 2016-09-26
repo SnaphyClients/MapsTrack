@@ -662,17 +662,23 @@ public class CreateEventFragment extends android.support.v4.app.Fragment{
                     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
                         String hourString = "";
                         boolean AM = false;
+
+
                         if (hourOfDay < 10) {
                             hourString = "0" + hourOfDay;
                             AM = true;
-                        } else if (hourOfDay > 10 && hourOfDay <= 11) {
+                        } else if (hourOfDay >= 10 && hourOfDay <= 11) {
                             hourString = hourOfDay + "";
                             AM = true;
                         }
+
+
                         if (hourOfDay > 12) {
                             hourOfDay = hourOfDay - 12;
                             if (hourOfDay < 10) {
                                 hourString = "0" + hourOfDay;
+                            } else {
+                                hourString = hourOfDay + "";
                             }
                             AM = false;
                         }

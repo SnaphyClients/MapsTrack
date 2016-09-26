@@ -229,8 +229,8 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
                             Info distanceInfo = leg.getDistance();
                             Info durationInfo = leg.getDuration();
-                            distance.setText(distanceInfo.getText());
-                            time.setText("( " + durationInfo.getText() + " )");
+                            /*distance.setText(distanceInfo.getText());
+                            time.setText("( " + durationInfo.getText() + " )");*/
 
                             ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
                             PolylineOptions polylineOptions = DirectionConverter.createPolyline(mainActivity, directionPositionList, 10, Color.rgb(69, 151, 255));

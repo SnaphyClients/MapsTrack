@@ -11,7 +11,8 @@
         android:id="@+id/fragment_location_share_by_user_friends_recycler_view1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        />
 
     <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
         android:layout_width="60dp"

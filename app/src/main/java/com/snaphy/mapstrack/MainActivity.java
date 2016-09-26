@@ -366,17 +366,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
                     progress.dismiss();
 
                     //Retry Login
-                    if(t.getMessage().equals("Unauthorized")) {
-                        //Snackbar.make(parentLayout, "Unable to connect to server", Snackbar.LENGTH_LONG).show();
-                        // you have to login first
-                        BackgroundService.setCustomer(null);
-                        googleLogout();
-                        moveToLogin();
-                    } else {
+                    if (t.getMessage() != null) {
+                        if (t.getMessage().equals("Unauthorized")) {
+                            //Snackbar.make(parentLayout, "Unable to connect to server", Snackbar.LENGTH_LONG).show();
+                            // you have to login first
+                            BackgroundService.setCustomer(null);
+                            googleLogout();
+                            moveToLogin();
+                        } else {
                         /*replaceFragment(R.layout.fragment_retry_login, null);*/
-                        showDialog();
-                    }
+                            showDialog();
+                        }
 
+                    }
                 }
             });
 
@@ -1894,7 +1896,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
     }
 
-    public double CalculationByDistance(double initialLat, double initialLong,
+   /* public double CalculationByDistance(double initialLat, double initialLong,
                                         double finalLat, double finalLong) {
         Location locationA = new Location("point A");
         locationA.setLatitude(initialLat);
@@ -1903,6 +1905,21 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         locationB.setLatitude(finalLat);
         locationB.setLongitude(finalLong);
         double distance = locationA.distanceTo(locationB) ;
+        return distance;
+    }*/
+
+    public static double CalculationByDistance(double initialLat, double initialLong,
+                                 double finalLat, double finalLong) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(finalLat-initialLat);
+        double dLng = Math.toRadians(finalLong-initialLong);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(initialLat)) * Math.cos(Math.toRadians(finalLat)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+        double distance  = (double) dist;
+
         return distance;
     }
 

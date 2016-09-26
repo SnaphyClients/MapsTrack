@@ -4,6 +4,7 @@ package com.snaphy.mapstrack;
  * Created by Ravi-Gupta on 12/8/2015.
  */
 public final class Constants {
+    //http://www.truiton.com/2015/04/obtaining-sha1-fingerprint-android-keystore/
     public static final String TAG = "MapsTrack";
     public static final String CLIENT_ID = "624660143780-l2jd9j9q7iksiager7821501msoe1r8r.apps.googleusercontent.com";
     public static final int SUCCESS_RESULT = 0;

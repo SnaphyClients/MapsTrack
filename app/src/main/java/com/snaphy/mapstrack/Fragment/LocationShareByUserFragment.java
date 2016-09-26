@@ -15,6 +15,7 @@ import com.androidsdk.snaphy.snaphyandroidsdk.models.LastUpdatedLocation;
 import com.androidsdk.snaphy.snaphyandroidsdk.repository.LastUpdatedLocationRepository;
 import com.google.android.gms.analytics.HitBuilders;
 import com.snaphy.mapstrack.Adapter.LocationShareAdapterContacts;
+import com.snaphy.mapstrack.Collection.TrackCollection;
 import com.snaphy.mapstrack.Constants;
 import com.snaphy.mapstrack.Helper.ContactMatcher;
 import com.snaphy.mapstrack.MainActivity;
@@ -55,6 +56,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     MainActivity mainActivity;
     //List<Customer> sharedLocation;
     List<ContactModel> sharedLocation = new ArrayList<>();
+    private boolean isViewShown = false;
 
     public LocationShareByUserFragment() {
         // Required empty public constructor
@@ -95,10 +97,12 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_location_share_by_user, container, false);
         ButterKnife.bind(this, view);
-
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        if (!isViewShown) {
+            shareWithUser();
+        }
         return view;
     }
 
@@ -159,6 +163,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         mainActivity = (MainActivity) getActivity();
+        mainActivity.stopProgressBar(TrackCollection.progressBar);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -277,14 +282,20 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            // load data here
+        if (getView() != null) {
+            isViewShown = true;
             if(mainActivity != null) {
                 shareWithUser();
             }
+        } else {
+            isViewShown = false;
+        }
+       /* if (isVisibleToUser) {
+            // load data here
+
         }else{
             // fragment is no longer visible
-        }
+        }*/
     }
 
 

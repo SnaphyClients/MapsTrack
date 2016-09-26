@@ -11,7 +11,9 @@
         android:id="@+id/fragment_location_share_by_user_recycler_view1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:clipToPadding="false"
+        android:paddingBottom="120dp"
+        android:scrollbars="vertical" />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"

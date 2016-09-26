@@ -126,7 +126,11 @@ public class TrackCollection {
         where.put("type", type);
         //Now add where.. filter..
         filter.put("where", where);
-        filter.put("order", "added DESC");
+        //Order by filter except for nearby filter..
+        if(!trackCurrentFilterSelect.get(Constants.NEAR_BY) && !trackCurrentFilterSelect.get(Constants.NEAR_BY_LOCATION) ){
+            filter.put("order", "added DESC");
+        }
+
 
         if(reset) {
             resetFilter(type);
