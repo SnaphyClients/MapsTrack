@@ -7,6 +7,7 @@ public final class Constants {
     //http://www.truiton.com/2015/04/obtaining-sha1-fingerprint-android-keystore/
     public static final String TAG = "MapsTrack";
     public static final String CLIENT_ID = "624660143780-l2jd9j9q7iksiager7821501msoe1r8r.apps.googleusercontent.com";
+    //public static final String CLIENT_ID = "624660143780-ru8rs0j6evisvp2u7hfbnbfnu6eo7lbh.apps.googleusercontent.com";
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
     public static final String PACKAGE_NAME = "com.snaphy.mapstrack";
