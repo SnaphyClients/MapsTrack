@@ -53,6 +53,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
     MainActivity mainActivity;
     List<ContactModel> sharedFriends = new ArrayList<>();
     private boolean isViewShown = false;
+    boolean isNameDisplayed = false;
     public LocationShareByUserFriendsFragment() {
         // Required empty public constructor
     }
@@ -208,19 +209,23 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
         recyclerView.setAdapter(locationShareAdapterContacts);
         ContactMatcher contactMatcher = new ContactMatcher(mainActivity, location, locationShareAdapterContacts);
         locationShareAdapterContacts.notifyDataSetChanged();
+        isNameDisplayed = true;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (getView() != null) {
-            isViewShown = true;
-            if(mainActivity != null) {
-                showFriendSharedLocation();
+        if(!isNameDisplayed) {
+
+            if (getView() != null) {
+                isViewShown = true;
+                if (mainActivity != null) {
+                    showFriendSharedLocation();
+                }
+            } else {
+                isViewShown = false;
             }
-        } else {
-            isViewShown = false;
         }
     }
 }

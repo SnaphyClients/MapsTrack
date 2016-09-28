@@ -75,14 +75,14 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
                 if(distanceInKm == 0){
                     distanceInKm = 1;
                     eventDistance.setText(distanceInKm+"");
-                    eventDistanceMetric.setText(Constants.KM);
+                    eventDistanceMetric.setText("+ "+Constants.KM);
                 } else if (distanceInKm > 99) {
                     distanceInKm = 99;
                     eventDistance.setText(distanceInKm+"");
                     eventDistanceMetric.setText("+ "+Constants.KM);
                 } else {
                     eventDistance.setText(distanceInKm+"");
-                    eventDistanceMetric.setText(Constants.KM);
+                    eventDistanceMetric.setText("+ "+Constants.KM);
                 }
 
             }

@@ -70,14 +70,14 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
                 if(distanceInKm == 0){
                     distanceInKm = 1;
                     locationDistance.setText(distanceInKm+"");
-                    locationDistanceMetric.setText(Constants.KM);
+                    locationDistanceMetric.setText("+ "+Constants.KM);
                 } else if (distanceInKm > 99) {
                     distanceInKm = 99;
                     locationDistance.setText(distanceInKm+"");
                     locationDistanceMetric.setText("+ "+Constants.KM);
                 } else {
                     locationDistance.setText(distanceInKm+"");
-                    locationDistanceMetric.setText(Constants.KM);
+                    locationDistanceMetric.setText("+ "+Constants.KM);
                 }
 
             }

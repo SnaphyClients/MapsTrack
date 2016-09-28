@@ -57,6 +57,8 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     //List<Customer> sharedLocation;
     List<ContactModel> sharedLocation = new ArrayList<>();
     private boolean isViewShown = false;
+    boolean isNameDisplayed = false;
+    int count = 0;
 
     public LocationShareByUserFragment() {
         // Required empty public constructor
@@ -276,19 +278,22 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
         recyclerView.setAdapter(locationShareAdapterContacts);
         ContactMatcher contactMatcher = new ContactMatcher(mainActivity, location, locationShareAdapterContacts);
         locationShareAdapterContacts.notifyDataSetChanged();
+        count++;
     }
 
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (getView() != null) {
-            isViewShown = true;
-            if(mainActivity != null) {
-                shareWithUser();
+        if(count < 2) {
+            if (getView() != null) {
+                isViewShown = true;
+                if (mainActivity != null) {
+                    shareWithUser();
+                }
+            } else {
+                isViewShown = false;
             }
-        } else {
-            isViewShown = false;
         }
        /* if (isVisibleToUser) {
             // load data here
