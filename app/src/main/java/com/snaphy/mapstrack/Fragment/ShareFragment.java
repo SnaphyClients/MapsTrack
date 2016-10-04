@@ -49,7 +49,7 @@ public class ShareFragment extends android.support.v4.app.Fragment {
         ButterKnife.bind(this, view);
         viewPager.setAdapter(new LocationShareTabAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setOffscreenPageLimit(0);
+        viewPager.setOffscreenPageLimit(2);
         setTextInTabLayout();
         return view;
     }

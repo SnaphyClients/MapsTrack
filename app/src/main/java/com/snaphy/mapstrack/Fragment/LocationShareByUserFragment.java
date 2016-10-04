@@ -74,6 +74,7 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        shareWithUser();
     }
 
     @Override
@@ -102,9 +103,10 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        if (!isViewShown) {
-            shareWithUser();
-        }
+       /* if (!mainActivity.isNameDisplayedInUserFragment) {*/
+
+        /*}*/
+        shareWithUser();
         return view;
     }
 
@@ -159,6 +161,9 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     @Override
     public void onResume() {
         super.onResume();
+        if(locationShareAdapterContacts != null) {
+            locationShareAdapterContacts.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -273,35 +278,59 @@ public class LocationShareByUserFragment extends android.support.v4.app.Fragment
     }
 
 
+
     public void setLocation(List<ContactModel> location){
         locationShareAdapterContacts = new LocationShareAdapterContacts(mainActivity, location, Constants.LOCATION_SHARE_BY_USER_FRAGMENT);
         recyclerView.setAdapter(locationShareAdapterContacts);
         ContactMatcher contactMatcher = new ContactMatcher(mainActivity, location, locationShareAdapterContacts);
         locationShareAdapterContacts.notifyDataSetChanged();
-        count++;
+        mainActivity.isNameDisplayedInUserFragmentCount++;
     }
-
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(count < 2) {
-            if (getView() != null) {
-                isViewShown = true;
-                if (mainActivity != null) {
+        if (isVisibleToUser) {
+            if (mainActivity != null) {
+                if (mainActivity.isNameDisplayedInUserFragmentCount < 2) {
                     shareWithUser();
                 }
-            } else {
-                isViewShown = false;
             }
         }
-       /* if (isVisibleToUser) {
+    }
+
+
+/*
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            if (locationShareAdapterContacts != null) {
+                locationShareAdapterContacts.notifyDataSetChanged();
+            }
+                if (count < 2) {
+                    if (getView() != null) {
+                        isViewShown = true;
+                        if (mainActivity != null) {
+                            if (!mainActivity.isNameDisplayedInUserFragment) {
+                            shareWithUser();
+                        }
+                    } else {
+                        isViewShown = false;
+                    }
+                }
+            }
+        }
+       */
+/* if (isVisibleToUser) {
             // load data here
 
         }else{
             // fragment is no longer visible
-        }*/
+        }*//*
+
     }
+*/
 
 
 

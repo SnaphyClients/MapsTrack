@@ -53,7 +53,6 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
     MainActivity mainActivity;
     List<ContactModel> sharedFriends = new ArrayList<>();
     private boolean isViewShown = false;
-    boolean isNameDisplayed = false;
     public LocationShareByUserFriendsFragment() {
         // Required empty public constructor
     }
@@ -67,6 +66,7 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        showFriendSharedLocation();
 
     }
 
@@ -79,9 +79,10 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        if (!isViewShown) {
+       /* if (!mainActivity.isNameDisplayedInUserFriendsFragment) {
             showFriendSharedLocation();
-        }
+        }*/
+        showFriendSharedLocation();
         return view;
     }
 
@@ -209,23 +210,38 @@ public class LocationShareByUserFriendsFragment extends android.support.v4.app.F
         recyclerView.setAdapter(locationShareAdapterContacts);
         ContactMatcher contactMatcher = new ContactMatcher(mainActivity, location, locationShareAdapterContacts);
         locationShareAdapterContacts.notifyDataSetChanged();
-        isNameDisplayed = true;
+        mainActivity.isNameDisplayedInUserFriendsFragmentCount++;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
-        if(!isNameDisplayed) {
-
-            if (getView() != null) {
-                isViewShown = true;
-                if (mainActivity != null) {
+        if (isVisibleToUser) {
+            if (mainActivity != null) {
+                if (mainActivity.isNameDisplayedInUserFriendsFragmentCount < 2) {
                     showFriendSharedLocation();
                 }
-            } else {
-                isViewShown = false;
             }
         }
     }
+
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if(isVisibleToUser) {
+//            if(locationShareAdapterContacts != null) {
+//                locationShareAdapterContacts.notifyDataSetChanged();
+//            }
+//                if (getView() != null) {
+//                    isViewShown = true;
+//                    if (mainActivity != null) {
+//                        if (!mainActivity.isNameDisplayedInUserFriendsFragment) {
+//                            showFriendSharedLocation();
+//                        }
+//                    }
+//                } else {
+//                    isViewShown = false;
+//                }
+//            }
+//    }
 }

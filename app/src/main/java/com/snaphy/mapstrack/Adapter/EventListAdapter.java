@@ -72,10 +72,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
                 double distance = mainActivity.CalculationByDistance(BackgroundService.getCurrentLocation().latitude, BackgroundService.getCurrentLocation().longitude,
                         track.getGeolocationLatitide(), track.getGeolocationLongitude());
                 int distanceInKm = (int)distance/1000;
-                if(distanceInKm == 0){
-                    distanceInKm = 1;
+                if(distanceInKm < 1 || distanceInKm == 0){
+                    distanceInKm = 0;
                     eventDistance.setText(distanceInKm+"");
-                    eventDistanceMetric.setText("+ "+Constants.KM);
+                    eventDistanceMetric.setText(Constants.KM);
                 } else if (distanceInKm > 99) {
                     distanceInKm = 99;
                     eventDistance.setText(distanceInKm+"");

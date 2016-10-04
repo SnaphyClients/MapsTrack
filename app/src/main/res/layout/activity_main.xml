@@ -28,4 +28,14 @@
         android:layout_below="@+id/activity_main_textview0"
         android:paddingLeft="12dp" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#333"
+        android:id="@+id/activity_main_button1"
+        android:visibility="gone"
+        android:text="No Internet Available ! Retry"
+        android:textColor="@color/white"/>
+
 </RelativeLayout>

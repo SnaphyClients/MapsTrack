@@ -67,10 +67,10 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
                 double distance = mainActivity.CalculationByDistance(BackgroundService.getCurrentLocation().latitude, BackgroundService.getCurrentLocation().longitude,
                         track.getGeolocationLatitide(), track.getGeolocationLongitude());
                 int distanceInKm = (int)distance/1000;
-                if(distanceInKm == 0){
-                    distanceInKm = 1;
+                if(distanceInKm < 0 || distanceInKm == 0){
+                    distanceInKm = 0;
                     locationDistance.setText(distanceInKm+"");
-                    locationDistanceMetric.setText("+ "+Constants.KM);
+                    locationDistanceMetric.setText(Constants.KM);
                 } else if (distanceInKm > 99) {
                     distanceInKm = 99;
                     locationDistance.setText(distanceInKm+"");

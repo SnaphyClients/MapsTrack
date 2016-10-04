@@ -39,6 +39,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -176,6 +177,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
     static ProgressDialog progressMain;
     int count = 0;
     GoogleApiClient googleApiClient;
+    Button internetRetryButton;
+    public int isNameDisplayedInUserFragmentCount = 0;
+    public int isNameDisplayedInUserFriendsFragmentCount = 0;
     public static LocalInstallation getInstallation() {
         return installation;
     }
@@ -186,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         parentLayout = findViewById(R.id.container);
+        internetRetryButton = (Button) findViewById(R.id.activity_main_button1);
         /*Mint.initAndStartSession(MainActivity.this, "16020362");*/
         MapsTrackDB application = (MapsTrackDB) getApplication();
         tracker = application.getDefaultTracker();
@@ -193,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         tracker.send(new HitBuilders.ScreenViewBuilder().build());
         EventBus.getDefault().registerSticky(this);
         EventBus.getDefault().register(this);
+        checkInternet();
         mainActivity = this;
         that = this;
         //BackgroundService.setLoopBackAdapter(getLoopBackAdapter());
@@ -221,7 +227,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
             }
         }, 100);
         if(isNetworkAvailable() == false) {
-            Snackbar.make(parentLayout, "Internet not connected", Snackbar.LENGTH_INDEFINITE).show();
+            //Snackbar.make(parentLayout, "Internet not connected", Snackbar.LENGTH_INDEFINITE).show();
+            internetRetryButton.setVisibility(View.VISIBLE);
         } else {
             if (isLocationEnabled(this)) {
                 checkLogin();
@@ -245,6 +252,39 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         }
         TrackCollection.setFilterColor(Constants.NEAR_BY, Constants.EVENT);
         TrackCollection.setFilterColor(Constants.NEAR_BY_LOCATION, Constants.LOCATION);
+    }
+
+    private void checkInternet() {
+        internetRetryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isNetworkAvailable() == false) {
+                    //Snackbar.make(parentLayout, "Internet not connected", Snackbar.LENGTH_INDEFINITE).show();
+                    internetRetryButton.setVisibility(View.VISIBLE);
+                } else {
+                    internetRetryButton.setVisibility(View.GONE);
+                    if (isLocationEnabled(mainActivity)) {
+                        checkLogin();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                        builder.setMessage("Seems Like location service is off,   Enable it?")
+                                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        String action = "com.google.android.gms.location.settings.GOOGLE_LOCATION_SETTINGS";
+                                        Intent settings = new Intent(action);
+                                        startActivityForResult(settings, LOCATION_ALERT);
+                                    }
+                                }).setNegativeButton("NO THANKS", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                onBackPressed();
+                            }
+                        }).create().show();
+                    }
+                }
+            }
+        });
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -1678,8 +1718,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentChange,
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == LOCATION_ALERT) {
             if(isNetworkAvailable() == false) {
-                Snackbar.make(parentLayout, "Internet not connected", Snackbar.LENGTH_INDEFINITE).show();
+                //Snackbar.make(parentLayout, "Internet not connected", Snackbar.LENGTH_INDEFINITE).show();
+                internetRetryButton.setVisibility(View.VISIBLE);
             } else {
+                internetRetryButton.setVisibility(View.GONE);
                 checkLogin();
             }
 

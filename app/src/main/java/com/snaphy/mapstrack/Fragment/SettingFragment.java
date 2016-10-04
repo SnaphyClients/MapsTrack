@@ -95,7 +95,7 @@ public class SettingFragment extends android.support.v4.app.Fragment {
                 sharingIntent.setType("text/plain");
                 String shareBody = Constants.APP_SHARE_TEXT;
                 shareBody = shareBody + "http://play.google.com/store/apps/details?id=" + Constants.APP_PLAY_STORE;
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Drugcorner");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "MapsTrack");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share Via"));
             }
